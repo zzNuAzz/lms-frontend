@@ -1,0 +1,10 @@
+# Custom type declarations
+
+# Top level declarations
+type Query {
+    testMessage: String!
+}
+
+type Mutation {
+    setTestMessage(message: String!): String
+}
