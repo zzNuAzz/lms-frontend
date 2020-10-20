@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Nav, Navbar, NavLink } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { NavSignin } from '../';
+import { AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core'
 export default function NavBar() {
   return (
     <>
@@ -26,7 +27,18 @@ export default function NavBar() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <hr style={{marginTop: 0}}/>
+      <hr style={{ marginTop: 0 }} />
     </>
+    // <AppBar position="static">
+    //   <Toolbar>
+    //     <IconButton edge="start" color="inherit" aria-label="menu">
+    //       <p>Menu Icon</p>
+    //     </IconButton>
+    //     <Typography variant="h6">
+    //       News
+    //     </Typography>
+    //     <Button color="inherit">Login</Button>
+    //   </Toolbar>
+    // </AppBar>
   );
 }
