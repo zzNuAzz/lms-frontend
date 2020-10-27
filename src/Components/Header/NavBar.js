@@ -1,15 +1,15 @@
 import React from 'react';
 import { Container, Nav, Navbar, NavLink, Row } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import { NavSignin } from '../';
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
   Button,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { NavSignin } from '../';
 import ButtonSignIn from './ButtonSignIn/button-sign-in';
 
 const useStyle = makeStyles((theme) => ({
@@ -27,46 +27,26 @@ const useStyle = makeStyles((theme) => ({
     flexGrow: 1,
   },
 
+  navigationButton: {
+    margin: '10px 10px',
+  },
+
 }));
 
 export default function NavBar() {
   const classes = useStyle();
 
   return (
-    // <>
-    //   <Navbar collapseOnSelect bg="default" expand="md">
-    //     <Container fluid>
-    //       <LinkContainer to="/" style={{ cursor: 'pointer' }}>
-    //         <Navbar.Brand>Learning System</Navbar.Brand>
-    //       </LinkContainer>
-    //       <Navbar.Toggle aria-controls="navbar-collapse" />
-    //       <Navbar.Collapse id="navbar-collapse">
-    //         <Nav className="mr-auto">
-    //           <LinkContainer to="/home">
-    //             <NavLink>Home</NavLink>
-    //           </LinkContainer>
-    //           <LinkContainer to="/course">
-    //             <NavLink>Courses</NavLink>
-    //           </LinkContainer>
-    //         </Nav>
-    //         <Nav>
-    //           <ButtonSignIn />
-    //         </Nav>
-    //       </Navbar.Collapse>
-    //     </Container>
-    //   </Navbar>
-    //   <hr style={{ marginTop: 0 }} />
-    // </>
     <div className={classes.root}>
       <AppBar color="primary" position="sticky">
         <Toolbar>
           <Typography className={classes.title} variant="h6">Learning System</Typography>
-          <LinkContainer to="/">
-            <Button color="inherit">Home</Button>
-          </LinkContainer>
-          <LinkContainer to="/course">
-            <Button color="inherit">Courses</Button>
-          </LinkContainer>
+          <Link to="/home">
+            <Button className={classes.navigationButton} variant="contained" color="primary">Home</Button>
+          </Link>
+          <Link to="/course">
+            <Button className={classes.navigationButton} variant="contained" color="primary">Courses</Button>
+          </Link>
           <div className={classes.endPoint} />
           <ButtonSignIn />
         </Toolbar>
