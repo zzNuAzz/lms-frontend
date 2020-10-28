@@ -6,6 +6,8 @@ import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { AccountCircleRounded, NavigateBeforeSharp } from '@material-ui/icons';
+import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -38,7 +40,11 @@ export default function SignInButton() {
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleOpen}>Sign In</Button>
+      <Button variant="contained" color="primary" onClick={handleOpen}>
+        <AccountCircleRounded />
+        &nbsp;
+        Sign In
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
