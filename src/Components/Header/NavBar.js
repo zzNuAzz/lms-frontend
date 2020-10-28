@@ -1,16 +1,12 @@
 import React from 'react';
-import { Container, Nav, Navbar, NavLink, Row } from 'react-bootstrap';
 import {
   AppBar,
   Toolbar,
-  IconButton,
   Typography,
-  Button,
   makeStyles,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { NavSignin } from '../';
 import ButtonSignIn from './ButtonSignIn/button-sign-in';
+import MenuBar from './MenuBar/menu-bar';
 
 const useStyle = makeStyles((theme) => ({
   title: {
@@ -40,13 +36,8 @@ export default function NavBar() {
     <div className={classes.root}>
       <AppBar color="primary" position="sticky">
         <Toolbar>
+          <MenuBar />
           <Typography className={classes.title} variant="h6">Learning System</Typography>
-          <Link to="/home">
-            <Button className={classes.navigationButton} variant="contained" color="primary">Home</Button>
-          </Link>
-          <Link to="/course">
-            <Button className={classes.navigationButton} variant="contained" color="primary">Courses</Button>
-          </Link>
           <div className={classes.endPoint} />
           <ButtonSignIn />
         </Toolbar>
