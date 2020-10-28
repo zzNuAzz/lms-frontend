@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { NavBar } from '../Components';
 import Footer from '../Components/Footer/Footer';
 import routes from './routes.config';
+import './style.css';
 
 export default function Page() {
   return (

@@ -3,7 +3,7 @@ import { Button, Grid, Typography, TextField } from '@material-ui/core';
 
 export default function Login() {
   return (
-    <>
+    <div className="section">
       <Grid
         container
         direction="column"
@@ -21,6 +21,6 @@ export default function Login() {
           <Button variant="contained" color="primary">Sign in</Button>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }
