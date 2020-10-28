@@ -32,7 +32,7 @@ export default function NavBarSignin() {
                 className="border-round"
                 type="text"
                 placeholder="Enter username"
-              ></Form.Control>
+              />
             </Form.Group>
             <Form.Group>
               {/* <Form.Label>Password</Form.Label> */}
@@ -40,15 +40,15 @@ export default function NavBarSignin() {
                 className="border-round"
                 type="password"
                 placeholder="Enter password"
-              ></Form.Control>
+              />
             </Form.Group>
             <Button className="border-round" block>
               Login
             </Button>
           </Form>
         </Modal.Body>
-        <Modal.Footer style={{display:"block"}}>
-          <div className="text-center" >or signin with</div>
+        <Modal.Footer style={{ display: 'block' }}>
+          <div className="text-center">or signin with</div>
           <Button variant="info" className="border-round" block>Google</Button>
           <Button variant="info" className="border-round" block>Facebook</Button>
         </Modal.Footer>
