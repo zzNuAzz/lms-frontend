@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Button,
   Drawer,
   Divider,
   IconButton,
@@ -38,7 +37,7 @@ const MenuBar = () => {
       <Drawer anchor="left" open={isOpen} onClose={handleIsOpen}>
         <div className={classes.list} role="presentation" onClick={handleIsOpen}>
           <List component="nav">
-            <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>
+            <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
               <ListItem button>
                 <ListItemIcon>
                   <HomeRoundedIcon />
@@ -46,7 +45,7 @@ const MenuBar = () => {
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <Link to="/course" style={{textDecoration: 'none', color: 'inherit'}}>
+            <Link to="/course" style={{ textDecoration: 'none', color: 'inherit' }}>
               <ListItem button>
                 <ListItemIcon>
                   <MenuBookRoundedIcon />
@@ -60,6 +59,6 @@ const MenuBar = () => {
       </Drawer>
     </div>
   );
-}
+};
 
 export default MenuBar;

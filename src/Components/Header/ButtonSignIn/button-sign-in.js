@@ -6,8 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { AccountCircleRounded, NavigateBeforeSharp } from '@material-ui/icons';
-import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
+import { AccountCircleRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -16,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   paper: {
-    width: '1000px',
-    height: '250px',
+    width: '500px',
+    height: '300px',
     backgroundColor: theme.palette.background.paper,
     // padding: '50px 100px',
     border: '2px solid #000',
