@@ -38,7 +38,7 @@ const MenuBar = () => {
       <Drawer anchor="left" open={isOpen} onClose={handleIsOpen}>
         <div className={classes.list} role="presentation" onClick={handleIsOpen}>
           <List component="nav">
-            <Link to="/home">
+            <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>
               <ListItem button>
                 <ListItemIcon>
                   <HomeRoundedIcon />
@@ -46,7 +46,7 @@ const MenuBar = () => {
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <Link to="/course">
+            <Link to="/course" style={{textDecoration: 'none', color: 'inherit'}}>
               <ListItem button>
                 <ListItemIcon>
                   <MenuBookRoundedIcon />
