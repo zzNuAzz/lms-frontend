@@ -8,7 +8,8 @@ import 'holderjs';
 
 ReactDOM.render(
   <App />,
-  document.getElementById('root')
+  // eslint-disable-next-line no-undef
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
