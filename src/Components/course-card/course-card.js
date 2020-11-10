@@ -26,12 +26,21 @@ const Card = styled.div`
   }
 `;
 
+const Title = styled.div`
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+`;
+const Subtitle = styled.div`
+`;
+
 // eslint-disable-next-line import/prefer-default-export
 export const CourseCard = ({ title, id }) => (
   <>
     <Card>
-      <h3>{title}</h3>
-      <p>{id}</p>
+      <Title>{title}</Title>
+      <Subtitle>{id}</Subtitle>
     </Card>
   </>
 );
