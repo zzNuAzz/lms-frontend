@@ -1,66 +1,110 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Carousel, Row, Col, Container,
-} from 'react-bootstrap';
-import CourseCard from '../Components/CourseCard/CourseCard.js';
+  Button,
+  ButtonGroup,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Typography,
+} from '@material-ui/core';
+import ListRoundedIcon from '@material-ui/icons/ListRounded';
+import CardIcon from '@material-ui/icons/ViewAgendaRounded';
+import { CourseCard } from '../Components/course-card/course-card.js';
+import { CourseListElement } from '../Components/course-list-element/course-list-element';
+import courses from '../sample-data/sample-course';
+
+// TODO: Custom CourseListView
+const CourseListView = courses.map((course) => (
+  <div style={{ margin: '15px' }}>
+    <CourseListElement title={course.name} />
+  </div>
+));
+
+const CourseCardView = courses.map((course) => (
+  <Grid item md={4}>
+    <CourseCard title={course.name} id={course.id} />
+  </Grid>
+));
 
 export default function CoursePage() {
-  const courses = [
-    {
-      courseName: 'Phát triển Web',
-      courseId: 'INT3306_21',
-      host: 'Lê Quang Nhật',
-    },
-    {
-      courseName: 'Lý thuyết thông tin',
-      courseId: 'INT2091_21',
-      host: 'Lê Khôi',
-    },
-    {
-      courseName: 'Xác suất thống kê',
-      courseId: 'MAT2019_21',
-      host: 'Đặng Cao Cường',
-    },
-    {
-      courseName: 'Phân tích thiết kế hướng đối tượng',
-      courseId: 'INT2028_21',
-      host: 'Hạnh',
-    },
-    {
-      courseName: 'Quản lý dự án',
-      courseId: 'INT2021_21',
-      host: 'Phạm Ngọc Hùng',
-    },
-    {
-      courseName: 'Kiểm thử',
-      courseId: 'INT1022_21',
-      host: '?????????',
-    },
-  ];
+  const [courseView, setCourseView] = useState('list');
+
+  const handleListView = () => {
+    setCourseView('list');
+  };
+  const handleCardView = () => {
+    setCourseView('card');
+  };
 
   return (
     <>
-      <h1>Recently Accessed Courses</h1>
-      <Carousel key="carousel">
-        {courses.map((course, index) => (
-          <Carousel.Item key={index}>
-            <img
-              className="w-100"
-              src={`holder.js/400x200?auto=yes&text=${course.courseName}&theme=${index % 2 === 0 ? 'sky' : 'industrial'}`}
-            />
-            <Carousel.Caption>
-              <h3>{`${course.courseId}`}</h3>
-              <p>{`Giảng viên: ${course.host}`}</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-        ))}
-      </Carousel>
-      <h1>All Course</h1>
-      <div className="d-flex justify-content-between">
-        <CourseCard courseName="Sample course_name" courseId="Sample course_id" />
-        <CourseCard courseName="Phân tích thiết kế hướng đối tượng" courseId="INT2091_21" />
-        <CourseCard courseName="Quản lý dự án phần mềm" courseId="INT3301_21" />
-      </div>
+      <h1>All Courses</h1>
+
+      {/* List-View Switcher */}
+      <Grid
+        container
+        direction="row"
+        justify="flex-end"
+        alignContent="center"
+        alignItems="center"
+      >
+        {/* <Grid item>
+          <Typography variant="body1">View as:&nbsp;</Typography>
+        </Grid> */}
+        <Grid item>
+          <ButtonGroup color="primary">
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled
+            >
+              View as
+            </Button>
+            <Button
+              variant={courseView === 'list' ? 'contained' : 'outlined'}
+              onClick={handleListView}
+            >
+              <ListRoundedIcon />
+              &nbsp;
+              List
+            </Button>
+            <Button
+              variant={courseView === 'card' ? 'contained' : 'outlined'}
+              onClick={handleCardView}
+            >
+              <CardIcon />
+              &nbsp;
+              Card
+            </Button>
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+      <br />
+      {
+        courseView === 'list'
+          ? (
+            <List>
+              {CourseListView}
+            </List>
+          )
+          : (
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              spacing={3}
+            >
+              {CourseCardView}
+            </Grid>
+          )
+      }
     </>
   );
 }
