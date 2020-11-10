@@ -14,22 +14,34 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+
 import ListRoundedIcon from '@material-ui/icons/ListRounded';
 import CardIcon from '@material-ui/icons/ViewAgendaRounded';
 import { CourseCard } from '../Components/course-card/course-card.js';
 import { CourseListElement } from '../Components/course-list-element/course-list-element';
 import courses from '../sample-data/sample-course';
 
-// TODO: Custom CourseListView
-const CourseListView = courses.map((course) => (
+// TODO: Fade in/out animation when entering CourseDetail
+const CourseListView = courses.map((course, index) => (
   <div style={{ margin: '15px' }}>
-    <CourseListElement title={course.name} />
+    <Link
+      to={`/course/${index}`}
+      style={{ textDecoration: 'none', color: 'inherit' }}
+    >
+      <CourseListElement title={course.name} />
+    </Link>
   </div>
 ));
 
-const CourseCardView = courses.map((course) => (
+const CourseCardView = courses.map((course, index) => (
   <Grid item md={4}>
-    <CourseCard title={course.name} id={course.id} />
+    <Link
+      to={`/course/${index}`}
+      style={{ textDecoration: 'none', color: 'inherit' }}
+    >
+      <CourseCard title={course.name} id={course.id} />
+    </Link>
   </Grid>
 ));
 
