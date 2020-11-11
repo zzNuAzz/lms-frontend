@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL_BASE = process.env.API_BASE_URL || 'http://ritachan.site/api';
+const URL_BASE = process.env.REACT_APP_API_BASE_URL || '/api';
 
 function handleResult(res) {
   if (!res.data.success) {
