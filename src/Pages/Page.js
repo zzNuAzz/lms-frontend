@@ -16,7 +16,8 @@ export default function Page() {
       <Container maxWidth="lg">
         <Switch>
           <Redirect exact from="/" to="home" />
-          {routes.map(route => (
+          {routes.map((route) => (
+            // eslint-disable-next-line react/jsx-props-no-spreading
             <Route {...route} key={route.path} />
           ))}
         </Switch>
