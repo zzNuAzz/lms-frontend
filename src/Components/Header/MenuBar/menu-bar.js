@@ -45,7 +45,7 @@ const MenuBar = () => {
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <Link to="/course" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link to="/courses" style={{ textDecoration: 'none', color: 'inherit' }}>
               <ListItem button>
                 <ListItemIcon>
                   <MenuBookRoundedIcon />
