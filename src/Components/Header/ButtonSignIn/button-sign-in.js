@@ -1,25 +1,27 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { AccountCircleRounded } from '@material-ui/icons';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { AccountCircleRounded } from "@material-ui/icons";
+import { Row, Col } from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
-    width: '500px',
-    height: '300px',
+    width: "500px",
+    height: "300px",
     backgroundColor: theme.palette.background.paper,
     // padding: '50px 100px',
-    border: '2px solid #000',
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
@@ -41,8 +43,7 @@ export default function SignInButton() {
     <div>
       <Button variant="contained" color="primary" onClick={handleOpen}>
         <AccountCircleRounded />
-        &nbsp;
-        Sign In
+        &nbsp; Sign In
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -66,14 +67,41 @@ export default function SignInButton() {
               spacing={3}
             >
               <Grid item>
-                <TextField fullWidth required variant="outlined" label="Username" />
+                <TextField
+                  fullWidth
+                  required
+                  variant="outlined"
+                  label="Username"
+                />
               </Grid>
               <Grid item>
-                <TextField fullWidth required variant="outlined" label="Password" />
+                <TextField
+                  fullWidth
+                  required
+                  variant="outlined"
+                  label="Password"
+                />
               </Grid>
-              <Grid item>
-                <Button variant="contained" color="primary">Sign in</Button>
-              </Grid>
+              {/* <Button variant="contained" color="primary">
+                  Sign in
+                </Button>
+                <Button variant="contained" color="primary">
+                  Sign up
+                </Button> */}
+              <Row>
+                <Col>
+                  <Button variant="contained" color="primary">
+                    Sign in
+                  </Button>
+                </Col>
+                <Col>
+                  <Link to="/signup">
+                    <Button variant="contained" color="primary">
+                      Sign up
+                    </Button>
+                  </Link>
+                </Col>
+              </Row>
             </Grid>
           </div>
         </Fade>
