@@ -6,7 +6,10 @@ export const getCourseById = async (courseId) => {
   course(courseId: $courseId) {
     courseId
     host {
-        userId
+      userId
+      username
+      firstName
+      lastName
     }
     name
     description

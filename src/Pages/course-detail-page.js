@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCourseById } from '../api/graphql/get-course-by-id';
 import { getUserInformation } from '../api/graphql/get-user-information';
+import { CourseCardLarge } from '../Components/course-card/course-card-large';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
@@ -21,19 +22,8 @@ const CourseDetailPage = () => {
         setCourseName(result.data.course.name);
         setCourseDescription(result.data.course.description || '');
         setCourseHostId(result.data.course.host.userId);
-      }
-    } catch (err) {
-      alert(`Error detected: ${err}`);
-    }
-  };
-
-  const fetchCourseHostInformation = async () => {
-    try {
-      let result = await getUserInformation(parseInt(courseHostId, 10));
-      result = JSON.parse(result);
-      if (result.data) {
-        setHostFirstName(result.data.userProfile.firstName || '');
-        setHostLastName(result.data.userProfile.lastName || '');
+        setHostFirstName(result.data.course.host.firstName);
+        setHostLastName(result.data.course.host.lastName);
       }
     } catch (err) {
       alert(`Error detected: ${err}`);
@@ -42,13 +32,15 @@ const CourseDetailPage = () => {
 
   useEffect(() => {
     fetchCourseDetails();
-    fetchCourseHostInformation();
   }, [courseId]);
 
   return (
     <>
-      <h5>{`Placeholder for CourseDetailPage ${courseName}`}</h5>
-      <h5>{`Lecturer: ${hostLastName + ' ' + hostFirstName}`}</h5>
+      <CourseCardLarge
+        courseName={courseName}
+        courseId={courseId}
+        courseLecturer={`${hostFirstName + ' ' + hostLastName}`}
+      />
     </>
   );
 };
