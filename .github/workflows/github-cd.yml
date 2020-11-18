@@ -1,5 +1,5 @@
 
-name: Build code and deploy to server
+name: Deploy
 
 on:
   push:
