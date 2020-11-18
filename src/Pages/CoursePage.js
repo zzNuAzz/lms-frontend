@@ -2,23 +2,14 @@ import React, { useState } from 'react';
 import {
   Button,
   ButtonGroup,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
   Grid,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Typography,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import ListRoundedIcon from '@material-ui/icons/ListRounded';
 import CardIcon from '@material-ui/icons/ViewAgendaRounded';
-import { CourseCard } from '../Components/course-card/course-card.js';
+import CourseCard from '../Components/course-card/course-card.js';
 import { CourseListElement } from '../Components/course-list-element/course-list-element';
 import courses from '../sample-data/sample-course';
 

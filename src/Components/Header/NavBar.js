@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
   Typography,
   makeStyles,
 } from '@material-ui/core';
-import ButtonSignIn from './ButtonSignIn/button-sign-in';
+import UserButton from './user-button/user-button';
 import MenuBar from './MenuBar/menu-bar';
 
 const useStyle = makeStyles((theme) => ({
@@ -32,14 +32,16 @@ const useStyle = makeStyles((theme) => ({
 export default function NavBar() {
   const classes = useStyle();
 
+  const [isLoggedIn, setLoginStatus] = useState(false);
+
   return (
     <div className={classes.root}>
       <AppBar color="primary" position="sticky">
         <Toolbar>
-          <MenuBar />
+          <MenuBar isLoggedIn={isLoggedIn} />
           <Typography className={classes.title} variant="h6">Learning System</Typography>
           <div className={classes.endPoint} />
-          <ButtonSignIn />
+          <UserButton isLoggedIn={isLoggedIn} setLoginStatus={setLoginStatus} />
         </Toolbar>
       </AppBar>
     </div>
