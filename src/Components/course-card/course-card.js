@@ -35,8 +35,7 @@ const Title = styled.div`
 const Subtitle = styled.div`
 `;
 
-// eslint-disable-next-line import/prefer-default-export
-export const CourseCard = ({ title, id }) => (
+const CourseCard = ({ title, id }) => (
   <>
     <Card>
       <Title>{title}</Title>
@@ -44,3 +43,5 @@ export const CourseCard = ({ title, id }) => (
     </Card>
   </>
 );
+
+export default CourseCard;
