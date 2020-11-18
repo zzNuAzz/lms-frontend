@@ -1,13 +1,9 @@
 
-name: Build code and deploy to server
+name: Deploy
 
 on:
   push:
     branches: 
-      - master
-      - dev
-  pull_request:
-    branches:
       - master
       - dev
 jobs:
