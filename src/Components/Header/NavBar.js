@@ -5,7 +5,7 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
-import ButtonSignIn from './ButtonSignIn/button-sign-in';
+import UserButton from './user-button/user-button';
 import MenuBar from './MenuBar/menu-bar';
 
 const useStyle = makeStyles((theme) => ({
@@ -39,7 +39,7 @@ export default function NavBar() {
           <MenuBar />
           <Typography className={classes.title} variant="h6">Learning System</Typography>
           <div className={classes.endPoint} />
-          <ButtonSignIn />
+          <UserButton />
         </Toolbar>
       </AppBar>
     </div>

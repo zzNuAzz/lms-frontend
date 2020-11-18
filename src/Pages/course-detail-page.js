@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCourseById } from '../api/graphql/get-course-by-id';
-import { getUserInformation } from '../api/graphql/get-user-information';
-import { CourseCardLarge } from '../Components/course-card/course-card-large';
+import CourseCardLarge from '../Components/course-card/course-card-large';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
