@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginComponent({ setUsername, setLoginStatus, setModalOpen }) {
+function LoginComponent({ setUsername, callbackToParent }) {
   const classes = useStyles();
   const [formUsername, setFormUsername] = useState('');
   const [formPassword, setFormPassword] = useState('');
@@ -48,10 +48,10 @@ function LoginComponent({ setUsername, setLoginStatus, setModalOpen }) {
     const result = await userLogin(formUsername, formPassword);
 
     if (result.code === 200) {
-      toast.success(`😃 Welcome ${result.credentials.user.username}`);
       setUsername(formUsername);
       sessionStorage.setItem('username', formUsername);
       sessionStorage.setItem('userId', result.credentials.user.userId);
+      callbackToParent();
     } else if (result.code === 400 || 401) {
       toast.error('😞 Wrong username or password, please try again!');
     }

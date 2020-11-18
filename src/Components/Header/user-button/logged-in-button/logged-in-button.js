@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import SentimentVerySatisfiedRoundedIcon from '@material-ui/icons/SentimentVerySatisfiedRounded';
+import { ToastContainer, toast } from 'react-toastify';
 
 const LoggedInButton = ({ setUsername }) => {
   const username = sessionStorage.getItem('username') || '';
@@ -34,6 +35,7 @@ const LoggedInButton = ({ setUsername }) => {
     sessionStorage.clear();
     setUsername('');
     setLogoutDialogOpen(false);
+    toast.info('See you soon!');
   };
 
   const handleLogoutDialogClose = () => {
@@ -42,6 +44,17 @@ const LoggedInButton = ({ setUsername }) => {
 
   return (
     <>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Button variant="contained" color="primary" onClick={(event) => handleClick(event)}>
         <SentimentVerySatisfiedRoundedIcon />
         &nbsp;

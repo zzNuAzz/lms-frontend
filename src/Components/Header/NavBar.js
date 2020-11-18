@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -32,14 +32,16 @@ const useStyle = makeStyles((theme) => ({
 export default function NavBar() {
   const classes = useStyle();
 
+  const [isLoggedIn, setLoginStatus] = useState(false);
+
   return (
     <div className={classes.root}>
       <AppBar color="primary" position="sticky">
         <Toolbar>
-          <MenuBar />
+          <MenuBar isLoggedIn={isLoggedIn} />
           <Typography className={classes.title} variant="h6">Learning System</Typography>
           <div className={classes.endPoint} />
-          <UserButton />
+          <UserButton isLoggedIn={isLoggedIn} setLoginStatus={setLoginStatus} />
         </Toolbar>
       </AppBar>
     </div>

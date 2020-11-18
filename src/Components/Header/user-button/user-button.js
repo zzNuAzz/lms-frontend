@@ -6,6 +6,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import { AccountCircleRounded } from '@material-ui/icons';
+import {ToastContainer, toast} from 'react-toastify'
 
 import LoginComponent from '../../login-component/login-component';
 import LoggedInButton from './logged-in-button/logged-in-button';
@@ -25,11 +26,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInButton() {
+export default function UserButton({ isLoggedIn, setLoginStatus }) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
-  const [isLoggedIn, setLoginStatus] = useState(false);
   const [username, setUsername] = useState('');
 
   const handleOpen = () => {
@@ -44,6 +44,7 @@ export default function SignInButton() {
     if (sessionStorage.getItem('username')) {
       setUsername(sessionStorage.getItem('username'));
       setLoginStatus(true);
+      if (username) toast.success(`😃 Welcome ${username}`);
     } else {
       setLoginStatus(false);
     }
@@ -51,6 +52,17 @@ export default function SignInButton() {
 
   return (
     <div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {isLoggedIn ? (
         // TODO: Logout and Account Information menu
         <LoggedInButton setUsername={setUsername} />
@@ -75,7 +87,10 @@ export default function SignInButton() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <LoginComponent setUsername={setUsername} setLoginStatus={setLoginStatus} setModalOpen={setOpen} />
+            <LoginComponent
+              setUsername={setUsername}
+              callbackToParent={handleClose}
+            />
           </div>
         </Fade>
       </Modal>
