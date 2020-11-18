@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import LoginComponent from '../Components/login-component/login-component';
 
 export default function LoginPage() {
