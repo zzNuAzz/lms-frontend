@@ -64,7 +64,7 @@ const CourseId = styled.div`
   }
 `;
 
-export const CourseCardLarge = ({ courseName, courseLecturer, courseId }) => {
+const CourseCardLarge = ({ courseName, courseLecturer, courseId }) => {
   return (
     <Card>
       <CourseName>{courseName}</CourseName>
@@ -73,3 +73,5 @@ export const CourseCardLarge = ({ courseName, courseLecturer, courseId }) => {
     </Card>
   )
 };
+
+export default CourseCardLarge;
