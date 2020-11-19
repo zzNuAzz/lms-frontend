@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ToastContainer, toast } from 'react-toastify';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import 'react-toastify/dist/ReactToastify.css';
 
 import userLogin from '../../api/user-login';
@@ -41,10 +42,12 @@ const useStyles = makeStyles((theme) => ({
 
 function LoginComponent({ setUsername, callbackToParent }) {
   const classes = useStyles();
+
+  const [submitted, setSubmitted] = useState(false);
   const [formUsername, setFormUsername] = useState('');
   const [formPassword, setFormPassword] = useState('');
 
-  const handleUserSignIn = async () => {
+  const handleSubmit = async () => {
     const result = await userLogin(formUsername, formPassword);
 
     if (result.code === 200) {
@@ -81,41 +84,43 @@ function LoginComponent({ setUsername, callbackToParent }) {
           <Typography component="h1" variant="h5" className={classes.h5}>
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
+          <ValidatorForm className={classes.form} onSubmit={handleSubmit}>
+            <TextValidator
+              label="Username"
+              onChange={(event) => setFormUsername(event.target.value)}
+              name="username"
+              value={formUsername}
+              validators={['required']}
+              errorMessages={['This field is required', 'Username is not valid']}
               variant="outlined"
               margin="normal"
-              required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
               autoComplete="username"
               autoFocus
-              onChange={(event) => setFormUsername(event.target.value)}
             />
-            <TextField
+            <TextValidator
+              label="Password"
+              name="password"
+              type="password"
+              value={formPassword}
+              onChange={(event) => setFormPassword(event.target.value)}
+              validators={['required']}
+              errorMessages={['This field is required']}
               variant="outlined"
               margin="normal"
-              required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
               autoComplete="current-password"
-              onChange={(event) => setFormPassword(event.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
             <Button
+              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={handleUserSignIn}
             >
               Sign In
             </Button>
@@ -126,7 +131,7 @@ function LoginComponent({ setUsername, callbackToParent }) {
                 </Link>
               </Grid>
             </Grid>
-          </form>
+          </ValidatorForm>
         </div>
       </Container>
     </>
