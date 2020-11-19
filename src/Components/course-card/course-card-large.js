@@ -69,7 +69,6 @@ const CourseCardLarge = ({ courseName, courseLecturer, courseId }) => {
     <Card>
       <CourseName>{courseName}</CourseName>
       <LecturerName>{courseLecturer}</LecturerName>
-      <CourseId>{courseId}</CourseId>
     </Card>
   )
 };
