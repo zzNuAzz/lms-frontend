@@ -46,7 +46,7 @@ const CourseDetailPage = () => {
         courseLecturer={
           (hostFirstName && hostLastName)
             ? `${hostFirstName + ' ' + hostLastName}`
-            : `Lecturer has no...name?`
+            : `Lecturer has...no name?`
         }
       />
       <br />
@@ -61,6 +61,7 @@ const CourseDetailPage = () => {
         <Tab label="Assignments" />
         <Tab label="Forum" />
       </Tabs>
+      <br />
       {(() => {
         switch (tabPosition) {
           case 0:
