@@ -52,17 +52,6 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
 
   return (
     <div>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       {isLoggedIn ? (
         // TODO: Logout and Account Information menu
         <LoggedInButton setUsername={setUsername} />
