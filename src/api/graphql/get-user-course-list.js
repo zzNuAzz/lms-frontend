@@ -1,5 +1,4 @@
-import React from 'react';
-import graphQlFetch from './graphql-fetch';
+import { graphQLFetch } from './graphql-fetch';
 
 const getUserCourseList = async ({ userId, status = 'Accepted', pageSize = 10, pageNumber = 0 }) => {
   const query = `query userCourseList (
@@ -32,7 +31,7 @@ const getUserCourseList = async ({ userId, status = 'Accepted', pageSize = 10, p
     pageSize,
     pageNumber,
   };
-  const result = await graphQlFetch(query, variables);
+  const result = await graphQLFetch(query, variables);
   return result;
 };
 
