@@ -9,10 +9,12 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import SentimentVerySatisfiedRoundedIcon from '@material-ui/icons/SentimentVerySatisfiedRounded';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const LoggedInButton = ({ setUsername }) => {
+  const history = useHistory();
   const username = sessionStorage.getItem('username') || '';
   const [anchorEl, setAnchorEl] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
@@ -35,7 +37,13 @@ const LoggedInButton = ({ setUsername }) => {
     sessionStorage.clear();
     setUsername('');
     setLogoutDialogOpen(false);
-    toast.info('See you soon!');
+    toast.info('See you soon!', {
+      autoClose: 2000,
+    });
+    setTimeout(() => {
+      history.push('/home');
+      history.go(0);
+    }, 2000);
   };
 
   const handleLogoutDialogClose = () => {
