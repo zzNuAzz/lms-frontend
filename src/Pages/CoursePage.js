@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable no-undef */
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -9,35 +10,16 @@ import { Link } from 'react-router-dom';
 
 import ListRoundedIcon from '@material-ui/icons/ListRounded';
 import CardIcon from '@material-ui/icons/ViewAgendaRounded';
+import { toast } from 'react-toastify';
 import CourseCard from '../Components/course-card/course-card.js';
 import { CourseListElement } from '../Components/course-list-element/course-list-element';
-import courses from '../sample-data/sample-course';
-
-// TODO: Fade in/out animation when entering CourseDetail
-const CourseListView = courses.map((course, index) => (
-  <div style={{ margin: '15px' }}>
-    <Link
-      to={`/course/${index}`}
-      style={{ textDecoration: 'none', color: 'inherit' }}
-    >
-      <CourseListElement title={course.name} />
-    </Link>
-  </div>
-));
-
-const CourseCardView = courses.map((course, index) => (
-  <Grid item md={4}>
-    <Link
-      to={`/course/${index}`}
-      style={{ textDecoration: 'none', color: 'inherit' }}
-    >
-      <CourseCard title={course.name} id={course.id} />
-    </Link>
-  </Grid>
-));
+import getUserCourseList from '../api/graphql/get-user-course-list';
+// import courses from '../sample-data/sample-course';
 
 export default function CoursePage() {
   const [courseView, setCourseView] = useState('list');
+  const [userId, setUserId] = useState(parseInt(sessionStorage.getItem('userId'), 10));
+  const [courses, setCourses] = useState([]);
 
   const handleListView = () => {
     setCourseView('list');
@@ -45,6 +27,48 @@ export default function CoursePage() {
   const handleCardView = () => {
     setCourseView('card');
   };
+
+  const fetchCourse = async () => {
+    const result = await getUserCourseList({
+      userId,
+      status: 'Accepted',
+      pageNumber: 0,
+      pageSize: 10,
+    });
+    const parsedResult = JSON.parse(result);
+    if (parsedResult.data.userCourseList.courseList.length !== 0) {
+      setCourses(parsedResult.data.userCourseList.courseList);
+    } else {
+      toast.error('You have no enrolled courses... :(');
+    }
+  };
+
+  useEffect(() => {
+    fetchCourse();
+  }, [userId]);
+
+  // TODO: Fade in/out animation when entering CourseDetail
+  const CourseListView = courses.map((course) => (
+    <div style={{ margin: '15px' }}>
+      <Link
+        to={`/course/${course.courseId}`}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+      >
+        <CourseListElement title={course.name} />
+      </Link>
+    </div>
+  ));
+
+  const CourseCardView = courses.map((course) => (
+    <Grid item md={4}>
+      <Link
+        to={`/course/${course.courseId}`}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+      >
+        <CourseCard title={course.name} id={course.courseId} />
+      </Link>
+    </Grid>
+  ));
 
   return (
     <>

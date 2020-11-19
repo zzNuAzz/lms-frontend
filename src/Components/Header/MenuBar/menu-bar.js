@@ -30,6 +30,48 @@ const MenuBar = ({ isLoggedIn }) => {
     setIsOpen(!isOpen);
   };
 
+  const LoggedInMenuBar = (
+    <List component="nav">
+      <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <ListItem button>
+          <ListItemIcon>
+            <HomeRoundedIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+      </Link>
+      <Link to="/courses" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <ListItem button>
+          <ListItemIcon>
+            <MenuBookRoundedIcon />
+          </ListItemIcon>
+          <ListItemText primary="Courses" />
+        </ListItem>
+      </Link>
+    </List>
+  );
+
+  const NotLoggedInMenuBar = (
+    <List component="nav">
+      <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <ListItem button>
+          <ListItemIcon>
+            <ExitToAppRoundedIcon />
+          </ListItemIcon>
+          <ListItemText primary="Sign In" />
+        </ListItem>
+      </Link>
+      <Link to="/signup" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <ListItem button>
+          <ListItemIcon>
+            <ExitToAppRoundedIcon />
+          </ListItemIcon>
+          <ListItemText primary="Sign Up" />
+        </ListItem>
+      </Link>
+    </List>
+  );
+
   return (
     <>
       <IconButton color="inherit" onClick={handleIsOpen}>
@@ -37,37 +79,7 @@ const MenuBar = ({ isLoggedIn }) => {
       </IconButton>
       <Drawer anchor="left" open={isOpen} onClose={handleIsOpen}>
         <div className={classes.list} role="presentation" onClick={handleIsOpen}>
-          {isLoggedIn ? (
-            <List component="nav">
-              <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <HomeRoundedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Home" />
-                </ListItem>
-              </Link>
-              <Link to="/courses" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <MenuBookRoundedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Courses" />
-                </ListItem>
-              </Link>
-            </List>
-          ) : (
-            <List component="nav">
-              <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <ExitToAppRoundedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Sign In" />
-                </ListItem>
-              </Link>
-            </List>
-          )}
+          {isLoggedIn ? (LoggedInMenuBar) : (NotLoggedInMenuBar)}
           <Divider />
         </div>
       </Drawer>

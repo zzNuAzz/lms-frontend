@@ -7,10 +7,22 @@ import { NavBar } from '../Components';
 import Footer from '../Components/Footer/Footer';
 import routes from './routes.config';
 import './style.css';
+import { ToastContainer } from 'react-toastify';
 
 export default function Page() {
   return (
     <>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <NavBar />
       <br />
       <Container maxWidth="lg">
