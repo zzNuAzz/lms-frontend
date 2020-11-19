@@ -89,17 +89,6 @@ export default function SignUp() {
   return (
     <>
       <Container component="main" maxWidth="xs">
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar
