@@ -6,14 +6,10 @@ import {
   Button,
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
+import graphqlMultipleUpload from '../../../api/graphql/graphql-multiple-upload';
 
+// TODO: Submit button loading state and success/failure messages
 const FileUpload = ({ title }) => {
-  // const useStyles = makeStyles(() => createStyles({
-  //   previewChip: {
-  //     minWidth: 160,
-  //     maxWidth: 210,
-  //   },
-  // }));
   const [files, setFiles] = React.useState([]);
 
   const handleOnFilesChange = (addedFiles) => {
@@ -21,8 +17,8 @@ const FileUpload = ({ title }) => {
   };
 
   const handleFilesSubmit = async () => {
-    // const result = await uploadSingleFile(files);
-    // console.log(result);
+    const result = await graphqlMultipleUpload(files);
+    console.log(result);
   };
 
   return (
