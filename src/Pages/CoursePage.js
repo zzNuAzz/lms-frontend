@@ -18,7 +18,7 @@ import getUserCourseList from '../api/graphql/get-user-course-list';
 
 export default function CoursePage() {
   const [courseView, setCourseView] = useState('list');
-  const [userId, setUserId] = useState(parseInt(sessionStorage.getItem('userId'), 10));
+  const [userId, setUserId] = useState(parseInt(localStorage.getItem('userId'), 10));
   const [courses, setCourses] = useState([]);
 
   const handleListView = () => {
@@ -88,9 +88,8 @@ export default function CoursePage() {
         <Grid item>
           <ButtonGroup color="primary">
             <Button
-              variant="outlined"
+              variant="text"
               color="primary"
-              disabled
             >
               View as
             </Button>
