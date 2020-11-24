@@ -1,11 +1,14 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
+import FileUpload from '../file-upload/file-upload';
+
+
 
 const AssignmentsComponent = () => {
   return (
-    <Typography variant="h4">
-      Placeholder for Assignments
-    </Typography>
+    <>
+      <FileUpload title="Upload your assignments here" />
+    </>
   );
 };
 
