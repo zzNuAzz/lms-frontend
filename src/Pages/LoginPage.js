@@ -13,7 +13,7 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem('username')) {
+    if (localStorage.getItem('username')) {
       handleLogIn();
     }
   }, [username]);
