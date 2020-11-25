@@ -11,7 +11,8 @@ export const getUserInformation = async (userId) => {
       firstName 
       lastName
       phone
-      pictureUrl
+      email
+      birthday
     }
   }`;
   const vars = {
