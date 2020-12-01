@@ -17,9 +17,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
-import createUserAccount from '../api/graphql/create-user-account';
+import createUserAccount from '../../api/graphql/create-user-account';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,7 +51,7 @@ export default function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState('Student');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
 
@@ -137,8 +137,8 @@ export default function SignUp() {
                   onChange={(e) => setUsername(e.target.value)}
                   name="username"
                   value={username}
-                  validators={['required']}
-                  errorMessages={['This field is required']}
+                  validators={['required', 'isUsernameExists']}
+                  errorMessages={['This field is required', 'Username already exists']}
                   variant="outlined"
                   margin="normal"
                   fullWidth
@@ -163,25 +163,23 @@ export default function SignUp() {
               </Grid>
               <Grid item xs="12">
                 <TextField
-                  label="Phone Number"
+                  label="Phone Number (optional)"
                   id="phone-number"
                   type="number"
                   variant="outlined"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  helperText="This field is optional"
                   fullWidth
                 />
               </Grid>
               <Grid item xs="12">
                 <TextField
-                  label="Home Address"
+                  label="Home Address (optional)"
                   id="address"
                   type="text"
                   variant="outlined"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  helperText="This field is also optional"
                   fullWidth
                 />
               </Grid>
@@ -191,8 +189,11 @@ export default function SignUp() {
                   label="Birthday"
                   type="date"
                   variant="outlined"
-                  className={classes.form}
+                  // className={classes.form}
                   onChange={(e) => setBirthday(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
               </Grid>
               <Grid item xs="12" sm="6">

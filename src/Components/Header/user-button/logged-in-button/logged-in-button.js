@@ -15,7 +15,7 @@ import { toast } from 'react-toastify';
 
 const LoggedInButton = ({ setUsername }) => {
   const history = useHistory();
-  const username = sessionStorage.getItem('username') || '';
+  const username = localStorage.getItem('username') || '';
   const [anchorEl, setAnchorEl] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
@@ -34,7 +34,7 @@ const LoggedInButton = ({ setUsername }) => {
 
   const handleLogout = () => {
     // TODO: Remove Cookies (necessary?)
-    sessionStorage.clear();
+    localStorage.clear();
     setUsername('');
     setLogoutDialogOpen(false);
     toast.info('See you soon!', {
