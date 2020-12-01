@@ -10,6 +10,10 @@ export const getCourseById = async (courseId) => {
       username
       firstName
       lastName
+      phone
+      email
+      address
+      birthday
     }
     name
     description

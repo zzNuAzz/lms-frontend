@@ -1,12 +1,10 @@
 import React from 'react';
 import {
   Typography,
-  makeStyles,
-  createStyles,
   Button,
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
-import graphqlMultipleUpload from '../../../api/graphql/graphql-multiple-upload';
+ import graphqlMultipleUpload from '../../../../api/graphql/graphql-multiple-upload';
 
 // TODO: Submit button loading state and success/failure messages
 const FileUpload = ({ title }) => {
@@ -23,7 +21,7 @@ const FileUpload = ({ title }) => {
 
   return (
     <div className="file-upload">
-      <Typography variant="h4">{title}</Typography>
+      <Typography variant="h5">{title}</Typography>
       <br />
       <DropzoneArea
         filesLimit={5}

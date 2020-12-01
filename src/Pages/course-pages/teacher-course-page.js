@@ -5,20 +5,20 @@ import {
   ButtonGroup,
   Grid,
   List,
+  Typography,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import ListRoundedIcon from '@material-ui/icons/ListRounded';
 import CardIcon from '@material-ui/icons/ViewAgendaRounded';
 import { toast } from 'react-toastify';
-import CourseCard from '../Components/course-card/course-card.js';
-import { CourseListElement } from '../Components/course-list-element/course-list-element';
-import getUserCourseList from '../api/graphql/get-user-course-list';
-// import courses from '../sample-data/sample-course';
+import CourseCard from '../../Components/common-components/course-card/course-card.js';
+import { CourseListElement } from '../../Components/common-components/course-list-element/course-list-element';
+import getTeacherCourseList from '../../api/graphql/get-teacher-course-list.js';
 
 export default function CoursePage() {
   const [courseView, setCourseView] = useState('list');
-  const [userId, setUserId] = useState(parseInt(localStorage.getItem('userId'), 10));
+  const hostId = parseInt(localStorage.getItem('userId'), 10);
   const [courses, setCourses] = useState([]);
 
   const handleListView = () => {
@@ -28,53 +28,65 @@ export default function CoursePage() {
     setCourseView('card');
   };
 
-  const fetchCourse = async () => {
-    const result = await getUserCourseList({
-      userId,
-      status: 'Accepted',
-      pageNumber: 0,
-      pageSize: 10,
-    });
+  const fetchTeacherCourse = async () => {
+    //* Fetch teacher courses
+    const result = await getTeacherCourseList(
+      hostId,
+    );
     const parsedResult = JSON.parse(result);
-    if (parsedResult.data.userCourseList.courseList.length !== 0) {
-      setCourses(parsedResult.data.userCourseList.courseList);
+    if (parsedResult.data.courseList.courseList.length !== 0) {
+      setCourses(parsedResult.data.courseList.courseList);
     } else {
-      toast.error('You have no enrolled courses... :(');
+      toast.error('You have no active courses.');
     }
   };
 
   useEffect(() => {
-    fetchCourse();
-  }, [userId]);
+    fetchTeacherCourse();
+  }, []);
 
   // TODO: Fade in/out animation when entering CourseDetail
-  const CourseListView = courses.map((course) => (
-    <div style={{ margin: '15px' }}>
-      <Link
-        to={`/course/${course.courseId}`}
-        style={{ textDecoration: 'none', color: 'inherit' }}
-      >
+  const CourseListView = (passedCourses, isPending = false) => {
+    if (!isPending) {
+      return passedCourses.map((course) => (
+        <div style={{ margin: '15px' }}>
+          <Link
+            to={`/course/${course.courseId}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <CourseListElement title={course.name} />
+          </Link>
+        </div>
+      ));
+    }
+    return passedCourses.map((course) => (
+      <div style={{ margin: '15px' }}>
         <CourseListElement title={course.name} />
-      </Link>
-    </div>
-  ));
-
-  const CourseCardView = courses.map((course) => (
-    <Grid item md={4}>
-      <Link
-        to={`/course/${course.courseId}`}
-        style={{ textDecoration: 'none', color: 'inherit' }}
-      >
+      </div>
+    ));
+  };
+  const CourseCardView = (passedCourses, isPending = false) => {
+    if (!isPending) {
+      return passedCourses.map((course) => (
+        <Grid item md={4}>
+          <Link
+            to={`/course/${course.courseId}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <CourseCard title={course.name} id={course.courseId} />
+          </Link>
+        </Grid>
+      ));
+    }
+    return passedCourses.map((course) => (
+      <Grid item md={4}>
         <CourseCard title={course.name} id={course.courseId} />
-      </Link>
-    </Grid>
-  ));
+      </Grid>
+    ));
+  };
 
   return (
     <>
-      <h1>All Courses</h1>
-
-      {/* List-View Switcher */}
       <Grid
         container
         direction="row"
@@ -82,9 +94,6 @@ export default function CoursePage() {
         alignContent="center"
         alignItems="center"
       >
-        {/* <Grid item>
-          <Typography variant="body1">View as:&nbsp;</Typography>
-        </Grid> */}
         <Grid item>
           <ButtonGroup color="primary">
             <Button
@@ -112,12 +121,13 @@ export default function CoursePage() {
           </ButtonGroup>
         </Grid>
       </Grid>
-      <br />
+      <Typography variant="h4">My Courses</Typography>
+      {/* List-View Switcher */}
       {
         courseView === 'list'
           ? (
             <List>
-              {CourseListView}
+              {CourseListView(courses)}
             </List>
           )
           : (
@@ -127,10 +137,11 @@ export default function CoursePage() {
               justify="center"
               spacing={3}
             >
-              {CourseCardView}
+              {CourseCardView(courses)}
             </Grid>
           )
       }
+      <br />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   MenuItem,
@@ -19,8 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { toast } from 'react-toastify';
 
-import createUserAccount from '../api/graphql/create-user-account';
-import checkUsernameAvailability from '../api/graphql/check-username-availability';
+import createUserAccount from '../../api/graphql/create-user-account';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
