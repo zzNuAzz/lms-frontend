@@ -1,7 +1,7 @@
 import { graphQLFetch } from './graphql-fetch';
 
 // eslint-disable-next-line import/prefer-default-export
-export const checkUsernameAvailability = async (username) => {
+const checkUsernameAvailability = async (username) => {
   const query = `query checkUsernameAvailability ($username: String!){
     usernameAvailability(username:$username)
 }`;
@@ -11,3 +11,5 @@ export const checkUsernameAvailability = async (username) => {
   const result = await graphQLFetch(query, vars);
   return result;
 };
+
+export default checkUsernameAvailability;

@@ -1,12 +1,12 @@
-import CoursePage from './CoursePage';
+import CoursePage from './course-pages/CoursePage';
 import HomePage from './HomePage';
-import LoginPage from './LoginPage';
-import CourseDetailPage from './course-detail-page';
-import SignUpPage from './SignUpPage';
 import ForumPage from "./ForumPage";
 import NewThread from "./ForumPage/NewThread"
 import ViewPost from "./ForumPage/ViewPost"
 
+import LoginPage from './account-control-pages/LoginPage';
+import CourseDetailPage from './course-pages/course-detail-page';
+import SignUpPage from './account-control-pages/SignUpPage';
 
 const routes = [
   { path: '/home', component: HomePage, hasContainer: true },
