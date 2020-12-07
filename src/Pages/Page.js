@@ -9,6 +9,16 @@ import routes from './routes.config';
 import './style.css';
 import { ToastContainer } from 'react-toastify';
 
+const withContainer = (component) => (
+  <Container maxWidth="lg">{component()}</Container>
+);
+
+function route(route) {
+  const { hasContainer, component, path } = route;
+  const content = hasContainer ? () => withContainer(component) : component;
+  return <Route key={path} component={content} path={path} />;
+}
+
 export default function Page() {
   return (
     <>
@@ -25,15 +35,10 @@ export default function Page() {
       />
       <NavBar />
       <br />
-      <Container maxWidth="lg">
-        <Switch>
-          <Redirect exact from="/" to="home" />
-          {routes.map((route) => (
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            <Route {...route} key={route.path} />
-          ))}
-        </Switch>
-      </Container>
+      <Switch>
+        <Redirect exact from="/" to="/home" />
+        {routes.map(route)}
+      </Switch>
       <Footer />
     </>
   );
