@@ -1,5 +1,5 @@
 import CoursePage from './CoursePage';
-import HomePage from './HomePage';
+import HomePage from './homepage/HomePage';
 import LoginPage from './LoginPage';
 import CourseDetailPage from './course-detail-page';
 import SignUpPage from './SignUpPage';
