@@ -19,7 +19,7 @@ import { green, pink, yellow, blue } from '@material-ui/core/colors';
 import { useParams, useHistory } from 'react-router-dom';
 import ThreadList from './ThreadList';
 import MostHelpful from './MostHelpful';
-import {NewPostBox} from './NewPostBox';
+import { NewPostBox } from './NewPostBox';
 import getThreadList from '../../api/graphql/get-thread-list';
 import getUserCourseList from '../../api/graphql/get-user-course-list';
 
@@ -27,12 +27,12 @@ export default function Forum() {
   const history = useHistory();
 
   let { courseId } = useParams();
-  console.log({courseId});
+  // console.log({courseId});
   const [course, setCourse] = useState({ name: "Course's Name" });
   const [userId, setUserId] = useState(
-    parseInt(sessionStorage.getItem('userId'), 10)
+    parseInt(localStorage.getItem('userId'), 10)
   );
-
+  // console.log({ userId });
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -79,6 +79,7 @@ export default function Forum() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  // console.log('CourseList: ', courseList);
   const newThreadLink = `/course/${courseId}/newthread`;
   return (
     <Fragment>
@@ -154,7 +155,7 @@ export default function Forum() {
             </Grid>
             <Grid container item xs={12} lg={4} direction="column" spacing={2}>
               <MostHelpful />
-              <NewPostBox/>
+              <NewPostBox />
             </Grid>
           </Grid>
         </Container>

@@ -6,6 +6,7 @@ import DescriptionRoundedIcon from '@material-ui/icons/DescriptionRounded';
 import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
 import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import PersonPinRoundedIcon from '@material-ui/icons/PersonPinRounded';
+import { useHistory } from 'react-router-dom';
 
 import { getCourseById } from '../../api/graphql/get-course-by-id';
 import CourseCardLarge from '../../Components/common-components/course-card/course-card-large';
@@ -18,6 +19,7 @@ import getAssignmentsList from '../../api/graphql/get-assignments-list';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
+  const history = useHistory();
   const [courseName, setCourseName] = useState('');
   const [courseId, setCourseId] = useState(id);
   const [courseDescription, setCourseDescription] = useState('');
@@ -145,7 +147,7 @@ const CourseDetailPage = () => {
           case 2:
             return <AssignmentsComponent assignments={assignments} />;
           case 3:
-            return <ForumComponent courseId={courseId} />;
+            history.push(`/course/${courseId}/forum`);
           case 4:
             return <ContactComponent user={host} />;
           default:
