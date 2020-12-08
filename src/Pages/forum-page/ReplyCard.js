@@ -14,6 +14,14 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+const useStyles = makeStyles((theme) => ({
+  avatar: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    fontSize: 15,
+  },
+}));
+
 export function ReplyCard({ content }) {
   const classes = useStyles();
   const clickOnCard = (id) => {};
@@ -21,18 +29,18 @@ export function ReplyCard({ content }) {
     <Grid item>
       <Card width="100%">
         <CardHeader
-          avatar={
+          avatar={(
             <Avatar
               aria-label="recipe"
               className={classes.avatar}
               src={`https://ritachan.site/${content.author.pictureUrl}`}
             />
-          }
-          action={
+          )}
+          action={(
             <IconButton aria-label="settings">
               <MoreVertIcon />
             </IconButton>
-          }
+          )}
           subheader={content.createAt}
         />
         <CardContent onClick={clickOnCard(1)}>
@@ -45,24 +53,20 @@ export function ReplyCard({ content }) {
             <ThumbUpIcon />
           </IconButton>
           <Typography variant="caption" gutterTop>
-            {content.like} like
+            {content.like}
+            {' '}
+            like
           </Typography>
           <IconButton aria-label="share">
             <ChatBubbleIcon />
           </IconButton>
           <Typography variant="caption" gutterTop>
-            {content.comment} comment
+            {content.comment}
+            {' '}
+            comment
           </Typography>
         </CardActions>
       </Card>
     </Grid>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  avatar: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    fontSize: 15,
-  },
-}));

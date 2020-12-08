@@ -8,122 +8,12 @@ import {
   TextField,
   Button,
 } from '@material-ui/core';
+import { toast } from 'react-toastify';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import MostHelpful from './MostHelpful';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import MostHelpful from './MostHelpful';
 import createThread from '../../api/graphql/create-thread';
-import { toast } from 'react-toastify';
-
-export default function NewThread() {
-  const classes = useStyles();
-  const history = useHistory();
-  const [body, setBody] = useState('');
-  const titleInput = useRef(null);
-  const tagInput = useRef(null);
-
-  let courseId = useParams();
-  courseId = parseInt(courseId.courseId, 10);
-  console.log({ courseId });
-  const handlePublish = async () => {
-    const title = titleInput.current.value;
-    const tag = tagInput.current.value;
-    console.log(titleInput.current.value, tagInput.current.value, body);
-
-    const result = await createThread(courseId, title, body);
-    //TODO
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      toast.success('Your topic will be displayed after 3 seconds', {
-        autoClose: 3000,
-      });
-      setTimeout(() => {
-        history.push(`/course/${courseId}/forum`);
-      }, 3000);
-    } else if (parsedResult.errors) {
-      console.log(parsedResult.errors);
-      toast.error('Unknown Error');
-    }
-  };
-  return (
-    <Fragment>
-      <div className={classes.root}>
-        <Box className={classes.search}></Box>
-
-        <Container className={classes.root}>
-          <Grid container direction="row" spacing={5}>
-            <Grid
-              container
-              item
-              xs={12}
-              lg={8}
-              direction="column"
-              className={classes.whiteBack}
-              spacing={5}
-            >
-              <Typography item variant="h3">
-                Write new post
-              </Typography>
-              <Typography item variant="caption">
-                Start a conversation, ask a question or share your idea
-              </Typography>
-              <Typography className={classes.padding13} variant="subtitle2">
-                Title
-              </Typography>
-              <TextField
-                variant="outlined"
-                required
-                placeholder="Provide a short but descriptive title"
-                inputRef={titleInput}
-              ></TextField>
-              <Typography className={classes.padding13} variant="subtitle2">
-                Body
-              </Typography>
-              <CKEditor
-                className={classes.editor}
-                editor={ClassicEditor}
-                placeholder="holder"
-                onChange={(event, editor) => {
-                  const data = editor.getData();
-                  setBody(data);
-                }}
-              />
-              <Typography
-                className={classes.padding13}
-                required
-                variant="subtitle2"
-              >
-                Tags (Optional)
-              </Typography>
-              <TextField
-                variant="outlined"
-                placeholder='Add tags (separated by ",")'
-                inputRef={tagInput}
-              ></TextField>
-              <Button
-                className={classes.padding13}
-                style={{ margin: '20px' }}
-                variant="contained"
-                color="primary"
-                onClick={handlePublish}
-              >
-                Publish
-              </Button>
-              <Grid container justify="flex-end">
-                <Link to="/course/2/forum" variant="caption">
-                  Back to forum.
-                </Link>
-              </Grid>
-            </Grid>
-            <Grid container item xs={12} lg={4} direction="column" spacing={2}>
-              <MostHelpful />
-            </Grid>
-          </Grid>
-        </Container>
-      </div>
-    </Fragment>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -165,3 +55,113 @@ const useStyles = makeStyles((theme) => ({
     height: 500,
   },
 }));
+
+export default function NewThread() {
+  const classes = useStyles();
+  const history = useHistory();
+  const [body, setBody] = useState('');
+  const titleInput = useRef(null);
+  const tagInput = useRef(null);
+
+  let courseId = useParams();
+  courseId = parseInt(courseId.courseId, 10);
+  console.log({ courseId });
+  const handlePublish = async () => {
+    const title = titleInput.current.value;
+    const tag = tagInput.current.value;
+    console.log(titleInput.current.value, tagInput.current.value, body);
+
+    const result = await createThread(courseId, title, body);
+    // TODO
+    const parsedResult = JSON.parse(result);
+    if (parsedResult.data) {
+      toast.success('Your topic will be displayed after 3 seconds', {
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        history.push(`/course/${courseId}/forum`);
+      }, 3000);
+    } else if (parsedResult.errors) {
+      console.log(parsedResult.errors);
+      toast.error('Unknown Error');
+    }
+  };
+  return (
+    <>
+      <div className={classes.root}>
+        <Box className={classes.search} />
+
+        <Container className={classes.root}>
+          <Grid container direction="row" spacing={5}>
+            <Grid
+              container
+              item
+              xs={12}
+              lg={8}
+              direction="column"
+              className={classes.whiteBack}
+              spacing={5}
+            >
+              <Typography item variant="h3">
+                Write new post
+              </Typography>
+              <Typography item variant="caption">
+                Start a conversation, ask a question or share your idea
+              </Typography>
+              <Typography className={classes.padding13} variant="subtitle2">
+                Title
+              </Typography>
+              <TextField
+                variant="outlined"
+                required
+                placeholder="Provide a short but descriptive title"
+                inputRef={titleInput}
+              />
+              <Typography className={classes.padding13} variant="subtitle2">
+                Body
+              </Typography>
+              <CKEditor
+                className={classes.editor}
+                editor={ClassicEditor}
+                placeholder="holder"
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  setBody(data);
+                }}
+              />
+              <Typography
+                className={classes.padding13}
+                required
+                variant="subtitle2"
+              >
+                Tags (Optional)
+              </Typography>
+              <TextField
+                variant="outlined"
+                placeholder='Add tags (separated by ",")'
+                inputRef={tagInput}
+              />
+              <Button
+                className={classes.padding13}
+                style={{ margin: '20px' }}
+                variant="contained"
+                color="primary"
+                onClick={handlePublish}
+              >
+                Publish
+              </Button>
+              <Grid container justify="flex-end">
+                <Link to="/course/2/forum" variant="caption">
+                  Back to forum.
+                </Link>
+              </Grid>
+            </Grid>
+            <Grid container item xs={12} lg={4} direction="column" spacing={2}>
+              <MostHelpful />
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
+    </>
+  );
+}

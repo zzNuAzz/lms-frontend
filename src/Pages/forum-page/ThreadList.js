@@ -24,39 +24,52 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import { green, pink, yellow, blue } from '@material-ui/core/colors';
+import {
+  green, pink, yellow, blue,
+} from '@material-ui/core/colors';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { useParams, useHistory} from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import getThreadList from '../../api/graphql/get-thread-list';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: 800,
+  },
+  avatar: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    fontSize: 15,
+  },
+}));
 
 export function CardForum({ forum }) {
   const classes = useStyles();
   const history = useHistory();
-  let { courseId } = useParams();
+  const { courseId } = useParams();
   const cId = parseInt(courseId);
   const viewThread = () => {
     console.log(forum.threadId);
     const threadId = parseInt(forum.threadId);
-    console.log(cId, threadId, "abcdefg");
-    history.push(`/course/forum/${threadId}`)
+    console.log(cId, threadId, 'abcdefg');
+    history.push(`/course/forum/${threadId}`);
   };
   return (
     <Grid item>
       <Card width="100%" className={classes.root}>
         <CardHeader
-          avatar={
+          avatar={(
             <Avatar
               aria-label="recipe"
               className={classes.avatar}
               src={`https://ritachan.site/${forum.author.pictureUrl}`}
             />
-          }
-          action={
+          )}
+          action={(
             <IconButton aria-label="settings">
               <MoreVertIcon />
             </IconButton>
-          }
+          )}
           title={`${forum.author.firstName} ${forum.author.lastName}`}
           subheader={forum.createAt}
         />
@@ -79,13 +92,17 @@ export function CardForum({ forum }) {
             <ThumbUpIcon />
           </IconButton>
           <Typography variant="caption" gutterTop>
-            {forum.like} forum_like
+            {forum.like}
+            {' '}
+            forum_like
           </Typography>
           <IconButton aria-label="share">
             <ChatBubbleIcon />
           </IconButton>
           <Typography variant="caption" gutterTop>
-            {forum.comment} forum_comment
+            {forum.comment}
+            {' '}
+            forum_comment
           </Typography>
         </CardActions>
       </Card>
@@ -94,23 +111,12 @@ export function CardForum({ forum }) {
 }
 
 export default function ({ thread }) {
-  console.log({thread});
+  console.log({ thread });
   return (
-    <Fragment>
+    <>
       {thread.map((forum) => (
         <CardForum forum={forum} />
       ))}
-    </Fragment>
+    </>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 800,
-  },
-  avatar: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    fontSize: 15,
-  },
-}));

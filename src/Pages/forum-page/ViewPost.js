@@ -10,17 +10,48 @@ import {
   CardContent,
 } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import MostHelpful from './MostHelpful';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { toast } from 'react-toastify';
+import MostHelpful from './MostHelpful';
 import { CardForum } from './ThreadList';
 import { ReplyCard } from './ReplyCard';
-import { NewPostBox } from './NewPostBox'
-import { toast } from 'react-toastify';
+import { NewPostBox } from './NewPostBox';
 
 import getPostList from '../../api/graphql/get-post-list';
 import getThreadById from '../../api/graphql/get-thread-by-id';
 import addPost from '../../api/graphql/add-post';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: '#f5f7fa',
+  },
+  search: {
+    backgroundImage: `url(${'https://uploads-us-west-2.insided.com/coursera-en/attachment/0ee512f0-c148-4e6c-a3c5-ae5ea674bbf9_thumb.jpg'})`,
+    backgroundPosition: 'center center',
+    backgroundSize: 'cover',
+    padding: 30,
+    width: '100%',
+    height: 250,
+    marginBottom: 50,
+  },
+  whiteBack: {
+    backgroundColor: '#ffffff',
+    marginBottom: 20,
+    marginTop: 10,
+    marginRight: 5,
+    marginLeft: 5,
+  },
+  padding13: {
+    paddingBottom: 13.5,
+    paddingTop: 13.5,
+    fontSize: 14,
+    fontWeight: 700,
+  },
+  editor: {
+    height: 500,
+  },
+}));
 
 export default function ViewPost() {
   const classes = useStyles();
@@ -40,12 +71,11 @@ export default function ViewPost() {
   //   content: `Hi everyone,
 
   //   I came across this article which features a new Coursera course. COVID-19 Contact Tracing (offered by Johns Hopkins) provides a promotion option right now which enables you to earn a free Course Certificate. As stated in the FAQ section, “you will need to enroll via a web browser on either a computer or a mobile device and not via the Coursera mobile app to enroll for the course and certificate for free. Unfortunately, the promotional price is not redeemable through the mobile app”.
-    
+
   //   If you have not taken the course, don’t miss the chance! If you’ve already taken the course, feel free to share your takeaway in the comment section. :point_down:
-    
+
   //   Stay safe!
-     
-    
+
   //   (It was edited to add some more info.)`,
   //   createAt: '2020-10-29T07:51:58.662Z',
   //   forumThreadId: 6,
@@ -79,25 +109,25 @@ export default function ViewPost() {
   const handleReply = async () => {
     console.log(replyContent);
     const result = await addPost(parseInt(threadId, 10), replyContent);
-    //TODO
+    // TODO
     const parsedResult = JSON.parse(result);
     if (parsedResult.data) {
       toast.success('Replied', {
         autoClose: 3000,
       });
       setTimeout(() => {
-        console.log("replied successfully");
+        console.log('replied successfully');
       }, 3000);
-      window.location.reload()
+      window.location.reload();
     } else if (parsedResult.errors) {
       console.log(parsedResult.errors);
       toast.error('Unknown Error');
     }
   };
   return (
-    <Fragment>
+    <>
       <div className={classes.root}>
-        <Box className={classes.search}></Box>
+        <Box className={classes.search} />
 
         <Container className={classes.root}>
           <Grid container direction="row" spacing={5}>
@@ -183,37 +213,6 @@ export default function ViewPost() {
           </Grid>
         </Container>
       </div>
-    </Fragment>
+    </>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: '#f5f7fa',
-  },
-  search: {
-    backgroundImage: `url(${'https://uploads-us-west-2.insided.com/coursera-en/attachment/0ee512f0-c148-4e6c-a3c5-ae5ea674bbf9_thumb.jpg'})`,
-    backgroundPosition: 'center center',
-    backgroundSize: 'cover',
-    padding: 30,
-    width: '100%',
-    height: 250,
-    marginBottom: 50,
-  },
-  whiteBack: {
-    backgroundColor: '#ffffff',
-    marginBottom: 20,
-    marginTop: 10,
-    marginRight: 5,
-    marginLeft: 5,
-  },
-  padding13: {
-    paddingBottom: 13.5,
-    paddingTop: 13.5,
-    fontSize: 14,
-    fontWeight: 700,
-  },
-  editor: {
-    height: 500,
-  },
-}));

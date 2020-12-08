@@ -13,10 +13,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import SearchBar from 'material-ui-search-bar';
-import { green, pink, yellow, blue } from '@material-ui/core/colors';
-import { useParams, useHistory } from 'react-router-dom';
+import {
+  green, pink, yellow, blue,
+} from '@material-ui/core/colors';
+
 import ThreadList from './ThreadList';
 import MostHelpful from './MostHelpful';
 import { NewPostBox } from './NewPostBox';
@@ -26,11 +28,11 @@ import getUserCourseList from '../../api/graphql/get-user-course-list';
 export default function Forum() {
   const history = useHistory();
 
-  let { courseId } = useParams();
+  const { courseId } = useParams();
   // console.log({courseId});
   const [course, setCourse] = useState({ name: "Course's Name" });
   const [userId, setUserId] = useState(
-    parseInt(localStorage.getItem('userId'), 10)
+    parseInt(localStorage.getItem('userId'), 10),
   );
   // console.log({ userId });
   const classes = useStyles();
@@ -82,13 +84,13 @@ export default function Forum() {
   // console.log('CourseList: ', courseList);
   const newThreadLink = `/course/${courseId}/newthread`;
   return (
-    <Fragment>
+    <>
       <div className={classes.root}>
         <Box className={classes.search}>
           <Container>
             <br />
             <Typography variant="h4" gutterBottom className={classes.welcome}>
-              Welcome to LMS's Forum
+              Welcome to LMS Forum
             </Typography>
             <SearchBar
               className={classes.searchBar}
@@ -160,7 +162,7 @@ export default function Forum() {
           </Grid>
         </Container>
       </div>
-    </Fragment>
+    </>
   );
 }
 
