@@ -1,7 +1,7 @@
 import CoursePage from './course-pages/CoursePage';
 import HomePage from './HomePage';
 import LoginPage from './account-control-pages/LoginPage';
-import CourseDetailPage from './course-pages/course-detail-page';
+import CourseDetailPage from './course-pages/course-detail-pages/course-detail-page';
 import SignUpPage from './account-control-pages/SignUpPage';
 
 const routes = [

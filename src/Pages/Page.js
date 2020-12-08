@@ -3,11 +3,11 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   Container,
 } from '@material-ui/core';
+import { ToastContainer } from 'react-toastify';
 import { NavBar } from '../Components';
 import Footer from '../Components/Footer/Footer';
 import routes from './routes.config';
 import './style.css';
-import { ToastContainer } from 'react-toastify';
 
 export default function Page() {
   return (
@@ -25,7 +25,7 @@ export default function Page() {
       />
       <NavBar />
       <br />
-      <Container maxWidth="lg">
+      <Container fixed>
         <Switch>
           <Redirect exact from="/" to="home" />
           {routes.map((route) => (

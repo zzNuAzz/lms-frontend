@@ -1,34 +1,28 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
-  ButtonGroup,
   Grid,
+  LinearProgress,
   List,
   Typography,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-
-import ListRoundedIcon from '@material-ui/icons/ListRounded';
-import CardIcon from '@material-ui/icons/ViewAgendaRounded';
 import { toast } from 'react-toastify';
-import CourseCard from '../../Components/common-components/course-card/course-card.js';
-import { CourseListElement } from '../../Components/common-components/course-list-element/course-list-element';
+
 import getUserCourseList from '../../api/graphql/get-user-course-list';
-// import courses from '../sample-data/sample-course';
+import getAllCourses from '../../api/graphql/get-all-courses.js';
+
+import CourseListView from './course-page-components/course-list-view/course-list-view';
+import CourseCardView from './course-page-components/course-card-view/course-card-view';
+import SwitchViewButton from './course-page-components/switch-view-button/switch-view-button.js';
+import AllCourseView from './course-page-components/all-courses-view/all-courses-view';
 
 export default function CoursePage() {
+  const [isLoading, setLoading] = useState(false);
   const [courseView, setCourseView] = useState('list');
   const userId = parseInt(localStorage.getItem('userId'), 10);
   const [courses, setCourses] = useState([]);
   const [pendingCourses, setPendingCourses] = useState([]);
-
-  const handleListView = () => {
-    setCourseView('list');
-  };
-  const handleCardView = () => {
-    setCourseView('card');
-  };
+  const [allCourses, setAllCourses] = useState([]);
 
   const fetchStudentCourse = async () => {
     //* Fetch enrolled course
@@ -58,88 +52,36 @@ export default function CoursePage() {
     }
   };
 
+  const fetchAllCourses = async () => {
+    const result = await getAllCourses();
+    const parsedResult = JSON.parse(result);
+    if (parsedResult.data) {
+      setAllCourses(parsedResult.data.courseList.courseList);
+    } else {
+      toast(result, {
+        type: 'error',
+        autoClose: 5000,
+      });
+    }
+  };
+
   useEffect(() => {
-    fetchStudentCourse();
-  }, [userId]);
+    const fetchContent = async () => {
+      setLoading(true);
+      await fetchStudentCourse();
+      await fetchAllCourses();
+      setLoading(false);
+    };
+    fetchContent();
+  }, []);
 
-  // TODO: Fade in/out animation when entering CourseDetail
-  const CourseListView = (passedCourses, isPending = false) => {
-    if (!isPending) {
-      return passedCourses.map((course) => (
-        <div style={{ margin: '15px' }}>
-          <Link
-            to={`/course/${course.courseId}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <CourseListElement title={course.name} />
-          </Link>
-        </div>
-      ));
-    }
-    return passedCourses.map((course) => (
-      <div style={{ margin: '15px' }}>
-        <CourseListElement title={course.name} />
-      </div>
-    ));
-  };
-  const CourseCardView = (passedCourses, isPending = false) => {
-    if (!isPending) {
-      return passedCourses.map((course) => (
-        <Grid item md={4}>
-          <Link
-            to={`/course/${course.courseId}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <CourseCard title={course.name} id={course.courseId} />
-          </Link>
-        </Grid>
-      ));
-    }
-    return passedCourses.map((course) => (
-      <Grid item md={4}>
-        <CourseCard title={course.name} id={course.courseId} />
-      </Grid>
-    ));
-  };
-
-  return (
+  const RenderComponent = (
     <>
-      <Grid
-        container
-        direction="row"
-        justify="flex-end"
-        alignContent="center"
-        alignItems="center"
-      >
-        <Grid item>
-          <ButtonGroup color="primary">
-            <Button
-              variant="text"
-              color="primary"
-            >
-              View as
-            </Button>
-            <Button
-              variant={courseView === 'list' ? 'contained' : 'outlined'}
-              onClick={handleListView}
-            >
-              <ListRoundedIcon />
-              &nbsp;
-              List
-            </Button>
-            <Button
-              variant={courseView === 'card' ? 'contained' : 'outlined'}
-              onClick={handleCardView}
-            >
-              <CardIcon />
-              &nbsp;
-              Card
-            </Button>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
+      <SwitchViewButton
+        courseView={courseView}
+        setCourseView={setCourseView}
+      />
       <Typography variant="h4">Enrolled Courses</Typography>
-      {/* List-View Switcher */}
       {
         courseView === 'list'
           ? (
@@ -177,6 +119,28 @@ export default function CoursePage() {
               {CourseCardView(pendingCourses, true)}
             </Grid>
           )
+      }
+      <br />
+      <Typography variant="h4">All Courses</Typography>
+      <Grid
+        container
+        direction="row"
+        spacing={2}
+      >
+        <AllCourseView
+          courses={allCourses}
+          enrolledCourses={courses}
+          pendingCourses={pendingCourses}
+          fetchAllCourses={fetchAllCourses}
+        />
+      </Grid>
+    </>
+  );
+
+  return (
+    <>
+      {
+        isLoading ? <LinearProgress /> : RenderComponent
       }
     </>
   );

@@ -1,32 +1,24 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
-  ButtonGroup,
   Grid,
+  LinearProgress,
   List,
   Typography,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
-import ListRoundedIcon from '@material-ui/icons/ListRounded';
-import CardIcon from '@material-ui/icons/ViewAgendaRounded';
 import { toast } from 'react-toastify';
-import CourseCard from '../../Components/common-components/course-card/course-card.js';
-import { CourseListElement } from '../../Components/common-components/course-list-element/course-list-element';
 import getTeacherCourseList from '../../api/graphql/get-teacher-course-list.js';
+import CourseListView from './course-page-components/course-list-view/course-list-view';
+import CourseCardView from './course-page-components/course-card-view/course-card-view';
+import SwitchViewButton from './course-page-components/switch-view-button/switch-view-button.js';
+import NewCourseButton from './course-page-components/new-course-button/new-course-button.js';
 
 export default function CoursePage() {
+  const [isLoading, setLoading] = useState(false);
   const [courseView, setCourseView] = useState('list');
   const hostId = parseInt(localStorage.getItem('userId'), 10);
   const [courses, setCourses] = useState([]);
-
-  const handleListView = () => {
-    setCourseView('list');
-  };
-  const handleCardView = () => {
-    setCourseView('card');
-  };
 
   const fetchTeacherCourse = async () => {
     //* Fetch teacher courses
@@ -42,87 +34,24 @@ export default function CoursePage() {
   };
 
   useEffect(() => {
-    fetchTeacherCourse();
+    const fetchContent = async () => {
+      setLoading(true);
+      await fetchTeacherCourse();
+      setLoading(false);
+    };
+    fetchContent();
   }, []);
 
-  // TODO: Fade in/out animation when entering CourseDetail
-  const CourseListView = (passedCourses, isPending = false) => {
-    if (!isPending) {
-      return passedCourses.map((course) => (
-        <div style={{ margin: '15px' }}>
-          <Link
-            to={`/course/${course.courseId}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <CourseListElement title={course.name} />
-          </Link>
-        </div>
-      ));
-    }
-    return passedCourses.map((course) => (
-      <div style={{ margin: '15px' }}>
-        <CourseListElement title={course.name} />
-      </div>
-    ));
-  };
-  const CourseCardView = (passedCourses, isPending = false) => {
-    if (!isPending) {
-      return passedCourses.map((course) => (
-        <Grid item md={4}>
-          <Link
-            to={`/course/${course.courseId}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <CourseCard title={course.name} id={course.courseId} />
-          </Link>
-        </Grid>
-      ));
-    }
-    return passedCourses.map((course) => (
-      <Grid item md={4}>
-        <CourseCard title={course.name} id={course.courseId} />
-      </Grid>
-    ));
-  };
-
-  return (
-    <>
-      <Grid
-        container
-        direction="row"
-        justify="flex-end"
-        alignContent="center"
-        alignItems="center"
-      >
-        <Grid item>
-          <ButtonGroup color="primary">
-            <Button
-              variant="text"
-              color="primary"
-            >
-              View as
-            </Button>
-            <Button
-              variant={courseView === 'list' ? 'contained' : 'outlined'}
-              onClick={handleListView}
-            >
-              <ListRoundedIcon />
-              &nbsp;
-              List
-            </Button>
-            <Button
-              variant={courseView === 'card' ? 'contained' : 'outlined'}
-              onClick={handleCardView}
-            >
-              <CardIcon />
-              &nbsp;
-              Card
-            </Button>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
+  const RenderComponent = (
+    <div className="course-list">
+      <SwitchViewButton
+        courseView={courseView}
+        setCourseView={setCourseView}
+      />
       <Typography variant="h4">My Courses</Typography>
-      {/* List-View Switcher */}
+      <br />
+      <NewCourseButton />
+      <br />
       {
         courseView === 'list'
           ? (
@@ -141,7 +70,14 @@ export default function CoursePage() {
             </Grid>
           )
       }
-      <br />
+    </div>
+  );
+
+  return (
+    <>
+      {
+        isLoading ? <LinearProgress /> : RenderComponent
+      }
     </>
   );
 }
