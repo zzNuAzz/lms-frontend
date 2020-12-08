@@ -41,8 +41,8 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem('username')) {
-      setUsername(sessionStorage.getItem('username'));
+    if (localStorage.getItem('username')) {
+      setUsername(localStorage.getItem('username'));
       setLoginStatus(true);
       if (username) toast.success(`😃 Welcome ${username}`);
     } else {
