@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import { Container } from '@material-ui/core';
 import AvatarUpload from './AvatarUpload';
 import ProfileEditForm from './ProfileEditForm';
-import profile from '../../../api/graphql/profile'
+import {getProfile, editProfile} from '../../../api/graphql/profile'
 import { toast } from 'react-toastify';
 
 
@@ -14,7 +14,7 @@ export default function ProfileEdit() {
 	const [userProfile, setUserProfile] = useMergeState({});
 	
 	const fetchUserProfile = () => {
-		profile.getProfile(userId).then(result => {
+		getProfile(userId).then(result => {
 			result.userProfile.isChanged = false;
 			setUserProfile(result.userProfile);
 	  });
@@ -22,7 +22,7 @@ export default function ProfileEdit() {
 
 	
 	const submitForm = () => {
-		profile.editProfile(userProfile).then(result => {
+		editProfile(userProfile).then(result => {
 			if(result.updateUserProfile.success) {
 				toast.success("Update success");
 				fetchUserProfile();
