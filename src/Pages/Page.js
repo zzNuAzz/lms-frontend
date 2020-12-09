@@ -7,7 +7,6 @@ import { ToastContainer } from 'react-toastify';
 import { NavBar } from '../Components';
 import Footer from '../Components/Footer/Footer';
 import routes from './routes.config';
-import './style.css';
 
 const withContainer = (component) => (
   <Container maxWidth="lg">{component()}</Container>
@@ -35,7 +34,7 @@ export default function Page() {
       />
       <NavBar />
       <br />
-      <Container fixed>
+      <Container fixed style={{ minHeight: '100vh' }}>
         <Switch>
           <Redirect exact from="/" to="home" />
           {routes.map((route) => (
