@@ -19,7 +19,7 @@ const routes = [
   { path: '/course/forum/:threadId', component: ViewPost, hasContainer: false },
   { path: '/course/:id', component: CourseDetailPage, hasContainer: true },
   { path: '/signup', component: SignUpPage, hasContainer: true },
-  { path: '/profile/:id', component: Profile, hasContainer: true}
+  { path: '/profile/:id', component: Profile, hasContainer: true },
 ];
 
 export default routes;
