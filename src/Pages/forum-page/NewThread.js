@@ -14,6 +14,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import MostHelpful from './MostHelpful';
 import createThread from '../../api/graphql/create-thread';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,19 +72,22 @@ export default function NewThread() {
     const tag = tagInput.current.value;
     console.log(titleInput.current.value, tagInput.current.value, body);
 
-    const result = await createThread(courseId, title, body);
-    // TODO
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      toast.success('Your topic will be displayed after 3 seconds', {
-        autoClose: 3000,
-      });
-      setTimeout(() => {
-        history.push(`/course/${courseId}/forum`);
-      }, 3000);
-    } else if (parsedResult.errors) {
-      console.log(parsedResult.errors);
-      toast.error('Unknown Error');
+    try {
+      const result = await createThread(courseId, title, body);
+      // TODO
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        toast.success('Your topic will be displayed after 3 seconds', {
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          history.push(`/course/${courseId}/forum`);
+        }, 3000);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
   return (

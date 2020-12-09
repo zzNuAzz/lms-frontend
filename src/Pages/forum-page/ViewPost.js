@@ -21,6 +21,7 @@ import { NewPostBox } from './NewPostBox';
 import getPostList from '../../api/graphql/get-post-list';
 import getThreadById from '../../api/graphql/get-thread-by-id';
 import addPost from '../../api/graphql/add-post';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,20 +109,23 @@ export default function ViewPost() {
 
   const handleReply = async () => {
     console.log(replyContent);
-    const result = await addPost(parseInt(threadId, 10), replyContent);
-    // TODO
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      toast.success('Replied', {
-        autoClose: 3000,
-      });
-      setTimeout(() => {
-        console.log('replied successfully');
-      }, 3000);
-      window.location.reload();
-    } else if (parsedResult.errors) {
-      console.log(parsedResult.errors);
-      toast.error('Unknown Error');
+    try {
+      const result = await addPost(parseInt(threadId, 10), replyContent);
+      // TODO
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        toast.success('Replied', {
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          console.log('replied successfully');
+        }, 3000);
+        window.location.reload();
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
   return (

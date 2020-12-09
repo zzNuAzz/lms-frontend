@@ -15,6 +15,7 @@ import ReactHTMLParser from 'react-html-parser';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
 
 import enrollCourse from '../../../../api/graphql/enroll-course';
+import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 
 const useStyles = makeStyles((theme) => ({
   accordionHeader: {
@@ -39,22 +40,23 @@ const AllCourseView = ({
   const classes = useStyles();
 
   const handleEnroll = async (courseId) => {
-    const result = await enrollCourse(parseInt(courseId, 10));
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      if (parsedResult.data.enrollCourse.success) {
-        fetchAllCourses();
+    try {
+      const result = await enrollCourse(parseInt(courseId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.enrollCourse.success) {
+          fetchAllCourses();
+        } else {
+          toast(parsedResult.data.enrollCourse.message, {
+            type: 'error',
+            autoClose: 5000,
+          });
+        }
       } else {
-        toast(parsedResult.data.enrollCourse.message, {
-          type: 'error',
-          autoClose: 5000,
-        });
+        toastFetchErrors(parsedResult);
       }
-    } else {
-      toast(result, {
-        type: 'error',
-        autoClose: 5000,
-      });
+    } catch (error) {
+      toast(error);
     }
   };
 

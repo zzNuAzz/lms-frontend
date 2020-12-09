@@ -13,6 +13,7 @@ import CourseListView from './course-page-components/course-list-view/course-lis
 import CourseCardView from './course-page-components/course-card-view/course-card-view';
 import SwitchViewButton from './course-page-components/switch-view-button/switch-view-button.js';
 import NewCourseButton from './course-page-components/new-course-button/new-course-button.js';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors.js';
 
 export default function CoursePage() {
   const [isLoading, setLoading] = useState(false);
@@ -21,15 +22,22 @@ export default function CoursePage() {
   const [courses, setCourses] = useState([]);
 
   const fetchTeacherCourse = async () => {
-    //* Fetch teacher courses
-    const result = await getTeacherCourseList(
-      hostId,
-    );
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data.courseList.courseList.length !== 0) {
-      setCourses(parsedResult.data.courseList.courseList);
-    } else {
-      toast.error('You have no active courses.');
+    try {
+      const result = await getTeacherCourseList(
+        hostId,
+      );
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.courseList.courseList.length !== 0) {
+          setCourses(parsedResult.data.courseList.courseList);
+        } else {
+          toast.error('You have no active courses.');
+        }
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
 
