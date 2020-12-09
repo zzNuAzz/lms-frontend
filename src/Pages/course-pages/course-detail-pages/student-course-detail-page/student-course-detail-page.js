@@ -19,11 +19,13 @@ import getAssignmentsList from '../../../../api/graphql/get-assignments-list';
 import { toast } from 'react-toastify';
 import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
+import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 
 const StudentCourseDetailPage = () => {
+  const history = useHistory();
+
   const [isLoading, setLoading] = useState(false);
   const { id } = useParams();
-  const history = useHistory();
   const [courseName, setCourseName] = useState('');
   const [courseId, setCourseId] = useState(id);
   const [courseDescription, setCourseDescription] = useState('');
@@ -41,19 +43,23 @@ const StudentCourseDetailPage = () => {
   const [assignments, setAssignments] = useState([]);
 
   const fetchCourseHost = async () => {
-    const result = await getCourseHost(parseInt(courseId, 10));
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      setHost({
-        firstName: parsedResult.data.course.host.firstName,
-        lastName: parsedResult.data.course.host.lastName,
-        phone: parsedResult.data.course.host.phone,
-        email: parsedResult.data.course.host.email,
-        birthday: parsedResult.data.course.host.birthday,
-        address: parsedResult.data.course.host.address,
-      });
-    } else {
-      toast(result);
+    try {
+      const result = await getCourseHost(parseInt(courseId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        setHost({
+          firstName: parsedResult.data.course.host.firstName,
+          lastName: parsedResult.data.course.host.lastName,
+          phone: parsedResult.data.course.host.phone,
+          email: parsedResult.data.course.host.email,
+          birthday: parsedResult.data.course.host.birthday,
+          address: parsedResult.data.course.host.address,
+        });
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
 
@@ -65,20 +71,27 @@ const StudentCourseDetailPage = () => {
         setCourseName(result.data.course.name);
         setCourseDescription(result.data.course.description || '');
         setCourseHostId(result.data.course.host.userId);
+      } else {
+        toastFetchErrors(result);
       }
-    } catch (err) {
-      toast(err);
+    } catch (error) {
+      toast(error);
     }
   };
 
   const fetchAssignments = async () => {
-    const result = await getAssignmentsList(parseInt(courseId, 10));
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      setAssignments(parsedResult.data.assignmentList.assignmentList);
+    try {
+      const result = await getAssignmentsList(parseInt(courseId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        setAssignments(parsedResult.data.assignmentList.assignmentList);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
-
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -90,7 +103,6 @@ const StudentCourseDetailPage = () => {
     };
     fetchContent();
   }, []);
-
 
   const RenderComponent = (
     <>
@@ -168,6 +180,7 @@ const StudentCourseDetailPage = () => {
             return <AssignmentsComponent assignments={assignments} courseId={id} />;
           case 3:
             history.push(`/course/${courseId}/forum`);
+            break;
           case 4:
             return <ContactComponent user={host} />;
           default:

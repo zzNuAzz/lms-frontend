@@ -15,6 +15,7 @@ import CourseListView from './course-page-components/course-list-view/course-lis
 import CourseCardView from './course-page-components/course-card-view/course-card-view';
 import SwitchViewButton from './course-page-components/switch-view-button/switch-view-button.js';
 import AllCourseView from './course-page-components/all-courses-view/all-courses-view';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 
 export default function CoursePage() {
   const [isLoading, setLoading] = useState(false);
@@ -25,43 +26,56 @@ export default function CoursePage() {
   const [allCourses, setAllCourses] = useState([]);
 
   const fetchStudentCourse = async () => {
-    //* Fetch enrolled course
-    const acceptedResult = await getUserCourseList({
-      userId,
-      status: 'Accepted',
-      pageNumber: 0,
-      pageSize: 10,
-    });
-    const parsedResult = JSON.parse(acceptedResult);
-    if (parsedResult.data.userCourseList.courseList.length !== 0) {
-      setCourses(parsedResult.data.userCourseList.courseList);
-    } else {
-      toast.error('You have no enrolled courses... :(');
-    }
+    try {
+      //* Fetch enrolled courses
+      const acceptedResult = await getUserCourseList({
+        userId,
+        status: 'Accepted',
+        pageNumber: 0,
+        pageSize: 10,
+      });
+      const parsedResult = JSON.parse(acceptedResult);
+      if (parsedResult.data) {
+        if (parsedResult.data.userCourseList.courseList.length !== 0) {
+          setCourses(parsedResult.data.userCourseList.courseList);
+        } else {
+          toast.error('You have no enrolled courses... :(');
+        }
+      } else {
+        toastFetchErrors(parsedResult);
+      }
 
-    //* Fetch pending course
-    const result = await getUserCourseList({
-      userId,
-      status: 'Pending',
-      pageNumber: 0,
-      pageSize: 10,
-    });
-    const temp = JSON.parse(result);
-    if (temp.data.userCourseList.courseList.length !== 0) {
-      setPendingCourses(temp.data.userCourseList.courseList);
+      //* Fetch pending courses
+      const result = await getUserCourseList({
+        userId,
+        status: 'Pending',
+        pageNumber: 0,
+        pageSize: 10,
+      });
+      const temp = JSON.parse(result);
+      if (temp.data) {
+        if (temp.data.userCourseList.courseList.length !== 0) {
+          setPendingCourses(temp.data.userCourseList.courseList);
+        }
+      } else {
+        toastFetchErrors(temp);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
 
   const fetchAllCourses = async () => {
-    const result = await getAllCourses();
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      setAllCourses(parsedResult.data.courseList.courseList);
-    } else {
-      toast(result, {
-        type: 'error',
-        autoClose: 5000,
-      });
+    try {
+      const result = await getAllCourses();
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        setAllCourses(parsedResult.data.courseList.courseList);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
 

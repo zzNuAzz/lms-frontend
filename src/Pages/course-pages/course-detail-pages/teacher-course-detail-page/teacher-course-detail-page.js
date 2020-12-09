@@ -21,6 +21,7 @@ import CourseMembersComponent from '../../../../Components/teacher-components/co
 import getCourseMemberList from '../../../../api/graphql/get-course-member-list';
 import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
+import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 
 const TeacherCourseDetailPage = () => {
   const { id } = useParams();
@@ -47,19 +48,23 @@ const TeacherCourseDetailPage = () => {
   const [tabPosition, setTabPosition] = useState(0);
 
   const fetchCourseHost = async () => {
-    const result = await getCourseHost(parseInt(courseId, 10));
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      setHost({
-        firstName: parsedResult.data.course.host.firstName,
-        lastName: parsedResult.data.course.host.lastName,
-        phone: parsedResult.data.course.host.phone,
-        email: parsedResult.data.course.host.email,
-        birthday: parsedResult.data.course.host.birthday,
-        address: parsedResult.data.course.host.address,
-      });
-    } else {
-      toast(result);
+    try {
+      const result = await getCourseHost(parseInt(courseId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        setHost({
+          firstName: parsedResult.data.course.host.firstName,
+          lastName: parsedResult.data.course.host.lastName,
+          phone: parsedResult.data.course.host.phone,
+          email: parsedResult.data.course.host.email,
+          birthday: parsedResult.data.course.host.birthday,
+          address: parsedResult.data.course.host.address,
+        });
+      } else {
+        toast(result);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
 
@@ -71,40 +76,57 @@ const TeacherCourseDetailPage = () => {
         setCourseName(result.data.course.name);
         setCourseDescription(result.data.course.description || '');
         setCourseHostId(result.data.course.host.userId);
+      } else {
+        toastFetchErrors(result);
+      }
+    } catch (error) {
+      toast(error);
+    }
+  };
+
+  const fetchAssignments = async () => {
+    try {
+      const result = await getAssignmentsList(parseInt(courseId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        setAssignments(parsedResult.data.assignmentList.assignmentList);
+      } else {
+        toastFetchErrors(parsedResult);
       }
     } catch (err) {
       toast(err);
     }
   };
 
-  const fetchAssignments = async () => {
-    const result = await getAssignmentsList(parseInt(courseId, 10));
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      setAssignments(parsedResult.data.assignmentList.assignmentList);
-    }
-  };
-
   const fetchMembers = async (status) => {
-    const result = await getCourseMemberList(parseInt(courseId, 10), status);
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data.courseMemberList) {
-      switch (status) {
-        case 'Accepted':
-          setEnrolledMembers(parsedResult.data.courseMemberList.memberList);
-          break;
-        case 'Pending':
-          setPendingMembers(parsedResult.data.courseMemberList.memberList);
-          break;
-        case 'Rejected':
-          setRejectedMembers(parsedResult.data.courseMemberList.memberList);
-          break;
-        default:
-          break;
+    try {
+      const result = await getCourseMemberList(parseInt(courseId, 10), status);
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data.courseMemberList) {
+        switch (status) {
+          case 'Accepted':
+            setEnrolledMembers(parsedResult.data.courseMemberList.memberList);
+            break;
+          case 'Pending':
+            setPendingMembers(parsedResult.data.courseMemberList.memberList);
+            break;
+          case 'Rejected':
+            setRejectedMembers(parsedResult.data.courseMemberList.memberList);
+            break;
+          default:
+            break;
+        }
+      } else {
+        const { errors } = parsedResult;
+        errors.forEach((error) => {
+          toast(error.message, {
+            type: 'error',
+            autoClose: 5000,
+          });
+        });
       }
-    } else {
-      toast('Error(s) occured. See browser\'s console for more details.');
-      console.log(parsedResult);
+    } catch (error) {
+      toast(error);
     }
   };
 
