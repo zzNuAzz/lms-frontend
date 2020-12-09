@@ -7,16 +7,19 @@ import CourseCardLarge from '../Components/course-card/course-card-large';
 import OverviewComponent from '../Components/course-detail-components/overview-component/overview-component';
 import AssignmentsComponent from '../Components/course-detail-components/assignments-component/assignments-component';
 import ForumComponent from '../Components/course-detail-components/forum-component/forum-component';
+import { useHistory } from 'react-router-dom';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
   const [courseName, setCourseName] = useState('');
   const [courseId, setCourseId] = useState(id);
+  // console.log({courseId});
   const [courseDescription, setCourseDescription] = useState('');
   const [courseHostId, setCourseHostId] = useState(0);
   const [hostFirstName, setHostFirstName] = useState('');
   const [hostLastName, setHostLastName] = useState('');
   const [tabPosition, setTabPosition] = useState(0);
+  const history = useHistory();
 
   const fetchCourseDetails = async () => {
     try {
@@ -69,7 +72,7 @@ const CourseDetailPage = () => {
           case 1:
             return <AssignmentsComponent />;
           case 2:
-            return <ForumComponent />;
+            history.push(`/course/${courseId}/forum`);
           default:
             return null;
         }

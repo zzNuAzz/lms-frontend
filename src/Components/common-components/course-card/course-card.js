@@ -3,6 +3,9 @@ import styled from 'styled-components';
 
 const Card = styled.div`
   //* Basic properties
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 4px;
   background: #fff;
   // box-shadow: 0 6px 10px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .05);
@@ -12,6 +15,7 @@ const Card = styled.div`
   padding: 30px 30px;
   padding-right: 80px;
   cursor: pointer;
+  min-height: 175px;
 
   //* Background properties
   background-image: url('https://ionicframework.com/img/getting-started/components-card.png');
@@ -29,17 +33,13 @@ const Card = styled.div`
 const Title = styled.div`
   font-size: 1.75rem;
   font-weight: 500;
-  margin-bottom: 0.5rem;
   line-height: 1.2;
 `;
-const Subtitle = styled.div`
-`;
 
-const CourseCard = ({ title, id }) => (
+const CourseCard = ({ title }) => (
   <>
     <Card>
       <Title>{title}</Title>
-      <Subtitle>{id}</Subtitle>
     </Card>
   </>
 );

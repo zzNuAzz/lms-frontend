@@ -19,6 +19,11 @@ const useStyle = makeStyles((theme) => ({
   list: {
     width: 250,
   },
+  iconButton: {
+    '&:focus': {
+      outline: 'none',
+    },
+  },
 }));
 
 const MenuBar = ({ isLoggedIn }) => {
@@ -51,7 +56,7 @@ const MenuBar = ({ isLoggedIn }) => {
     </List>
   );
 
-  const NotLoggedInMenuBar = (
+  const LoggedOutMenuBar = (
     <List component="nav">
       <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItem button>
@@ -74,12 +79,12 @@ const MenuBar = ({ isLoggedIn }) => {
 
   return (
     <>
-      <IconButton color="inherit" onClick={handleIsOpen}>
+      <IconButton className={classes.iconButton} color="inherit" onClick={handleIsOpen}>
         <MenuIcon />
       </IconButton>
       <Drawer anchor="left" open={isOpen} onClose={handleIsOpen}>
         <div className={classes.list} role="presentation" onClick={handleIsOpen}>
-          {isLoggedIn ? (LoggedInMenuBar) : (NotLoggedInMenuBar)}
+          {isLoggedIn ? (LoggedInMenuBar) : (LoggedOutMenuBar)}
           <Divider />
         </div>
       </Drawer>
