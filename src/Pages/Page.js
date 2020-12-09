@@ -35,7 +35,7 @@ export default function Page() {
       />
       <NavBar />
       <br />
-      <Container fixed style={{ minHeight: '100vh' }}>
+      <Container fixed style={{ minHeight: '80vh' }}>
         <Switch>
           <Redirect exact from="/" to="home" />
           {routes.map((route) => (
