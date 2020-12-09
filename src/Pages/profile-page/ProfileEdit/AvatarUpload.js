@@ -1,23 +1,62 @@
-import { Button, Grid } from '@material-ui/core';
-import React, {Fragment} from 'react';
+import { Typography } from '@material-ui/core';
+import { EvStationSharp } from '@material-ui/icons';
+import React, { Fragment, useState } from 'react';
+import AvatarImageCropper from 'react-avatar-image-cropper';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { uploadAvatar } from '../../../api/graphql/profile';
 
-export default function AvatarUpload({userProfile}) {
-  return (
-    <Fragment>
-      {/* <div style={{marginTop: "25px", paddingLeft: "50px"}}>
-        <Grid container direction="row"> 
-          <Grid item container xs={2} justify="flex-end" alignItems="flex-start" style={{paddingRight: "1rem",fontWeight: "bold" }} >Photo Profile</Grid>
-          <Grid item container xs={8} alignItems="flex-start">
-            <img src={userProfile.pictureUrl} alt="User Avatar" style={{width:"80%",heigh:"80%"}}/>
-          </Grid>
-        </Grid>
-        <Grid style={{marginTop: "20px", marginLeft:"29%"}}>
-          <Button size="large" variant="contained" color="primary">
-            Upload Photo 
-          </Button>
-        </Grid>
-      </div> */}
-      <div className="mr-5 ml-2 mt-5" />
-    </Fragment>
-  );
+AvatarUpload.MAX_SIZE = 1024 * 1024 * 5;
+AvatarUpload.IMAGE_WIDTH = 400;
+AvatarUpload.IMAGE_HEIGHT = 400;
+
+export default function AvatarUpload({ userProfile }) {
+    const { pictureUrl } = userProfile;
+    const history = useHistory();
+    const apply = file => {
+        uploadAvatar(file).then(result => {
+            if (result?.success) {
+				history.push('/profile');
+                toast.success('Upload avatar successful.');
+            } else {
+                toast.error(
+                    result?.message ? result?.message : 'Upload failed.'
+                );
+            }
+        });
+    };
+    const errorHandler = type => {
+        switch (type) {
+            case 'not_image':
+                toast.error('Avatar must be image.');
+                break;
+            case 'maxsize':
+                toast.error('Max file size is 5MB.');
+                break;
+            default:
+                toast.error(type);
+        }
+    };
+    return (
+        <Fragment>
+            <div className="mr-5 ml-4 mt-5">
+                <div
+                    style={{
+                        backgroundImage: `url(${pictureUrl})`,
+                        width: `${AvatarUpload.IMAGE_WIDTH}px`,
+                        height: `${AvatarUpload.IMAGE_HEIGHT}px`,
+                        margin: 'auto',
+                    }}
+                >
+                    <AvatarImageCropper
+                        apply={apply}
+                        errorHandler={errorHandler}
+                        maxsize={AvatarUpload.MAX_SIZE}
+                        isBack={true}
+                    />
+                </div>
+            </div>
+            <Typography>Avatar</Typography>
+        </Fragment>
+    );
 }
