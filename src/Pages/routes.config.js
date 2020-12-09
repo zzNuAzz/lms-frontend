@@ -3,6 +3,7 @@ import HomePage from './home-page/HomePage';
 import ForumPage from './forum-page';
 import NewThread from './forum-page/NewThread';
 import ViewPost from './forum-page/ViewPost';
+import Profile from './profile';
 
 import LoginPage from './account-control-pages/LoginPage';
 import CourseDetailPage from './course-pages/course-detail-pages/course-detail-page';
@@ -18,6 +19,7 @@ const routes = [
   { path: '/course/forum/:threadId', component: ViewPost, hasContainer: false },
   { path: '/course/:id', component: CourseDetailPage, hasContainer: true },
   { path: '/signup', component: SignUpPage, hasContainer: true },
+  { path: '/profile/:id', component: Profile, hasContainer: true}
 ];
 
 export default routes;
