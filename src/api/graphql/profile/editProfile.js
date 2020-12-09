@@ -17,4 +17,3 @@ export default async ({firstName, lastName, email, address, birthday, phone}) =>
 };
 
 
-
