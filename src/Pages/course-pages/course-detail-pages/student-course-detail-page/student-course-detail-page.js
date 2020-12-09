@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@material-ui/core';
+import { LinearProgress, Tab, Tabs } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SubjectRoundedIcon from '@material-ui/icons/SubjectRounded';
@@ -8,16 +8,20 @@ import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import PersonPinRoundedIcon from '@material-ui/icons/PersonPinRounded';
 import { useHistory } from 'react-router-dom';
 
-import { getCourseById } from '../../api/graphql/get-course-by-id';
-import CourseCardLarge from '../../Components/common-components/course-card/course-card-large';
-import OverviewComponent from '../../Components/common-components/course-detail-components/overview-component/overview-component';
-import AssignmentsComponent from '../../Components/common-components/course-detail-components/assignments-component/assignments-component';
-import ForumComponent from '../../Components/common-components/course-detail-components/forum-component/forum-component';
-import DocumentComponent from '../../Components/common-components/course-detail-components/document-component/document-component';
-import ContactComponent from '../../Components/common-components/course-detail-components/contact-component/contact-component';
-import getAssignmentsList from '../../api/graphql/get-assignments-list';
+import { getCourseById } from '../../../../api/graphql/get-course-by-id';
+import CourseCardLarge from '../../../../Components/common-components/course-card/course-card-large';
+import OverviewComponent from '../../../../Components/common-components/course-detail-components/overview-component/overview-component';
+import AssignmentsComponent from '../../../../Components/common-components/course-detail-components/assignments-component/assignments-component';
+import ForumComponent from '../../../../Components/common-components/course-detail-components/forum-component/forum-component';
+import DocumentComponent from '../../../../Components/common-components/course-detail-components/document-component/document-component';
+import ContactComponent from '../../../../Components/common-components/course-detail-components/contact-component/contact-component';
+import getAssignmentsList from '../../../../api/graphql/get-assignments-list';
+import { toast } from 'react-toastify';
+import getCourseHost from '../../../../api/graphql/get-course-host';
+import getCourseDetails from '../../../../api/graphql/get-course-details';
 
-const CourseDetailPage = () => {
+const StudentCourseDetailPage = () => {
+  const [isLoading, setLoading] = useState(false);
   const { id } = useParams();
   const history = useHistory();
   const [courseName, setCourseName] = useState('');
@@ -36,25 +40,34 @@ const CourseDetailPage = () => {
 
   const [assignments, setAssignments] = useState([]);
 
+  const fetchCourseHost = async () => {
+    const result = await getCourseHost(parseInt(courseId, 10));
+    const parsedResult = JSON.parse(result);
+    if (parsedResult.data) {
+      setHost({
+        firstName: parsedResult.data.course.host.firstName,
+        lastName: parsedResult.data.course.host.lastName,
+        phone: parsedResult.data.course.host.phone,
+        email: parsedResult.data.course.host.email,
+        birthday: parsedResult.data.course.host.birthday,
+        address: parsedResult.data.course.host.address,
+      });
+    } else {
+      toast(result);
+    }
+  };
+
   const fetchCourseDetails = async () => {
     try {
-      let result = await getCourseById(parseInt(courseId, 10));
+      let result = await getCourseDetails(parseInt(courseId, 10));
       result = JSON.parse(result);
       if (result.data) {
         setCourseName(result.data.course.name);
         setCourseDescription(result.data.course.description || '');
         setCourseHostId(result.data.course.host.userId);
-        setHost({
-          firstName: result.data.course.host.firstName,
-          lastName: result.data.course.host.lastName,
-          phone: result.data.course.host.phone,
-          email: result.data.course.host.email,
-          birthday: result.data.course.host.birthday,
-          address: result.data.course.host.address,
-        });
       }
     } catch (err) {
-      alert(`Error detected: ${err}`);
+      toast(err);
     }
   };
 
@@ -66,12 +79,20 @@ const CourseDetailPage = () => {
     }
   };
 
+
   useEffect(() => {
-    fetchCourseDetails();
-    fetchAssignments();
+    const fetchContent = async () => {
+      setLoading(true);
+      await fetchCourseDetails();
+      await fetchCourseHost();
+      await fetchAssignments();
+      setLoading(false);
+    };
+    fetchContent();
   }, []);
 
-  return (
+
+  const RenderComponent = (
     <>
       <CourseCardLarge
         courseName={courseName}
@@ -84,8 +105,7 @@ const CourseDetailPage = () => {
       />
       <br />
       <Tabs
-        variant="fullWidth"
-        centered
+        variant="scrollable"
         value={tabPosition}
         onChange={(event, newPos) => setTabPosition(newPos)}
         indicatorColor="primary"
@@ -141,11 +161,11 @@ const CourseDetailPage = () => {
       {(() => {
         switch (tabPosition) {
           case 0:
-            return <OverviewComponent description={courseDescription} />;
+            return <OverviewComponent currentDescription={courseDescription} />;
           case 1:
             return <DocumentComponent />;
           case 2:
-            return <AssignmentsComponent assignments={assignments} />;
+            return <AssignmentsComponent assignments={assignments} courseId={id} />;
           case 3:
             history.push(`/course/${courseId}/forum`);
           case 4:
@@ -156,6 +176,14 @@ const CourseDetailPage = () => {
       })()}
     </>
   );
+
+  return (
+    <>
+      {
+        isLoading ? <LinearProgress /> : RenderComponent
+      }
+    </>
+  );
 };
 
-export default CourseDetailPage;
+export default StudentCourseDetailPage;

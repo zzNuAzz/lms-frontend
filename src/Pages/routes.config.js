@@ -5,7 +5,7 @@ import NewThread from './forum-page/NewThread';
 import ViewPost from './forum-page/ViewPost';
 
 import LoginPage from './account-control-pages/LoginPage';
-import CourseDetailPage from './course-pages/course-detail-page';
+import CourseDetailPage from './course-pages/course-detail-pages/course-detail-page';
 import SignUpPage from './account-control-pages/SignUpPage';
 
 const routes = [

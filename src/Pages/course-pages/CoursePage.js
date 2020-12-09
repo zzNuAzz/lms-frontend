@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import StudentCoursePage from './student-course-page';
 import TeacherCoursePage from './teacher-course-page';
 

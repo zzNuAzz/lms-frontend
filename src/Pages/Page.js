@@ -3,11 +3,11 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   Container,
 } from '@material-ui/core';
+import { ToastContainer } from 'react-toastify';
 import { NavBar } from '../Components';
 import Footer from '../Components/Footer/Footer';
 import routes from './routes.config';
 import './style.css';
-import { ToastContainer } from 'react-toastify';
 
 const withContainer = (component) => (
   <Container maxWidth="lg">{component()}</Container>
@@ -35,10 +35,15 @@ export default function Page() {
       />
       <NavBar />
       <br />
-      <Switch>
-        <Redirect exact from="/" to="/home" />
-        {routes.map(route)}
-      </Switch>
+      <Container fixed>
+        <Switch>
+          <Redirect exact from="/" to="home" />
+          {routes.map((route) => (
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            <Route {...route} key={route.path} />
+          ))}
+        </Switch>
+      </Container>
       <Footer />
     </>
   );

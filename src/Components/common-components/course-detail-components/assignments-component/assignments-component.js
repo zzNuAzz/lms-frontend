@@ -1,6 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Paper, Typography } from '@material-ui/core';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
 import React from 'react';
+import AddAssignmentComponent from '../../../teacher-components/add-assignment-component/add-assignment-component';
 import FileUpload from '../file-upload/file-upload';
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AssignmentsComponent = ({ assignments }) => {
+const AssignmentsComponent = ({ assignments, courseId, fetchAssignments }) => {
   const classes = useStyles();
 
   const assignmentsList = assignments.map((assignment) => (
@@ -43,9 +44,10 @@ const AssignmentsComponent = ({ assignments }) => {
   ));
 
   return (
-    <>
+    <div className="assignments">
+      {localStorage.getItem('role') === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetchAssignments} /> : null}
       {assignmentsList}
-    </>
+    </div>
   );
 };
 
