@@ -1,6 +1,5 @@
 import { Typography } from '@material-ui/core';
-import { EvStationSharp } from '@material-ui/icons';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import AvatarImageCropper from 'react-avatar-image-cropper';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -56,7 +55,7 @@ export default function AvatarUpload({ userProfile }) {
                     />
                 </div>
             </div>
-            <Typography>Avatar</Typography>
+            <Typography className="mt-5 mx-auto" variant="h4" bold>Avatar</Typography>
         </Fragment>
     );
 }
