@@ -44,7 +44,6 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
     if (localStorage.getItem('username')) {
       setUsername(localStorage.getItem('username'));
       setLoginStatus(true);
-      if (username) toast.success(`😃 Welcome ${username}`);
     } else {
       setLoginStatus(false);
     }
