@@ -20,6 +20,10 @@ export default function ProfileEdit() {
 	  });
 	}
 
+	const cancel = () =>{
+		fetchUserProfile();
+	}
+
 	
 	const submitForm = () => {
 		profile.editProfile(userProfile).then(result => {
@@ -56,7 +60,7 @@ export default function ProfileEdit() {
 
 			<div style={{marginTop: "70px"}}>
 				<Grid container direction="row" justify="center" alignItems="center">
-					<Button size="large" variant="contained" color="secondary" style={{marginRight: "30px", marginLeft: "-15px"}}>
+					<Button size="large" variant="contained" color="secondary" style={{marginRight: "30px", marginLeft: "-15px"}} onClick={cancel}>
 						Cancel 
 					</Button>
 					<Button size="large" variant="contained" color="primary" disabled={!userProfile.isChanged} onClick={submitForm}>
