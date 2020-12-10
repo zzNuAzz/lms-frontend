@@ -19,7 +19,7 @@ const routes = [
   { path: '/course/:courseId/newthread', component: NewThread, ...defaultConfig, hasContainer: false },
   // { path: "/course/:courseId/forum/:threadId", component: ViewPost, hasContainer: false },
   { path: '/course/forum/:threadId', component: ViewPost, ...defaultConfig, hasContainer: false },
-  { path: '/course/:id', component: CourseDetailPage, ...defaultConfig },
+  { path: '/course/:id', component: CourseDetailPage, ...defaultConfig, hasContainer: false },
   { path: '/signup', component: SignUpPage, ...defaultConfig },
   { path: '/profile/edit', component: ProfileEdit, ...defaultConfig },
 ];
