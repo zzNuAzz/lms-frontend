@@ -27,6 +27,7 @@ import getCourseMemberList from '../../../../api/graphql/get-course-member-list'
 import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
 import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
+import CourseTitle from '../course-title';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -174,7 +175,7 @@ const TeacherCourseDetailPage = () => {
       <Grid
         container
         direction="row"
-        spacing="3"
+        spacing="1"
       >
         <Grid item md="2">
           <Grid
@@ -183,9 +184,8 @@ const TeacherCourseDetailPage = () => {
             justify="center"
           >
             <Grid item>
-              <div>
-
-              </div>
+              <CourseTitle title={courseName} />
+              <br />
             </Grid>
             <Grid item>
               <Tabs
