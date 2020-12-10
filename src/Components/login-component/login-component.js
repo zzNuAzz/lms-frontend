@@ -55,6 +55,7 @@ function LoginComponent({ setUsername, callbackToParent }) {
       localStorage.setItem('username', formUsername);
       localStorage.setItem('userId', result.credentials.user.userId);
       localStorage.setItem('role', result.credentials.user.role);
+      localStorage.setItem('pictureUrl', result.credentials.user.pictureUrl);
       callbackToParent();
     } else if (result.code === 400 || 401) {
       toast.error('😞 Wrong username or password, please try again!');
