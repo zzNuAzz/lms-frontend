@@ -1,10 +1,18 @@
 import React, { Fragment } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Container } from '@material-ui/core';
+import { Container, makeStyles } from '@material-ui/core';
 import { ToastContainer } from 'react-toastify';
 import { NavBar } from '../Components';
 import Footer from '../Components/Footer/Footer';
 import routes from './routes.config';
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    '& button:focus': {
+      outline: 'none',
+    },
+  },
+}));
 
 function Page() {
   return (
@@ -32,22 +40,25 @@ const withContainer = (component) => () => (
   <Container maxWidth="lg">{component()}</Container>
 );
 
-const withToastContainer = (Component) => () => (
-  <>
-    <ToastContainer
-      position="bottom-right"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-    />
-    <Component />
-  </>
-);
+const withToastContainer = (Component) => () => {
+  const classes = useStyles();
+  return (
+    <div className={classes.container}>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <Component />
+    </div>
+  )
+};
 
 const withNavbar = (Component) => () => (
   <>
