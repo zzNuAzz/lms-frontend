@@ -28,8 +28,22 @@ import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
 import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: '0vw 5vw 0vw 5vw',
+  },
+  courseName: {
+    fontSize: '',
+  },
+  tabs: {
+    '& .MuiTab-wrapper': {
+      alignItems: 'flex-end',
+    },
+  },
+}));
+
 const TeacherCourseDetailPage = () => {
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const { id } = useParams();
   const [isLoading, setLoading] = useState(false);
@@ -156,87 +170,91 @@ const TeacherCourseDetailPage = () => {
   }, []);
 
   const RenderComponent = (
-    <div>
-      {/* <CourseCardLarge
-        courseName={courseName}
-        courseId={courseId}
-        courseLecturer={
-          (host.firstName && host.lastName)
-            ? `${`${host.lastName} ${host.firstName}`}`
-            : 'Lecturer has...no name?'
-        }
-      />
-      <br /> */}
+    <div className={classes.root}>
       <Grid
         container
         direction="row"
-        justify="center"
+        spacing="3"
       >
         <Grid item md="2">
-          <Tabs
-            orientation="vertical"
-            variant="standard"
-            scrollButtons="on"
-            value={tabPosition}
-            onChange={(event, newPos) => setTabPosition(newPos)}
-            indicatorColor="primary"
-            textColor="primary"
+          <Grid
+            container
+            direction="row"
+            justify="center"
           >
-            <Tab
-              label={(
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <SubjectRoundedIcon />
-              &nbsp;
-              Overview
-                </div>
-              )}
-            />
-            <Tab
-              label={(
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <PeopleRoundedIcon />
-              &nbsp;
-              Members
-                </div>
-              )}
-            />
-            <Tab
-              label={(
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <DescriptionRoundedIcon />
-              &nbsp;
-              Documents
-                </div>
-              )}
-            />
-            <Tab
-              label={(
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <BorderColorRoundedIcon />
-              &nbsp;
-              Assignments
-                </div>
-              )}
-            />
-            <Tab
-              label={(
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <ForumRoundedIcon />
-              &nbsp;
-              Forum
-                </div>
-              )}
-            />
-            <Tab
-              label={(
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <PersonPinRoundedIcon />
-              &nbsp;
-              Contact
-                </div>
-              )}
-            />
-          </Tabs>
+            <Grid item>
+              <div>
+
+              </div>
+            </Grid>
+            <Grid item>
+              <Tabs
+                className={classes.tabs}
+                orientation="vertical"
+                variant="standard"
+                value={tabPosition}
+                onChange={(event, newPos) => setTabPosition(newPos)}
+                indicatorColor="primary"
+                textColor="primary"
+              >
+                <Tab
+                  label={(
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      Overview
+                      &nbsp;
+                      <SubjectRoundedIcon />
+                    </div>
+                  )}
+                />
+                <Tab
+                  label={(
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      Members
+                      &nbsp;
+                      <PeopleRoundedIcon />
+                    </div>
+                  )}
+                />
+                <Tab
+                  label={(
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      Documents
+                      &nbsp;
+                      <DescriptionRoundedIcon />
+                    </div>
+                  )}
+                />
+                <Tab
+                  label={(
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      Assignments
+                      &nbsp;
+                      <BorderColorRoundedIcon />
+                    </div>
+                  )}
+                />
+                <Tab
+                  label={(
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      Forum
+                      &nbsp;
+                      <ForumRoundedIcon />
+                    </div>
+                  )}
+                  className={classes.tab}
+                />
+                <Tab
+                  label={(
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      Contact
+                      &nbsp;
+                      <PersonPinRoundedIcon />
+                    </div>
+                  )}
+                />
+              </Tabs>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item md="10">
           {(() => {
