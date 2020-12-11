@@ -17,6 +17,11 @@ const getUserCourseList = async ({ userId, status = 'Accepted', pageSize = 10, p
           courseId
           name
           description
+          host {
+            userId
+            username
+            pictureUrl
+          }
         }
         status
         totalRecords

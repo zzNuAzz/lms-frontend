@@ -10,6 +10,9 @@ const getAllCourses = async () => {
           courseId
           description
           host {
+            userId
+            username
+            pictureUrl
             firstName
             lastName
           }
