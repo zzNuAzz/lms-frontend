@@ -35,15 +35,18 @@ export default function NavBar() {
   const [isLoggedIn, setLoginStatus] = useState(false);
 
   return (
-    <div className={classes.root}>
-      <AppBar color="primary" position="sticky">
-        <Toolbar>
-          <MenuBar isLoggedIn={isLoggedIn} />
-          <Typography className={classes.title} variant="h6">Learning System</Typography>
-          <div className={classes.endPoint} />
-          <UserButton isLoggedIn={isLoggedIn} setLoginStatus={setLoginStatus} />
-        </Toolbar>
-      </AppBar>
+    <div>
+      <div className={classes.root}>
+        <AppBar color="primary" position="sticky">
+          <Toolbar>
+            <MenuBar isLoggedIn={isLoggedIn} />
+            <Typography className={classes.title} variant="h6">Learning System</Typography>
+            <div className={classes.endPoint} />
+            <UserButton isLoggedIn={isLoggedIn} setLoginStatus={setLoginStatus} />
+          </Toolbar>
+        </AppBar>
+      </div>
+      <br />
     </div>
   );
 }

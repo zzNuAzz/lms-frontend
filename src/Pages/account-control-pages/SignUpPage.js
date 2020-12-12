@@ -20,6 +20,7 @@ import Container from '@material-ui/core/Container';
 import { toast } from 'react-toastify';
 
 import createUserAccount from '../../api/graphql/create-user-account';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -60,29 +61,33 @@ export default function SignUp() {
   };
 
   const handleSubmit = async () => {
-    const result = await createUserAccount(
-      username,
-      password,
-      role,
-      firstName,
-      lastName,
-      phoneNumber,
-      address,
-      birthday,
-    );
+    try {
+      const result = await createUserAccount(
+        username,
+        password,
+        role,
+        firstName,
+        lastName,
+        phoneNumber,
+        address,
+        birthday,
+      );
 
-    // TODO: Loading Animation
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      toast.success('Successfully created your account! You will be redirected to the Sign In page in 3 seconds...', {
-        autoClose: 3000,
-      });
-      setTimeout(() => {
-        history.push('/login');
-        history.go(0);
-      }, 3000);
-    } else if (parsedResult.errors) {
-      toast.error(parsedResult.errors[0].extensions.errors[0]);
+      // TODO: Loading Animation
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        toast.success('Successfully created your account! You will be redirected to the Sign In page in 3 seconds...', {
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          history.push('/login');
+          history.go(0);
+        }, 3000);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
     }
   };
 
