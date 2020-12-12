@@ -21,7 +21,7 @@ const routes = [
   { path: '/course/:id', component: CourseDetailPage, hasContainer: true },
   { path: '/signup', component: SignUpPage, hasContainer: true },
   { path: '/profile/edit', component: ProfileEdit, hasContainer: true},
-  { path: '/profile/view', component: ViewProfile, hasContainer: true}
+  { path: '/profile/view', component: ViewProfile, hasContainer: false}
 ];
 
 export default routes;
