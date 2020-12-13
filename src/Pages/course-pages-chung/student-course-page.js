@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -236,7 +235,10 @@ export default function CoursePage() {
           {/* RECOMMEND FOR 3RD YEAR STUDENTS */}
           <Box className={classes.root} py={2}>
             <Container maxWidth="lg">
-              <Recommend recommendArr={recommendArr} />
+              <Recommend
+                recommendArr={recommendArr}
+                title="Might be you want to access"
+              />
             </Container>
           </Box>
           <Box className={classes.whiteBack} pt={4}>
@@ -349,10 +351,15 @@ export default function CoursePage() {
       </Grid>
     </>
   );
-  // const theme = {
-  //   spacing: 8,
-  // }
-  return <>{isLoading ? <LinearProgress style={{backGround: "#2a73cc"}}/> : RenderComponent}</>;
+  return (
+    <>
+      {isLoading ? (
+        <LinearProgress style={{ backGround: '#2a73cc' }} />
+      ) : (
+        RenderComponent
+      )}
+    </>
+  );
 }
 
 const useStyles = makeStyles((theme) => ({

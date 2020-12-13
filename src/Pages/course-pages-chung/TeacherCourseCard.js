@@ -6,13 +6,16 @@ import {
   Grid,
   Typography,
   Divider,
-  Avatar,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+import deleteCourseById from '../../api/graphql/deleteCourseById';
 
-export function CourseCard({ course }) {
+export function TeacherCourseCard({ course }) {
   const classes = useStyles();
+
   const backGroundArr = [
     classes.greenBack,
     classes.blueBack,
@@ -21,6 +24,26 @@ export function CourseCard({ course }) {
   const backGround = backGroundArr[Math.floor(Math.random() * 3)];
   console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
+  const deleteCourse = async () => {
+    try {
+      const courseName = course.name;
+      const result = await deleteCourseById(course.courseId);
+      // TODO
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        toast.success(`Delete Course: ${courseName} Successfully`, {
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
+    }
+  };
   return (
     <Box mt={10}>
       <Container className={backGround} maxWidth="md">
@@ -70,15 +93,27 @@ export function CourseCard({ course }) {
             <Grid item xs={12}>
               <Divider variant="fullWidth"></Divider>
             </Grid>
-            <Grid style={{ marginBlock: 10 }} className={classes.dFlex}>
+            <Grid
+              container
+              style={{ marginBlock: 10 }}
+              className={classes.dFlex}
+              justify="flex-end"
+            >
               <Box mr={2}>
-                <Avatar src={course.host.pictureUrl}></Avatar>
+                <Button size="small" color="primary" variant="contained">
+                  Edit
+                </Button>
               </Box>
-              <Link>
-                <Typography variant="subtitle2" className={classes.blackText}>
-                  {course.host.username}
-                </Typography>
-              </Link>
+              <Box mr={0}>
+                <Button
+                  size="small"
+                  color="secondary"
+                  variant="contained"
+                  onClick={deleteCourse}
+                >
+                  Delete
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         </Box>

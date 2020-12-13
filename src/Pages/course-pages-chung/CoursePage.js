@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -33,11 +32,7 @@ export default function CoursePage() {
 
   return (
     <>
-      {
-        userRole === 'Student'
-          ? <StudentCoursePage />
-          : <TeacherCoursePage />
-      }
+      {userRole === 'Student' ? <StudentCoursePage /> : <TeacherCoursePage />}
     </>
   );
 }

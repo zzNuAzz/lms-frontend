@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Carousel from 'react-elastic-carousel';
 import { Link } from 'react-router-dom';
 
-export function Recommend({ recommendArr }) {
+export function Recommend({ recommendArr, title }) {
   const classes = useStyles();
 
   function shuffle(array) {
@@ -42,8 +42,7 @@ export function Recommend({ recommendArr }) {
     var result = new Array(n),
       len = arr.length,
       taken = new Array(len);
-    if (n > len)
-      throw new RangeError('getRandom: more elements taken than available');
+    while (n > len) n--;
     while (n--) {
       var x = Math.floor(Math.random() * len);
       result[n] = arr[x in taken ? taken[x] : x];
@@ -70,15 +69,14 @@ export function Recommend({ recommendArr }) {
   ];
   console.log({ recommendArr }, recommendArr.length);
   let recommendCourses = [];
-  if(recommendArr.length != 0)
-    recommendCourses = getRandom(recommendArr, 8);
+  if (recommendArr.length != 0) recommendCourses = getRandom(recommendArr, 8);
 
   return (
     <Box my={2}>
       <Container maxWidth="md">
         <Box my={4}>
           <Typography variant="h5" className={classes.fw700}>
-            Recommend courses for Computer Science
+            {title}
           </Typography>
         </Box>
       </Container>
