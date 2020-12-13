@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 
 import getUserCourseList from '../../api/graphql/get-user-course-list';
 import getAllCourses from '../../api/graphql/get-all-courses.js';
+import getRecommendCourses from '../../api/graphql/get-recommend-courses.js';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 import { Recommend } from './Recommend';
@@ -57,6 +58,7 @@ export default function CoursePage() {
   const [totalPageAllCourses, setTotalPageAllCourses] = React.useState(1);
   const [totalPageIPCourses, setTotalPageIPCourses] = React.useState(1);
   const [totalPagePeCourses, setTotalPagePeCourses] = React.useState(1);
+  const [recommendArr, setRecommendArr] = useState([]);
   const pageSize = 5;
 
   const handlePagination = (event, pageNum) => {
@@ -153,15 +155,33 @@ export default function CoursePage() {
     }
   };
 
+  const fetchRecommendCourses = async (pageSize) => {
+    try {
+      const result = await getRecommendCourses(pageSize);
+      const parsedResult = JSON.parse(result);
+
+      if (parsedResult.data) {
+        setRecommendArr(parsedResult.data.courseList.courseList);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+      // console.log({ parsedResult });
+    } catch (error) {
+      toast(error);
+    }
+  };
+
   useEffect(() => {
     const fetchContent = async () => {
       setLoading(true);
       await fetchStudentCourse();
       await fetchAllCourses(pageNumber, pageSize);
+      await fetchRecommendCourses(20);
       setLoading(false);
     };
     fetchContent();
   }, []);
+
   console.log({ courses });
   console.log({ allCourses });
   console.log({ pendingCourses });
@@ -216,7 +236,7 @@ export default function CoursePage() {
           {/* RECOMMEND FOR 3RD YEAR STUDENTS */}
           <Box className={classes.root} py={2}>
             <Container maxWidth="lg">
-              <Recommend allCourses={allCourses} />
+              <Recommend recommendArr={recommendArr} />
             </Container>
           </Box>
           <Box className={classes.whiteBack} pt={4}>
