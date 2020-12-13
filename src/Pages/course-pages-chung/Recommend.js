@@ -17,6 +17,35 @@ import { Link } from 'react-router-dom';
 
 export function Recommend({ allCourses }) {
   const classes = useStyles();
+  function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
+  const recommendCoursesImgArr = [
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/37/6352a069b511e3ae92c39913bb30e0/DataScientistsToolbox.jpg?auto=format%2Ccompress&dpr=1&w=250",
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/7a/569080aab711e79d97bf25c196049d/1200px-square-dark.jpg?auto=format%2Ccompress&dpr=1&w=250",
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/3e/3974e00aa311e8840ea7bed5c70ad0/Specialization-logo.jpg?auto=format%2Ccompress&dpr=1&w=250",
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/77/e06750f1fb11e782572b9fa3447a7a/TURQUASE-Square-800x800-02.jpg.jpg?auto=format%2Ccompress&dpr=1&w=250",
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera.s3.amazonaws.com/topics/algo2/large-icon.png?auto=format%2Ccompress&dpr=1&w=250",
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/23/22bc54f77f45a2b057f4ff518d272f/iStock-1169539468.jpg?auto=format%2Ccompress&dpr=1&w=250",
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/f4/acffe00bd811e8bfabed507b508fa4/ds0105en-square.png?auto=format%2Ccompress&dpr=1&w=250",
+    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera.s3.amazonaws.com/topics/ml/large-icon.png?auto=format%2Ccompress&dpr=1&w=250",
+  ];
+  shuffle(recommendCoursesImgArr);
   const breakPoints = [
     { width: 1, itemsToShow: 1, itemsToScroll: 1 },
     { width: 550, itemsToShow: 2, itemsToScroll: 2 },
@@ -35,12 +64,12 @@ export function Recommend({ allCourses }) {
       </Container>
       <Container className={classes.root} maxWidth="lg">
         <Carousel breakPoints={breakPoints}>
-          {recommendCourses.map((course) => (
+          {recommendCourses.map((course, index) => (
             <Card className={classes.card}>
               <CardActionArea>
                 <CardMedia
                   className={classes.media}
-                  image="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/53/01bee0502a11e58ddc8ff4d6e0523a/pythonnetworkdata_thumbnail_1x1.png?auto=format%2Ccompress&dpr=1&w=250"
+                  image={recommendCoursesImgArr[index]}
                   title="Contemplative Reptile"
                 />
                 <CardContent className={classes.content}>
@@ -58,7 +87,7 @@ export function Recommend({ allCourses }) {
                       color="textSecondary"
                       component="p"
                     >
-                      Số tín chỉ: 3
+                      {course.host.firstname} {course.host.lastname}
                     </Typography>
                   </Box>
                 </CardContent>

@@ -37,7 +37,7 @@ export default function NavBar() {
   return (
     <div>
       <div className={classes.root}>
-        <AppBar color="primary" position="sticky">
+        <AppBar style={{backgroundColor: "#2a73cc"}} position="sticky">
           <Toolbar>
             <MenuBar isLoggedIn={isLoggedIn} />
             <Typography className={classes.title} variant="h6">Learning System</Typography>

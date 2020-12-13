@@ -1,6 +1,11 @@
 import { graphQLFetch } from './graphql-fetch';
 
-const getUserCourseList = async ({ userId, status = 'Accepted', pageSize = 10, pageNumber = 0 }) => {
+const getUserCourseList = async ({
+  userId,
+  status = 'Accepted',
+  pageNumber,
+  pageSize,
+}) => {
   const query = `query userCourseList (
     $userId: Int!
     $status: EnrollStatus = Accepted
@@ -33,8 +38,8 @@ const getUserCourseList = async ({ userId, status = 'Accepted', pageSize = 10, p
   const variables = {
     userId,
     status,
-    pageSize,
     pageNumber,
+    pageSize,
   };
   const result = await graphQLFetch(query, variables);
   return result;

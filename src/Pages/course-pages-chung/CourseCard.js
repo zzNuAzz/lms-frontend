@@ -13,22 +13,28 @@ import { Link } from 'react-router-dom';
 
 export function CourseCard({ course }) {
   const classes = useStyles();
+  const backGroundArr = [
+    classes.greenBack,
+    classes.blueBack,
+    classes.yellowBack,
+  ];
+  const backGround = backGroundArr[Math.floor(Math.random() * 3)];
+  console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
   return (
     <Box mt={10}>
-      <Container className={classes.whiteBack} maxWidth="md">
+      <Container className={backGround} maxWidth="md">
         <Box className={classes.courseCard}>
-          <Box py={1.5}>
+          <Box pt={3} pb={1}>
             <Typography variant="button">Course</Typography>
           </Box>
-          <br />
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} lg={6} className={classes.bodyCourse}>
               <Link>
                 <Typography
                   variant="h5"
                   color="primary"
-                  className={classes.fw700}
+                  className={`${classes.fw700} ${classes.blackText}`}
                 >
                   {course.name}
                 </Typography>
@@ -42,20 +48,23 @@ export function CourseCard({ course }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth={Boolean(true)}
-                >
+                <Button variant="contained" fullWidth={Boolean(true)}>
                   Go to Course
                 </Button>
                 <br />
                 <Grid item>
-                  <Link to={linkToForum}>
-                    <Typography classname={classes.center} variant="body1">
-                      Go to forum
-                    </Typography>
-                  </Link>
+                  <Box py={3}>
+                    <Link to={linkToForum}>
+                      <Typography
+                        classname={classes.center}
+                        variant="body1"
+                        
+                        className={classes.blackText}
+                      >
+                        Go to forum
+                      </Typography>
+                    </Link>
+                  </Box>
                 </Grid>
               </Grid>
             </Grid>
@@ -67,7 +76,7 @@ export function CourseCard({ course }) {
                 <Avatar src={course.host.pictureUrl}></Avatar>
               </Box>
               <Link>
-                <Typography variant="subtitle2">
+                <Typography variant="subtitle2" className={classes.blackText}>
                   {course.host.username}
                 </Typography>
               </Link>
@@ -82,6 +91,15 @@ export function CourseCard({ course }) {
 const useStyles = makeStyles((theme) => ({
   whiteBack: {
     backgroundColor: '#ffffff',
+  },
+  blueBack: {
+    backgroundColor: '#1e94eb',
+  },
+  yellowBack: {
+    backgroundColor: '#f3c800',
+  },
+  greenBack: {
+    backgroundColor: '#00d2a1',
   },
   bodyCourse: {
     height: 170,
@@ -98,10 +116,17 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
   },
   courseCard: {
-    marginTop: '28px',
+    marginBottom: '28px',
+    color: '#1f1f1f',
   },
   dFlex: {
     display: 'flex',
     marginBlock: 'auto',
+  },
+  blackText: {
+    color: '#1f1f1f',
+  },
+  fw700: {
+    fontWeight: 700,
   },
 }));

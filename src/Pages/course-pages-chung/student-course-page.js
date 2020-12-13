@@ -19,6 +19,7 @@ import getAllCourses from '../../api/graphql/get-all-courses.js';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 import { Recommend } from './Recommend';
+import Pagination from '@material-ui/lab/Pagination';
 
 //TabPanel
 function TabPanel(props) {
@@ -44,7 +45,6 @@ function TabPanel(props) {
 //CoursePage
 export default function CoursePage() {
   const [isLoading, setLoading] = useState(false);
-  const [courseView, setCourseView] = useState('list');
   const userId = parseInt(localStorage.getItem('userId'), 10);
   const [courses, setCourses] = useState([]);
   const [pendingCourses, setPendingCourses] = useState([]);
@@ -52,8 +52,34 @@ export default function CoursePage() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(1);
+  const [totalPageAllCourses, setTotalPageAllCourses] = React.useState(1);
+  const [totalPageIPCourses, setTotalPageIPCourses] = React.useState(1);
+  const [totalPagePeCourses, setTotalPagePeCourses] = React.useState(1);
+  const pageSize = 5;
+
+  const handlePagination = (event, pageNum) => {
+    setPageNumber(pageNum);
+    const fetchContent = async () => {
+      // setLoading(true);
+      if (value == 0) {
+        await fetchAllCourses(pageNum - 1, pageSize);
+        window.scrollTo(0, 900);
+      } else if (value == 1 || value == 2) {
+        await fetchStudentCourse(pageNum - 1, pageSize);
+        window.scrollTo(0, 100);
+      }
+      // setLoading(false);
+    };
+    fetchContent();
+  };
   const handleSwitchCourseType = (event, newValue) => {
+    if (newValue == 0) setTotalPage(totalPageAllCourses);
+    else if (newValue == 1) setTotalPage(totalPageIPCourses);
+    else if (newValue == 2) setTotalPage(totalPagePeCourses);
     setValue(newValue);
+    setPageNumber(1);
   };
   const handleChangeIndex = (index) => {
     setValue(index);
@@ -65,37 +91,41 @@ export default function CoursePage() {
     };
   }
   // API
-  const fetchStudentCourse = async () => {
+  const fetchStudentCourse = async (pageNumber, pageSize) => {
     try {
       //* Fetch enrolled courses
       const acceptedResult = await getUserCourseList({
         userId,
         status: 'Accepted',
-        pageNumber: 0,
-        pageSize: 10,
+        pageNumber: pageNumber,
+        pageSize: pageSize,
       });
       const parsedResult = JSON.parse(acceptedResult);
+      // console.log(parsedResult);
       if (parsedResult.data) {
         if (parsedResult.data.userCourseList.courseList.length !== 0) {
           setCourses(parsedResult.data.userCourseList.courseList);
+          setTotalPageIPCourses(parsedResult.data.userCourseList.totalPages);
         } else {
           toast.error('You have no enrolled courses... :(');
         }
       } else {
         toastFetchErrors(parsedResult);
+        // console.log({ parsedResult });
       }
 
       //* Fetch pending courses
       const result = await getUserCourseList({
         userId,
         status: 'Pending',
-        pageNumber: 0,
-        pageSize: 10,
+        pageNumber: pageNumber,
+        pageSize: pageSize,
       });
       const temp = JSON.parse(result);
       if (temp.data) {
         if (temp.data.userCourseList.courseList.length !== 0) {
           setPendingCourses(temp.data.userCourseList.courseList);
+          setTotalPagePeCourses(parsedResult.data.userCourseList.totalPages);
         }
       } else {
         toastFetchErrors(temp);
@@ -105,15 +135,19 @@ export default function CoursePage() {
     }
   };
 
-  const fetchAllCourses = async () => {
+  const fetchAllCourses = async (pageNumber, pageSize) => {
     try {
-      const result = await getAllCourses();
+      const result = await getAllCourses(pageNumber, pageSize);
       const parsedResult = JSON.parse(result);
+
       if (parsedResult.data) {
         setAllCourses(parsedResult.data.courseList.courseList);
+        setTotalPageAllCourses(parsedResult.data.courseList.totalPages);
+        setTotalPage(parsedResult.data.courseList.totalPages);
       } else {
         toastFetchErrors(parsedResult);
       }
+      // console.log({ parsedResult });
     } catch (error) {
       toast(error);
     }
@@ -123,12 +157,15 @@ export default function CoursePage() {
     const fetchContent = async () => {
       setLoading(true);
       await fetchStudentCourse();
-      await fetchAllCourses();
+      await fetchAllCourses(pageNumber, pageSize);
       setLoading(false);
     };
     fetchContent();
   }, []);
   console.log({ courses });
+  console.log({ allCourses });
+  console.log({ pendingCourses });
+
   const RenderComponent = (
     <>
       <Box className={classes.root}>
@@ -146,6 +183,7 @@ export default function CoursePage() {
           </Container>
         </Box>
       </Box>
+
       {/* MIDDLE NAV */}
       <Container maxWidth="xl" className={classes.middleNav}>
         <Grid container justify="flex-start">
@@ -167,44 +205,134 @@ export default function CoursePage() {
         </Grid>
       </Container>
 
-      <Box className={classes.root}>
-        {/* COURSE CARD */}
-        <Container maxWidth="lg">
-          <SwipeableViews
-            className={classes.root}
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={value}
-            onChangeIndex={handleChangeIndex}
-          >
-            {/* HOME */}
-            <TabPanel value={value} index={0} dir={theme.direction}>
-              {/* RECOMMEND FOR 3RD YEAR STUDENTS */}
+      {/* COURSE CARD */}
+      <SwipeableViews
+        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={value}
+        onChangeIndex={handleChangeIndex}
+      >
+        {/* HOME */}
+        <TabPanel value={value} index={0} dir={theme.direction}>
+          {/* RECOMMEND FOR 3RD YEAR STUDENTS */}
+          <Box className={classes.root} py={2}>
+            <Container maxWidth="lg">
               <Recommend allCourses={allCourses} />
+            </Container>
+          </Box>
+          <Box className={classes.whiteBack} pt={4}>
+            <Container maxWidth="md">
+              <Box mb={-6}>
+                <Grid container justify="center">
+                  <Grid item xs={4}>
+                    <Box pl={3}>
+                      <Typography variant="h5" className={classes.fw700}>
+                        All Courses:
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={8} container justify="flex-end">
+                    <Box pr={3}>
+                      <Pagination
+                        count={totalPage}
+                        page={pageNumber}
+                        color="primary"
+                        onChange={handlePagination}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Container>
+            <Container maxWidth="md">
               {allCourses.map((course) => (
                 <CourseCard course={course} />
               ))}
-            </TabPanel>
-            {/* IN PROGRESS */}
-            <TabPanel value={value} index={1} dir={theme.direction}>
+            </Container>
+          </Box>
+        </TabPanel>
+        {/* IN PROGRESS */}
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <Box className={classes.whiteBack}>
+            <Container maxWidth="md">
+              <Box mb={-6}>
+                <Grid container justify="center">
+                  <Grid item xs={4}>
+                    <Box pl={3}>
+                      <Typography variant="h5" className={classes.fw700}>
+                        Your Courses:
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={8} container justify="flex-end">
+                    <Box pr={3}>
+                      <Pagination
+                        count={totalPage}
+                        page={pageNumber}
+                        color="primary"
+                        onChange={handlePagination}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Container>
+            <Container maxWidth="lg">
               {courses.map((course) => (
                 <CourseCard course={course} />
               ))}
-            </TabPanel>
-            {/* PENDING */}
-            <TabPanel value={value} index={2} dir={theme.direction}>
+            </Container>
+          </Box>
+        </TabPanel>
+        {/* PENDING */}
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <Box className={classes.whiteBack}>
+            <Container maxWidth="md">
+              <Box mb={-6}>
+                <Grid container justify="center">
+                  <Grid item xs={4}>
+                    <Box pl={3}>
+                      <Typography variant="h5" className={classes.fw700}>
+                        Pending Courses:
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={8} container justify="flex-end">
+                    <Box pr={3}>
+                      <Pagination
+                        count={totalPage}
+                        page={pageNumber}
+                        color="primary"
+                        onChange={handlePagination}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Container>
+            <Container maxWidth="lg">
               {pendingCourses.map((course) => (
                 <CourseCard course={course} />
               ))}
-            </TabPanel>
-          </SwipeableViews>
-        </Container>
-      </Box>
+            </Container>
+          </Box>
+        </TabPanel>
+      </SwipeableViews>
+
+      {/* PAGINATE */}
+      <Grid container justify="center">
+        <Pagination
+          count={totalPage}
+          page={pageNumber}
+          color="primary"
+          onChange={handlePagination}
+        />
+      </Grid>
     </>
   );
   // const theme = {
   //   spacing: 8,
   // }
-  return <>{isLoading ? <LinearProgress /> : RenderComponent}</>;
+  return <>{isLoading ? <LinearProgress style={{backGround: "#2a73cc"}}/> : RenderComponent}</>;
 }
 
 const useStyles = makeStyles((theme) => ({
