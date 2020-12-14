@@ -24,7 +24,7 @@ import Pagination from '@material-ui/lab/Pagination';
 //TabPanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
+  
   return (
     <div
       role="tabpanel"
@@ -183,7 +183,6 @@ export default function CoursePage() {
   console.log({ courses });
   console.log({ allCourses });
   console.log({ pendingCourses });
-
   const RenderComponent = (
     <>
       <Box className={classes.root}>
