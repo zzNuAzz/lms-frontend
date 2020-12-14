@@ -24,7 +24,7 @@ import Pagination from '@material-ui/lab/Pagination';
 //TabPanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
+  
   return (
     <div
       role="tabpanel"
@@ -140,7 +140,6 @@ export default function CoursePage() {
     try {
       const result = await getAllCourses(pageNumber, pageSize);
       const parsedResult = JSON.parse(result);
-
       if (parsedResult.data) {
         setAllCourses(parsedResult.data.courseList.courseList);
         setTotalPageAllCourses(parsedResult.data.courseList.totalPages);
@@ -174,7 +173,7 @@ export default function CoursePage() {
     const fetchContent = async () => {
       setLoading(true);
       await fetchStudentCourse();
-      await fetchAllCourses(pageNumber, pageSize);
+      await fetchAllCourses(pageNumber - 1, pageSize);
       await fetchRecommendCourses(20);
       setLoading(false);
     };
@@ -184,7 +183,6 @@ export default function CoursePage() {
   console.log({ courses });
   console.log({ allCourses });
   console.log({ pendingCourses });
-
   const RenderComponent = (
     <>
       <Box className={classes.root}>
@@ -237,7 +235,7 @@ export default function CoursePage() {
             <Container maxWidth="lg">
               <Recommend
                 recommendArr={recommendArr}
-                title="Might be you want to access"
+                title="Recommend for Computer Science"
               />
             </Container>
           </Box>

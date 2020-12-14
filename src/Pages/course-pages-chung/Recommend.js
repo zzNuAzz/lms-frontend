@@ -115,7 +115,7 @@ export function Recommend({ recommendArr, title }) {
                 <Box pl={3}>
                   <Link>
                     <Typography variant="subtitle2">
-                      Lecturer: {course.host.username}
+                      Lecturer: {course.host.lastName + " " + course.host.firstName}
                     </Typography>
                   </Link>
                 </Box>
