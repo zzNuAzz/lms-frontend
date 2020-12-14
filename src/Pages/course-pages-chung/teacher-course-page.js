@@ -9,14 +9,14 @@ import {
   Tab,
 } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
+import { toast } from 'react-toastify';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { TeacherCourseCard } from './TeacherCourseCard';
-import { toast } from 'react-toastify';
 import getTeacherCourseList from '../../api/graphql/get-teacher-course-list.js';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 import { Recommend } from './Recommend';
-import Pagination from '@material-ui/lab/Pagination';
 import { NewCourseBox } from './NewCourseBox';
 
 function TabPanel(props) {
@@ -144,6 +144,7 @@ export default function CoursePage() {
               Welcome back!
             </Typography>
           </Container>
+          <br />
         </Box>
       </Box>
 
@@ -327,7 +328,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeatX: 'no-repeat',
     backgroundRepeatY: 'no-repeat',
     backgroundSize: 'contain',
-    height: 150,
+    height: 'fit-content',
   },
   bodyCourse: {
     height: 'fit-content',

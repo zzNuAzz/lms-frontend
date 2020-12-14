@@ -97,7 +97,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                 </Typography>
               </Link>
               <Typography variant="body2">
-                {ReactHtmlParser(course.description.substring(0, 200) + '...')}
+                {course.description.substring(0, 200) + '...'}
               </Typography>
             </Grid>
             <Grid item xs={12} lg={6} container justify="flex-end">
@@ -105,11 +105,9 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Link to={`/course/${course.courseId}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                  <Button variant="contained" color="primary" fullWidth>
-                    Go to Course
-                  </Button>
-                </Link>
+                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
+                  Go to Course
+                </Button>
                 <br />
                 <Grid item>
                   <Box py={3}>
@@ -147,10 +145,9 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                 <Button
                   color="secondary"
                   variant="contained"
+                  size="small"
                   onClick={openAlertDelete}
                 >
-                  <DeleteForeverRoundedIcon />
-                  &nbsp;
                   Delete
                 </Button>
                 <Dialog

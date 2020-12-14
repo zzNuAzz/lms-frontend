@@ -198,6 +198,7 @@ export default function CoursePage() {
               Welcome back!
             </Typography>
           </Container>
+          <br />
         </Box>
       </Box>
 
@@ -378,7 +379,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeatX: 'no-repeat',
     backgroundRepeatY: 'no-repeat',
     backgroundSize: 'contain',
-    height: 150,
+    height: 'fit-content',
   },
   bodyCourse: {
     height: 170,
