@@ -7,20 +7,20 @@ import CardContent from '@material-ui/core/CardContent';
 import { Button, Grid } from '@material-ui/core';
 import NewCourseButton from './course-page-components/new-course-button/new-course-button';
 
-export function NewCourseBox() {
+export function NewCourseBox({ fetchTeacherCourse }) {
   const classes = useStyles();
   return (
     <>
       <Card style={{ marginTop: '30px' }}>
         <CardContent className={classes.newCourse}>
           <Typography variant="h6" style={{ fontWeight: 700 }}>
-            Wanna create a whole new course?
+            Want to host a new course?
           </Typography>
           <Typography variant="body1">
             Start a new course to share knowledge with your students
           </Typography>
           <br />
-          <NewCourseButton />
+          <NewCourseButton fetchTeacherCourse={fetchTeacherCourse} />
         </CardContent>
       </Card>
     </>

@@ -181,7 +181,7 @@ export default function CoursePage() {
             <Container maxWidth="lg">
               <Recommend
                 recommendArr={courses}
-                title="Might be you want to access"
+                title="Recommended Courses"
               />
             </Container>
           </Box>
@@ -213,12 +213,12 @@ export default function CoursePage() {
                     </Box>
                   </Container>
                   {courses.map((course) => (
-                    <TeacherCourseCard course={course} />
+                    <TeacherCourseCard course={course} fetchTeacherCourse={fetchTeacherCourse} />
                   ))}
                 </Grid>
                 <Grid item xs={12} lg={4}>
                   <Box mt={9}>
-                    <NewCourseBox />
+                    <NewCourseBox fetchTeacherCourse={fetchTeacherCourse} />
                   </Box>
                   {/* <NewPostBox /> */}
                 </Grid>
@@ -330,7 +330,7 @@ const useStyles = makeStyles((theme) => ({
     height: 150,
   },
   bodyCourse: {
-    height: 170,
+    height: 'fit-content',
   },
   fw700: {
     fontWeight: 700,

@@ -9,7 +9,9 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { toast } from 'react-toastify';
+
 import createAssignment from '../../../../../api/graphql/create-assignment';
 
 const useStyle = makeStyles((theme) => ({
@@ -132,8 +134,11 @@ const EditAssignmentComponent = ({
         variant="contained"
         color="primary"
         onClick={handleDialogOpen}
+        style={{ height: 54 }}
       >
-        Edit Icon
+        <EditRoundedIcon />
+        &nbsp;
+        Edit
       </Button>
       <br />
       <br />

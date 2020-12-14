@@ -23,6 +23,13 @@ const useStyle = makeStyles((theme) => ({
     flexGrow: 1,
   },
 
+  navbar: {
+    backgroundColor: theme.palette.background.paper,
+    color: '#2a73cc',
+    fontWeight: 'bolder',
+    position: 'sticky',
+  },
+
   navigationButton: {
     margin: '10px 10px',
   },
@@ -35,17 +42,15 @@ export default function NavBar() {
   const [isLoggedIn, setLoginStatus] = useState(false);
 
   return (
-    <div>
-      <div className={classes.root}>
-        <AppBar style={{backgroundColor: "#2a73cc"}} position="sticky">
-          <Toolbar>
-            <MenuBar isLoggedIn={isLoggedIn} />
-            <Typography className={classes.title} variant="h6">Learning System</Typography>
-            <div className={classes.endPoint} />
-            <UserButton isLoggedIn={isLoggedIn} setLoginStatus={setLoginStatus} />
-          </Toolbar>
-        </AppBar>
-      </div>
+    <div className={classes.root}>
+      <AppBar className={classes.navbar}>
+        <Toolbar>
+          <MenuBar isLoggedIn={isLoggedIn} />
+          <Typography className={classes.title} variant="h6">Learning System</Typography>
+          <div className={classes.endPoint} />
+          <UserButton isLoggedIn={isLoggedIn} setLoginStatus={setLoginStatus} />
+        </Toolbar>
+      </AppBar>
       <br />
     </div>
   );
