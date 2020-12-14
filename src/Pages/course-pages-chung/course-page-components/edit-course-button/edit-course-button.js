@@ -107,8 +107,8 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
         variant="contained"
         color="primary"
         onClick={handleDialogOpen}
+        size="small"
       >
-        <EditRoundedIcon />
         Edit
       </Button>
     </>

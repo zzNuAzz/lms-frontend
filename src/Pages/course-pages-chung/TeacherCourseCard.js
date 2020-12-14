@@ -105,7 +105,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Link to={`/course/${course.courseId}`} style={{textDecoration: 'none', color: 'inherit'}}>
+                <Link to={`/course/${course.courseId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <Button variant="contained" color="primary" fullWidth>
                     Go to Course
                   </Button>
@@ -147,10 +147,9 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                 <Button
                   color="secondary"
                   variant="contained"
+                  size="small"
                   onClick={openAlertDelete}
                 >
-                  <DeleteForeverRoundedIcon />
-                  &nbsp;
                   Delete
                 </Button>
                 <Dialog
