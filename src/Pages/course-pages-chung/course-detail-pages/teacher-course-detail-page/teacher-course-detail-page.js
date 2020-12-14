@@ -212,7 +212,7 @@ const TeacherCourseDetailPage = () => {
       </Box>
       <Tabs
         className={classes.tabs}
-        variant="standard"
+        variant="scrollable"
         value={tabPosition}
         onChange={(event, newPos) => setTabPosition(newPos)}
         indicatorColor="primary"
