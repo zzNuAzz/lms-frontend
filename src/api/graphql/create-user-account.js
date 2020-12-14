@@ -1,7 +1,7 @@
 import { graphQLFetch } from './graphql-fetch';
 
 // eslint-disable-next-line import/prefer-default-export
-export const createUserAccount = async (
+const createUserAccount = async (
   username,
   password,
   role,
@@ -55,3 +55,5 @@ export const createUserAccount = async (
   const result = await graphQLFetch(query, vars);
   return result;
 };
+
+export default createUserAccount;
