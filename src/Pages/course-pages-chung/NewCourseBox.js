@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Button, Grid } from '@material-ui/core';
+import NewCourseButton from './course-page-components/new-course-button/new-course-button';
 
 export function NewCourseBox() {
   const classes = useStyles();
@@ -19,18 +20,7 @@ export function NewCourseBox() {
             Start a new course to share knowledge with your students
           </Typography>
           <br />
-          <br />
-          <Grid>
-            <Link to="">
-              <Button
-                fullWidth={Boolean(true)}
-                variant="contained"
-                color="primary"
-              >
-                Create A New Course
-              </Button>
-            </Link>
-          </Grid>
+          <NewCourseButton />
         </CardContent>
       </Card>
     </>
