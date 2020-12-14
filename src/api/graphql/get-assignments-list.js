@@ -9,8 +9,10 @@ const getAssignmentsList = async (courseId, pageNumber = 0, pageSize = 10) => {
   ) {
     assignmentList(courseId: $courseId, pageNumber: $pageNumber, pageSize: $pageSize) {
       assignmentList {
+        assignmentId
         title
         content
+        dueDate
       }
       pageNumber
       totalPages

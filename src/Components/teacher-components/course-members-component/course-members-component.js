@@ -89,8 +89,6 @@ const CourseMembersComponent = ({ enrolledMembers, pendingMembers, rejectedMembe
         <MenuItem data-status="Pending" onClick={(event) => handleStatusChange(event)}>Pending</MenuItem>
         <MenuItem data-status="Rejected" onClick={(event) => handleStatusChange(event)}>Rejected</MenuItem>
       </Menu>
-      <Typography variant="h4">Enrolled Members</Typography>
-      <br />
       <Paper elevation={3}>
         <Table>
           <TableHead>

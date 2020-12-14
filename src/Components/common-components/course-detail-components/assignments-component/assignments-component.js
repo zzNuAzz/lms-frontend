@@ -1,8 +1,9 @@
-import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
-import React from 'react';
-import AddAssignmentComponent from '../../../teacher-components/add-assignment-component/add-assignment-component';
+import React, { useState } from 'react';
+import AddAssignmentComponent from './add-assignment-component/add-assignment-component';
 import FileUpload from '../file-upload/file-upload';
+import EditAssignmentComponent from './edit-assignment-component';
 
 const useStyles = makeStyles((theme) => ({
   accordionHeader: {
@@ -23,22 +24,38 @@ const AssignmentsComponent = ({ assignments, courseId, fetchAssignments }) => {
 
   const assignmentsList = assignments.map((assignment) => (
     <>
-      <Paper elevation={4}>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreRoundedIcon />}
-            className={classes.accordionHeader}
-          >
-            {assignment.title}
-          </AccordionSummary>
-          <AccordionDetails className={classes.accordionBody}>
-            <Typography className={classes.bodyDescription} variant="body1">
-              {assignment.content}
-            </Typography>
-            <FileUpload />
-          </AccordionDetails>
-        </Accordion>
-      </Paper>
+      <Grid
+        container
+        direction="row"
+        spacing="1"
+      >
+        <Grid item md="11">
+          <Paper elevation={4}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreRoundedIcon />}
+                className={classes.accordionHeader}
+              >
+                {assignment.title}
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionBody}>
+                <Typography className={classes.bodyDescription} variant="body1">
+                  {assignment.content}
+                </Typography>
+                <FileUpload />
+              </AccordionDetails>
+            </Accordion>
+          </Paper>
+        </Grid>
+        <Grid item md="1">
+          <EditAssignmentComponent
+            assignmentId={assignment.assignmentId}
+            currentTitle={assignment.title}
+            currentContent={assignment.content}
+            fetchAssignments={fetchAssignments}
+          />
+        </Grid>
+      </Grid>
       <br />
     </>
   ));

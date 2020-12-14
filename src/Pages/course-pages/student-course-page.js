@@ -18,7 +18,7 @@ import AllCourseView from './course-page-components/all-courses-view/all-courses
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 
 export default function CoursePage() {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [courseView, setCourseView] = useState('list');
   const userId = parseInt(localStorage.getItem('userId'), 10);
   const [courses, setCourses] = useState([]);
@@ -81,7 +81,6 @@ export default function CoursePage() {
 
   useEffect(() => {
     const fetchContent = async () => {
-      setLoading(true);
       await fetchStudentCourse();
       await fetchAllCourses();
       setLoading(false);
@@ -151,11 +150,11 @@ export default function CoursePage() {
     </>
   );
 
+  if (isLoading) return <LinearProgress />;
+
   return (
-    <>
-      {
-        isLoading ? <LinearProgress /> : RenderComponent
-      }
-    </>
+    <div>
+      {RenderComponent}
+    </div>
   );
 }

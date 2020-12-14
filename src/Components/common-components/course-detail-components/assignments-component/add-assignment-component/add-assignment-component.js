@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
-import createAssignment from '../../../api/graphql/create-assignment';
+import createAssignment from '../../../../../api/graphql/create-assignment';
 
 const useStyle = makeStyles((theme) => ({
   dialog: {

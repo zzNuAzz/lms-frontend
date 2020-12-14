@@ -6,13 +6,13 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import Page from './Pages/Page';
 
 function App() {
-    return (
-        <Router>
-            {/* <MuiPickersUtilsProvider utils={DateMomentUtils}> */}
-                <Page />
-            {/* </MuiPickersUtilsProvider> */}
-        </Router>
-    );
+  return (
+    <Router>
+      {/* <MuiPickersUtilsProvider utils={DateMomentUtils}> */}
+      <Page />
+      {/* </MuiPickersUtilsProvider> */}
+    </Router>
+  );
 }
 
 export default App;
