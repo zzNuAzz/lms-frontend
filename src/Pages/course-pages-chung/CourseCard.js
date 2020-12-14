@@ -53,9 +53,11 @@ export function CourseCard({ course }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
-                  Go to Course
-                </Button>
+                <Link to={`/course/${course.courseId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
+                    Go to Course
+                  </Button>
+                </Link>
                 <br />
                 <Grid item>
                   <Box py={3}>
@@ -63,7 +65,7 @@ export function CourseCard({ course }) {
                       <Typography
                         classname={classes.center}
                         variant="body1"
-                        // className={classes.blackText}
+                      // className={classes.blackText}
                       >
                         Go to forum
                       </Typography>
