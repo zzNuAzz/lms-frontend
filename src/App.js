@@ -1,17 +1,26 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import DateMomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import Page from './Pages/Page';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#2a73cc',
+    },
+  },
+});
+
 function App() {
   return (
-    <Router>
-      {/* <MuiPickersUtilsProvider utils={DateMomentUtils}> */}
-      <Page />
-      {/* </MuiPickersUtilsProvider> */}
-    </Router>
+    <MuiThemeProvider theme={theme}>
+      <Router>
+        {/* <MuiPickersUtilsProvider utils={DateMomentUtils}> */}
+        <Page />
+        {/* </MuiPickersUtilsProvider> */}
+      </Router>
+    </MuiThemeProvider>
   );
 }
 
