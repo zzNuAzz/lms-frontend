@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import JoditEditor from 'jodit-react';
 import ReactHtmlParser from 'react-html-parser';
 import updateCourseDescription from '../../../../api/graphql/update-course-description';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const OverviewComponent = ({ currentDescription, fetchCourseDetails }) => {
   const [description, setDescription] = useState(currentDescription);
@@ -49,11 +51,16 @@ const OverviewComponent = ({ currentDescription, fetchCourseDetails }) => {
 
   const EditDescription = (
     <div className="edit-description" style={{ display: 'flex', flexDirection: 'column' }}>
-      <JoditEditor
+      {/* <JoditEditor
         value={description}
         ref={editor}
         config={editorConfig}
         onBlur={(newDescription) => setDescription(newDescription.target.innerHTML)}
+      /> */}
+      <CKEditor
+        editor={ClassicEditor}
+        data={description}
+        onBlur={(event, editor) => setDescription(editor.getData())}
       />
       <br />
       <div className="update-button" style={{ justifyContent: 'flex-start' }}>

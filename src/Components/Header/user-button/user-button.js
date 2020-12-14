@@ -57,14 +57,15 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
       ) : (
         <Button
           variant="contained"
-          color="default"
-          // style={{ color: '#1f1f1f', backgroundColor: '#f3c800' }}
+          color="primary"
           onClick={handleOpen}
+          style={{ margin: '10px 10px' }}
         >
           <AccountCircleRounded />
-          &nbsp; Sign In
+          &nbsp;
+          Sign In
         </Button>
-      )}
+        )}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

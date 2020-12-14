@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import ReactHtmlParser from 'react-html-parser';
 
 export function CourseCard({ course }) {
   const classes = useStyles();
@@ -44,7 +45,7 @@ export function CourseCard({ course }) {
                 </Typography>
               </Link>
               <Typography variant="body2">
-                {course.description.substring(0, 200) + '...'}
+                {ReactHtmlParser(course.description.substring(0, 200) + '...')}
               </Typography>
             </Grid>
             <Grid item xs={12} lg={6} container justify="flex-end">
@@ -52,9 +53,11 @@ export function CourseCard({ course }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
-                  Go to Course
-                </Button>
+                <Link to={`/course/${course.courseId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
+                    Go to Course
+                  </Button>
+                </Link>
                 <br />
                 <Grid item>
                   <Box py={3}>
@@ -62,7 +65,7 @@ export function CourseCard({ course }) {
                       <Typography
                         classname={classes.center}
                         variant="body1"
-                        // className={classes.blackText}
+                      // className={classes.blackText}
                       >
                         Go to forum
                       </Typography>
@@ -109,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#00d2a1',
   },
   bodyCourse: {
-    height: 170,
+    height: 'fit-content',
   },
   fw700: {
     fontWeight: 700,

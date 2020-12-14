@@ -62,7 +62,7 @@ export default function HomePage() {
             <Typography item style={{ fontSize: '24px', fontWeight: 'bolder', color: '#1c205f' }}>Learning Management System</Typography>
             <Typography item style={{ fontSize: '18px', color: '#000000' }}>Lorem ipsum dolor sit amet.</Typography>
             <div className={classes.root}>
-              <Button href="/signin" variant="outlined" color="primary">Sign In</Button>
+              <Button href="/login" variant="outlined" color="primary">Sign In</Button>
               <Button href="/signup" variant="outlined" color="primary">Sign Up</Button>
             </div>
           </Grid>

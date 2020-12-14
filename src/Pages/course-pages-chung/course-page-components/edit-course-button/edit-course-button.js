@@ -10,17 +10,16 @@ import {
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
 
-import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import createCourse from '../../../../api/graphql/create-course';
-import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 
-const NewCourseButton = ({ fetchTeacherCourse }) => {
+const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeacherCourse }) => {
   const [isLoading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState(courseName);
+  const [description, setDescription] = useState(courseDescription);
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -31,24 +30,16 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const result = await createCourse(name, description);
-      const parsedResult = JSON.parse(result);
-      if (parsedResult.data) {
-        if (parsedResult.data.createCourse.success) {
-          toast.success(`Successfully created course ${name}`, {
-            autoClose: 3000,
-          });
-          setDialogOpen(false);
-          fetchTeacherCourse();
-        } else {
-          toast.error(parsedResult.data.createCourse.message);
-        }
-      } else {
-        toastFetchErrors(parsedResult);
+    const result = await createCourse(name, description);
+    const parsedResult = JSON.parse(result);
+    if (parsedResult.data) {
+      if (parsedResult.data.createCourse.success) {
+        toast.success(`Successfully created course ${name}`, {
+          autoClose: 3000,
+        });
+        setDialogOpen(false);
+        fetchTeacherCourse();
       }
-    } catch (error) {
-      toast.error(error);
     }
   };
 
@@ -91,7 +82,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
         onClose={handleDialogClose}
         maxWidth="lg"
       >
-        <DialogTitle>Add a new course</DialogTitle>
+        <DialogTitle>{`Edit ${courseName}`}</DialogTitle>
         <DialogContent>
           {NewCourseForm}
         </DialogContent>
@@ -102,7 +93,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
             onClick={handleSubmit}
             disabled={isLoading}
           >
-            Add
+            Update
           </Button>
           <Button
             variant="text"
@@ -115,14 +106,13 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
       <Button
         variant="contained"
         color="primary"
-        fullWidth
         onClick={handleDialogOpen}
       >
-        <AddRoundedIcon />
-        New course
+        <EditRoundedIcon />
+        Edit
       </Button>
     </>
   );
 };
 
-export default NewCourseButton;
+export default EditCourseButton;

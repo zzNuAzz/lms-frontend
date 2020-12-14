@@ -83,44 +83,46 @@ export function Recommend({ recommendArr, title }) {
       <Container className={classes.root} maxWidth="lg">
         <Carousel breakPoints={breakPoints}>
           {recommendCourses.map((course, index) => (
-            <Card className={classes.card}>
-              <CardActionArea>
-                <CardMedia
-                  className={classes.media}
-                  image={recommendCoursesImgArr[index]}
-                  title="Contemplative Reptile"
-                />
-                <CardContent className={classes.content}>
-                  <Avatar
-                    src={course.host.pictureUrl}
-                    variant="rounded"
-                    className={classes.large}
-                  ></Avatar>
-                  <Box mt={5}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {course.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {course.host.firstname} {course.host.lastname}
-                    </Typography>
+            <Link to={`/course/${course.courseId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Card className={classes.card}>
+                <CardActionArea>
+                  <CardMedia
+                    className={classes.media}
+                    image={recommendCoursesImgArr[index]}
+                    title="Contemplative Reptile"
+                  />
+                  <CardContent className={classes.content}>
+                    <Avatar
+                      src={course.host.pictureUrl}
+                      variant="rounded"
+                      className={classes.large}
+                    />
+                    <Box mt={5}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {course.name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        {course.host.firstname} {course.host.lastname}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+                <Divider variant="fullWidth"></Divider>
+                <CardActions>
+                  <Box pl={3}>
+                    <Link>
+                      <Typography variant="subtitle2">
+                        Lecturer: {course.host.lastName.concat(' ', course.host.firstName)}
+                      </Typography>
+                    </Link>
                   </Box>
-                </CardContent>
-              </CardActionArea>
-              <Divider variant="fullWidth"></Divider>
-              <CardActions>
-                <Box pl={3}>
-                  <Link>
-                    <Typography variant="subtitle2">
-                      Lecturer: {course.host.lastName + " " + course.host.firstName}
-                    </Typography>
-                  </Link>
-                </Box>
-              </CardActions>
-            </Card>
+                </CardActions>
+              </Card>
+            </Link>
           ))}
 
           {/* TEMP */}
