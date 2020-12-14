@@ -48,7 +48,9 @@ export function TeacherCourseCard({ course }) {
     classes.blueBack,
     classes.yellowBack,
   ];
-  const backGround = backGroundArr[Math.floor(Math.random() * 3)];
+  // const backGround = backGroundArr[course.courseId % 3];
+  const backGround = classes.grayBack;
+
   console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
   const deleteCourse = async () => {
@@ -128,7 +130,7 @@ export function TeacherCourseCard({ course }) {
               justify="flex-end"
             >
               <Box mr={2}>
-                <Button size="small" color="primary" variant="contained">
+                <Button size="small" color="warning" variant="contained">
                   Edit
                 </Button>
               </Box>
@@ -196,6 +198,9 @@ const useStyles = makeStyles((theme) => ({
   },
   greenBack: {
     backgroundColor: '#00d2a1',
+  },
+  grayBack: {
+    backgroundColor: '#f5f7fa',
   },
   bodyCourse: {
     height: 170,

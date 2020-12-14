@@ -58,7 +58,8 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
       ) : (
         <Button
           variant="contained"
-          style={{ color: '#1f1f1f', backgroundColor: '#f3c800' }}
+          color="default"
+          // style={{ color: '#1f1f1f', backgroundColor: '#f3c800' }}
           onClick={handleOpen}
         >
           <AccountCircleRounded />

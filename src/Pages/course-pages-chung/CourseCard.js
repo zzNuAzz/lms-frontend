@@ -19,8 +19,10 @@ export function CourseCard({ course }) {
     classes.yellowBack,
   ];
   const teacherName = `Lecturer: ${course.host.lastName} ${course.host.firstName}`;
-  const backGround = backGroundArr[Math.floor(Math.random() * 3)];
-  console.log({ backGround });
+  // const backGround = backGroundArr[course.courseId % 3];
+  const backGround = classes.grayBack;
+
+  // console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
   return (
     <Box mt={10}>
@@ -35,7 +37,8 @@ export function CourseCard({ course }) {
                 <Typography
                   variant="h5"
                   color="primary"
-                  className={`${classes.fw700} ${classes.blackText}`}
+                  // className={`${classes.fw700} ${classes.blackText}`}
+                  className={`${classes.fw700}`}
                 >
                   {course.name}
                 </Typography>
@@ -49,7 +52,7 @@ export function CourseCard({ course }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button variant="contained" fullWidth={Boolean(true)}>
+                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
                   Go to Course
                 </Button>
                 <br />
@@ -59,7 +62,7 @@ export function CourseCard({ course }) {
                       <Typography
                         classname={classes.center}
                         variant="body1"
-                        className={classes.blackText}
+                        // className={classes.blackText}
                       >
                         Go to forum
                       </Typography>
@@ -76,7 +79,8 @@ export function CourseCard({ course }) {
                 <Avatar src={course.host.pictureUrl}></Avatar>
               </Box>
               <Link>
-                <Typography variant="subtitle2" className={classes.blackText}>
+                {/* <Typography variant="subtitle2" className={classes.blackText}> */}
+                <Typography variant="subtitle2">
                   {teacherName}
                 </Typography>
               </Link>
@@ -94,6 +98,9 @@ const useStyles = makeStyles((theme) => ({
   },
   blueBack: {
     backgroundColor: '#1e94eb',
+  },
+  grayBack: {
+    backgroundColor: '#f5f7fa',
   },
   yellowBack: {
     backgroundColor: '#f3c800',
@@ -117,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
   },
   courseCard: {
     marginBottom: '28px',
-    color: '#1f1f1f',
+    // color: '#1f1f1f',
   },
   dFlex: {
     display: 'flex',
