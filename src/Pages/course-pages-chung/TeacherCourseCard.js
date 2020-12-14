@@ -12,10 +12,37 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 import deleteCourseById from '../../api/graphql/deleteCourseById';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export function TeacherCourseCard({ course }) {
   const classes = useStyles();
+  // const [open, setOpen] = React.useState(false);
 
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+  const [open, setOpen] = React.useState(false);
+
+  const openAlertDelete = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const backGroundArr = [
     classes.greenBack,
     classes.blueBack,
@@ -43,6 +70,7 @@ export function TeacherCourseCard({ course }) {
     } catch (error) {
       toast(error);
     }
+    setOpen(false);
   };
   return (
     <Box mt={10}>
@@ -109,10 +137,44 @@ export function TeacherCourseCard({ course }) {
                   size="small"
                   color="secondary"
                   variant="contained"
-                  onClick={deleteCourse}
+                  onClick={openAlertDelete}
                 >
                   Delete
                 </Button>
+                <Dialog
+                  open={open}
+                  TransitionComponent={Transition}
+                  keepMounted
+                  onClose={handleClose}
+                  aria-labelledby="alert-dialog-slide-title"
+                  aria-describedby="alert-dialog-slide-description"
+                >
+                  <DialogTitle id="alert-dialog-slide-title">
+                    {'Are you sure to delete this course?'}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                      All the documents, forum and lectures will be deleted with
+                      this course!
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={deleteCourse}
+                      color="secondary"
+                      variant="contained"
+                    >
+                      Yes, I'm SURE
+                    </Button>
+                    <Button
+                      onClick={handleClose}
+                      color="primary"
+                      variant="contained"
+                    >
+                      No, Bring Me Back
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Box>
             </Grid>
           </Grid>

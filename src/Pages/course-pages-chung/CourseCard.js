@@ -18,6 +18,7 @@ export function CourseCard({ course }) {
     classes.blueBack,
     classes.yellowBack,
   ];
+  const teacherName = `Lecturer: ${course.host.lastName} ${course.host.firstName}`;
   const backGround = backGroundArr[Math.floor(Math.random() * 3)];
   console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
@@ -76,7 +77,7 @@ export function CourseCard({ course }) {
               </Box>
               <Link>
                 <Typography variant="subtitle2" className={classes.blackText}>
-                  {course.host.username}
+                  {teacherName}
                 </Typography>
               </Link>
             </Grid>
