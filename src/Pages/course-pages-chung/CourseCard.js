@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import ReactHtmlParser from 'react-html-parser';
 
 export function CourseCard({ course }) {
   const classes = useStyles();
@@ -44,7 +45,7 @@ export function CourseCard({ course }) {
                 </Typography>
               </Link>
               <Typography variant="body2">
-                {course.description.substring(0, 200) + '...'}
+                {ReactHtmlParser(course.description.substring(0, 200) + '...')}
               </Typography>
             </Grid>
             <Grid item xs={12} lg={6} container justify="flex-end">
@@ -109,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#00d2a1',
   },
   bodyCourse: {
-    height: 170,
+    height: 'fit-content',
   },
   fw700: {
     fontWeight: 700,
