@@ -38,7 +38,8 @@ export default function AvatarUpload({ userProfile }) {
     };
     return (
         <Fragment>
-            <div className="mr-5 ml-4 mt-5">
+            {/* <div className="mr-5 ml-4 mt-5"> */}
+            <div  className="mt-5">
                 <div
                     style={{
                         backgroundImage: `url(${pictureUrl})`,
