@@ -13,6 +13,7 @@ const getCourseHost = async (courseId) => {
       email
       address
       birthday
+      pictureUrl
     }
   }
 }`;

@@ -6,6 +6,7 @@ const getCourseDetails = async (courseId) => {
   course(courseId: $courseId) {
     courseId
     name
+    shortDescription
     description
   }
 }`;
