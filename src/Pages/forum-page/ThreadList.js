@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   Avatar,
   AppBar,
@@ -29,7 +29,9 @@ import {
 } from '@material-ui/core/colors';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useParams, useHistory } from 'react-router-dom';
-
+import Pagination from '@material-ui/lab/Pagination';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+import { toast } from 'react-toastify';
 import getThreadList from '../../api/graphql/get-thread-list';
 
 const useStyles = makeStyles((theme) => ({
@@ -112,11 +114,63 @@ export function CardForum({ forum }) {
 
 export default function ({ thread }) {
   console.log({ thread });
+  const [value, setValue] = React.useState(0);
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(1);
+  const [totalPageAllThreads, setTotalPageAllThreads] = React.useState(1);
+  const [isLoading, setLoading] = useState(false);
+  const [allThreads, setAllThreads] = useState([]);
+  const pageSize = 10;
+  const handlePagination = (event, pageNum) => {
+    setPageNumber(pageNum);
+    const fetchContent = async () => {
+      if(value == 0){
+        await fetchThreadList(pageNum - 1, pageSize);
+        window.scrollTo(0, 900);
+      }
+    };
+    fetchContent();
+  }
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+  const fetchThreadList = async (pageNumber, pageSize) => {
+    try{
+      const result = await getThreadList(pageNumber, pageSize);
+      const parsedResult = JSON.parse(result);
+      if(parsedResult.data){
+        setAllThreads(parsedResult.data.threadList.threadList);
+        setTotalPageAllThreads(parsedResult.data.threadList.totalPages);
+        setTotalPage(parsedResult.data.threadList.totalPages);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error){
+      toast(error);
+    }
+  }
+  useEffect(() => {
+    const fetchContent = async () => {
+      setLoading(true);
+      await fetchThreadList(pageNumber - 1, pageSize);
+      setLoading(false);
+    };
+    fetchContent();
+  }, []);
   return (
     <>
       {thread.map((forum) => (
         <CardForum forum={forum} />
       ))}
+      {/* PAGINATE */}
+      <Grid container justify="center">
+        <Pagination
+          count={totalPage}
+          page={pageNumber}
+          color="primary"
+          onChange={handlePagination}
+        />
+      </Grid>
     </>
   );
 }
