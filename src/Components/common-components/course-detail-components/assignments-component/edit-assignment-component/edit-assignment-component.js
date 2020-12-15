@@ -133,11 +133,11 @@ const EditAssignmentComponent = ({
       <Button
         variant="contained"
         color="primary"
+        size="small"
+        fullWidth
         onClick={handleDialogOpen}
         style={{ height: 54 }}
       >
-        <EditRoundedIcon />
-        &nbsp;
         Edit
       </Button>
       <br />
