@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-const graphqlMultipleUpload = async (files) => {
+const createDocument = async (document, files) => {
   const data = new FormData();
 
   //* Operation field
   const query = `
-  mutation uploadMultipleFiles($files: [Upload!]!) {
-    uploadFileMultiple(files: $files) {
-      filename
-      mimetype
-      uuid
+  mutation createDocument($document: DocumentInput!) {
+    createDocument(document: $document) {
+      success
+      insertedId
+      message
     }
   }
   `;
@@ -25,8 +25,11 @@ const graphqlMultipleUpload = async (files) => {
     ];
   }
 
+  const tempVar = document;
+  tempVar.files = filesNull;
+
   const variables = {
-    files: filesNull,
+    document: tempVar,
   };
   data.append('operations', JSON.stringify({ query, variables }));
 
@@ -48,7 +51,7 @@ const graphqlMultipleUpload = async (files) => {
     withCredentials: true,
     data,
   });
-  return response.data;
+  console.log(response);
 };
 
-export default graphqlMultipleUpload;
+export default createDocument;

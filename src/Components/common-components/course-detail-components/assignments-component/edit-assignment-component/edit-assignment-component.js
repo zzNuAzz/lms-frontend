@@ -9,18 +9,25 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { toast } from 'react-toastify';
-import createAssignment from '../../../api/graphql/create-assignment';
+
+import createAssignment from '../../../../../api/graphql/create-assignment';
 
 const useStyle = makeStyles((theme) => ({
   dialog: {
     width: '960px',
-  }
+  },
 }));
 
-const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+const EditAssignmentComponent = ({
+  assignmentId,
+  currentTitle,
+  currentContent,
+  fetchAssignments
+}) => {
+  const [title, setTitle] = useState(currentTitle);
+  const [content, setContent] = useState(currentContent);
   const [dueDate, setDueDate] = useState('');
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -36,44 +43,10 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
   };
 
   const handleSubmit = async () => {
-    const payload = {
-      assignment: {
-        courseId: parseInt(courseId, 10),
-        title,
-        content,
-        dueDate: new Date(dueDate).getTime(),
-        files: [],
-      },
-    };
-    setLoading(true);
-    const result = await createAssignment(payload);
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      if (parsedResult.data.createAssignment.success) {
-        toast('Assignment added successfully!', {
-          autoClose: 3000,
-          type: 'success',
-        });
-        fetchAssignments();
-        setDialogOpen(false);
-        setLoading(false);
-      } else {
-        toast('Failed to add new assignment. Please try again!', {
-          autoClode: 3000,
-          type: 'error',
-        });
-        setLoading(false);
-      }
-    } else {
-      toast(result, {
-        autoClode: 5000,
-        type: 'error',
-      });
-      setLoading(false);
-    }
+
   };
 
-  const AddAssignmentForm = (
+  const EditAssignmentForm = (
     <ValidatorForm onSubmit={handleSubmit}>
       <Grid
         container
@@ -84,7 +57,7 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
       >
         <Grid item xs={6}>
           <TextValidator
-            label="Title"
+            label="New Title"
             id="title"
             name="title"
             type="text"
@@ -100,7 +73,7 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
           <TextValidator
             id="date"
             name="date"
-            label="Due date"
+            label="New Due Date"
             type="date"
             variant="outlined"
             onChange={(event) => setDueDate(event.target.value)}
@@ -114,7 +87,7 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
-            label="Content"
+            label="New Content"
             name="content"
             type="text"
             value={content}
@@ -136,9 +109,9 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
         onClose={handleDialogClose}
         maxWidth="md"
       >
-        <DialogTitle>Add a new Assignment</DialogTitle>
+        <DialogTitle>Edit Assignment</DialogTitle>
         <DialogContent>
-          {AddAssignmentForm}
+          {EditAssignmentForm}
         </DialogContent>
         <DialogActions>
           <Button
@@ -147,7 +120,7 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
             onClick={handleSubmit}
             disabled={isLoading}
           >
-            Add
+            Submit
           </Button>
           <Button
             variant="text"
@@ -161,8 +134,11 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
         variant="contained"
         color="primary"
         onClick={handleDialogOpen}
+        style={{ height: 54 }}
       >
-        Add Assignment
+        <EditRoundedIcon />
+        &nbsp;
+        Edit
       </Button>
       <br />
       <br />
@@ -170,4 +146,4 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
   );
 };
 
-export default AddAssignmentComponent;
+export default EditAssignmentComponent;

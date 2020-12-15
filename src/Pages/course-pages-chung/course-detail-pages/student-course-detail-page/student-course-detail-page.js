@@ -1,25 +1,63 @@
-import { LinearProgress, Tab, Tabs } from '@material-ui/core';
+import {
+  Box,
+  Container,
+  LinearProgress,
+  Tab,
+  Tabs,
+  Typography,
+  makeStyles,
+} from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import SubjectRoundedIcon from '@material-ui/icons/SubjectRounded';
 import DescriptionRoundedIcon from '@material-ui/icons/DescriptionRounded';
 import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
 import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import PersonPinRoundedIcon from '@material-ui/icons/PersonPinRounded';
-import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import CourseCardLarge from '../../../../Components/common-components/course-card/course-card-large';
 import OverviewComponent from '../../../../Components/common-components/course-detail-components/overview-component/overview-component';
 import AssignmentsComponent from '../../../../Components/common-components/course-detail-components/assignments-component/assignments-component';
 import DocumentComponent from '../../../../Components/common-components/course-detail-components/document-component/document-component';
 import ContactComponent from '../../../../Components/common-components/course-detail-components/contact-component/contact-component';
 import getAssignmentsList from '../../../../api/graphql/get-assignments-list';
-import { toast } from 'react-toastify';
 import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
 import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    background: theme.palette.background.paper,
+  },
+  courseName: {
+    fontSize: '',
+  },
+  header: {
+    backgroundImage: 'url("//s3.amazonaws.com/coursera_assets/logged-in-home/header-bg-alt_optim.png")',
+    backgroundColor: '#d7eef7',
+    width: '100%',
+    backgroundPosition: 'right 120px center',
+    backgroundPositionX: 'right 120px',
+    backgroundPositionY: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundRepeatX: 'no-repeat',
+    backgroundRepeatY: 'no-repeat',
+    backgroundSize: 'contain',
+    height: 'fit-content',
+  },
+  welcome: {
+    color: theme.palette.primary,
+    fontSize: '3rem',
+    lineHeight: '3.75rem',
+    fontWeight: 700,
+    paddingTop: 90,
+  },
+}));
+
 const StudentCourseDetailPage = () => {
   const history = useHistory();
+  const classes = useStyles();
 
   const [isLoading, setLoading] = useState(false);
   const { id } = useParams();
@@ -102,17 +140,28 @@ const StudentCourseDetailPage = () => {
   }, []);
 
   const RenderComponent = (
-    <>
-      <CourseCardLarge
-        courseName={courseName}
-        courseId={courseId}
-        courseLecturer={
-          (host.firstName && host.lastName)
-            ? `${`${host.lastName} ${host.firstName}`}`
-            : 'Lecturer has...no name?'
-        }
-      />
-      <br />
+    <div className="course-detail-page">
+      <Box className={classes.root}>
+        {/* HEADER */}
+        <Box className={classes.header}>
+          <Container maxWidth="md">
+            <Typography
+              variant="h3"
+              gutterBottom
+              className={classes.welcome}
+            >
+              {courseName}
+            </Typography>
+            <Typography
+              variant="h5"
+              gutterBottom
+            >
+              {`Lecturer: ${host.lastName.concat(' ', host.firstName)}`}
+            </Typography>
+            <br />
+          </Container>
+        </Box>
+      </Box>
       <Tabs
         variant="scrollable"
         value={tabPosition}
@@ -184,7 +233,7 @@ const StudentCourseDetailPage = () => {
             return null;
         }
       })()}
-    </>
+    </div>
   );
 
   return (

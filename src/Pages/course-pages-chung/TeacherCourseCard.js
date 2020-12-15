@@ -10,20 +10,24 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
-import deleteCourseById from '../../api/graphql/deleteCourseById';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import ReactHtmlParser from 'react-html-parser';
+import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
+
+import deleteCourseById from '../../api/graphql/deleteCourseById';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+import EditCourseButton from './course-page-components/edit-course-button/edit-course-button';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function TeacherCourseCard({ course }) {
+export function TeacherCourseCard({ course, fetchTeacherCourse }) {
   const classes = useStyles();
   // const [open, setOpen] = React.useState(false);
 
@@ -101,7 +105,7 @@ export function TeacherCourseCard({ course }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button variant="contained" fullWidth={Boolean(true)}>
+                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
                   Go to Course
                 </Button>
                 <br />
@@ -121,7 +125,7 @@ export function TeacherCourseCard({ course }) {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Divider variant="fullWidth"></Divider>
+              <Divider variant="fullWidth" />
             </Grid>
             <Grid
               container
@@ -130,15 +134,18 @@ export function TeacherCourseCard({ course }) {
               justify="flex-end"
             >
               <Box mr={2}>
-                <Button size="small" color="warning" variant="contained">
-                  Edit
-                </Button>
+                <EditCourseButton
+                  courseName={course.name}
+                  courseDescription={course.description}
+                  courseId={course.courseId}
+                  fetchTeacherCourse={fetchTeacherCourse}
+                />
               </Box>
               <Box mr={0}>
                 <Button
-                  size="small"
                   color="secondary"
                   variant="contained"
+                  size="small"
                   onClick={openAlertDelete}
                 >
                   Delete
@@ -152,7 +159,7 @@ export function TeacherCourseCard({ course }) {
                   aria-describedby="alert-dialog-slide-description"
                 >
                   <DialogTitle id="alert-dialog-slide-title">
-                    {'Are you sure to delete this course?'}
+                    Are you sure to delete this course?
                   </DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
@@ -162,11 +169,11 @@ export function TeacherCourseCard({ course }) {
                   </DialogContent>
                   <DialogActions>
                     <Button
-                      onClick={deleteCourse}
-                      color="secondary"
                       variant="contained"
+                      color="secondary"
+                      onClick={deleteCourse}
                     >
-                      Yes, I'm SURE
+                      Yes, I'm sure
                     </Button>
                     <Button
                       onClick={handleClose}
@@ -203,7 +210,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#f5f7fa',
   },
   bodyCourse: {
-    height: 170,
+    height: 'fit-content',
   },
   fw700: {
     fontWeight: 700,

@@ -8,23 +8,23 @@ import {
   Tabs,
   Tab,
 } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { toast } from 'react-toastify';
+import Pagination from '@material-ui/lab/Pagination';
 import SwipeableViews from 'react-swipeable-views';
 
 import { CourseCard } from './CourseCard';
-import { toast } from 'react-toastify';
 
 import getUserCourseList from '../../api/graphql/get-user-course-list';
 import getAllCourses from '../../api/graphql/get-all-courses.js';
 import getRecommendCourses from '../../api/graphql/get-recommend-courses.js';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 import { Recommend } from './Recommend';
-import Pagination from '@material-ui/lab/Pagination';
 
-//TabPanel
+// TabPanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-  
+
   return (
     <div
       role="tabpanel"
@@ -98,8 +98,8 @@ export default function CoursePage() {
       const acceptedResult = await getUserCourseList({
         userId,
         status: 'Accepted',
-        pageNumber: pageNumber,
-        pageSize: pageSize,
+        pageNumber,
+        pageSize,
       });
       const parsedResult = JSON.parse(acceptedResult);
       // console.log(parsedResult);
@@ -198,11 +198,12 @@ export default function CoursePage() {
               Welcome back!
             </Typography>
           </Container>
+          <br />
         </Box>
       </Box>
 
       {/* MIDDLE NAV */}
-      <Container maxWidth="xl" className={classes.middleNav}>
+      <Container fixed className={classes.middleNav}>
         <Grid container justify="flex-start">
           <Grid item>
             <Box position="static" color="default">
@@ -235,7 +236,7 @@ export default function CoursePage() {
             <Container maxWidth="lg">
               <Recommend
                 recommendArr={recommendArr}
-                title="Recommend for Computer Science"
+                title="Recommended courses for Computer Science"
               />
             </Container>
           </Box>
@@ -354,8 +355,8 @@ export default function CoursePage() {
       {isLoading ? (
         <LinearProgress style={{ backGround: '#2a73cc' }} />
       ) : (
-        RenderComponent
-      )}
+          RenderComponent
+        )}
     </>
   );
 }
@@ -378,7 +379,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeatX: 'no-repeat',
     backgroundRepeatY: 'no-repeat',
     backgroundSize: 'contain',
-    height: 150,
+    height: 'fit-content',
   },
   bodyCourse: {
     height: 170,

@@ -9,14 +9,14 @@ import {
   Tab,
 } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
+import { toast } from 'react-toastify';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { TeacherCourseCard } from './TeacherCourseCard';
-import { toast } from 'react-toastify';
 import getTeacherCourseList from '../../api/graphql/get-teacher-course-list.js';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
 import { Recommend } from './Recommend';
-import Pagination from '@material-ui/lab/Pagination';
 import { NewCourseBox } from './NewCourseBox';
 
 function TabPanel(props) {
@@ -144,6 +144,7 @@ export default function CoursePage() {
               Welcome back!
             </Typography>
           </Container>
+          <br />
         </Box>
       </Box>
 
@@ -181,7 +182,7 @@ export default function CoursePage() {
             <Container maxWidth="lg">
               <Recommend
                 recommendArr={courses}
-                title="Might be you want to access"
+                title="Recommended Courses"
               />
             </Container>
           </Box>
@@ -213,12 +214,12 @@ export default function CoursePage() {
                     </Box>
                   </Container>
                   {courses.map((course) => (
-                    <TeacherCourseCard course={course} />
+                    <TeacherCourseCard course={course} fetchTeacherCourse={fetchTeacherCourse} />
                   ))}
                 </Grid>
                 <Grid item xs={12} lg={4}>
                   <Box mt={9}>
-                    <NewCourseBox />
+                    <NewCourseBox fetchTeacherCourse={fetchTeacherCourse} />
                   </Box>
                   {/* <NewPostBox /> */}
                 </Grid>
@@ -327,10 +328,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeatX: 'no-repeat',
     backgroundRepeatY: 'no-repeat',
     backgroundSize: 'contain',
-    height: 150,
+    height: 'fit-content',
   },
   bodyCourse: {
-    height: 170,
+    height: 'fit-content',
   },
   fw700: {
     fontWeight: 700,

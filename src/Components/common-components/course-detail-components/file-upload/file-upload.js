@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
  import graphqlMultipleUpload from '../../../../api/graphql/graphql-multiple-upload';
+import { toast } from 'react-toastify';
 
 // TODO: Submit button loading state and success/failure messages
 const FileUpload = ({ title }) => {
@@ -16,7 +17,13 @@ const FileUpload = ({ title }) => {
 
   const handleFilesSubmit = async () => {
     const result = await graphqlMultipleUpload(files);
-    console.log(result);
+    if (result.data?.uploadFileMultiple?.length !== 0) {
+      toast.success('Assignments uploaded successfully!', {
+        autoClose: 3000,
+      });
+    } else {
+      toast.error('No assignments were uploaded.');
+    }
   };
 
   return (
