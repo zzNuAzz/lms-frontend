@@ -43,12 +43,12 @@ export default function ProfileEdit() {
 			<hr></hr>
 			<div>
 				<div style={{fontSize: "150%"}}>Information</div>
-				<div>Let the Coursera community of other learners and instructors recognize you.</div>
+				<div>Let your friends and teachers recognize you.</div>
 				<Grid container>
-					<Grid container direction="column" item xs={6}>
+					<Grid container direction="column" item xs={12} lg={6}>
 						<AvatarUpload userProfile={userProfile} />
 					</Grid>
-					<Grid container item xs={6}>
+					<Grid container item xs={12} lg={6}>
 						<ProfileEditForm userProfile={userProfile} setUserProfile={setUserProfile} />
 					</Grid>
 				</Grid>
