@@ -268,7 +268,7 @@ const TeacherCourseDetailPage = () => {
         </Grid>
         <Grid item md="10">
           <br />
-          <Container>
+          <Container maxWidth="md">
             {(() => {
               switch (tabPosition) {
                 case 'Course Info':
