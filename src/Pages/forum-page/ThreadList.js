@@ -1,5 +1,14 @@
-import React from 'react';
-import { Avatar, IconButton, Box, MenuItem, Menu } from '@material-ui/core';
+import React, { Fragment, useEffect, useState } from 'react';
+import {
+  Avatar,
+  AppBar,
+  IconButton,
+  Toolbar,
+  Box,
+  Menu,
+  MenuItem,
+  Fade,
+} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,9 +21,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useParams, useHistory } from 'react-router-dom';
-import Fade from '@material-ui/core/Fade';
-import { toast } from 'react-toastify';
+import Pagination from '@material-ui/lab/Pagination';
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+import { toast } from 'react-toastify';
+import getThreadList from '../../api/graphql/get-thread-list';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -41,15 +52,15 @@ export function CardForum({ forum }) {
   const classes = useStyles();
   const history = useHistory();
   const { courseId } = useParams();
-  const cId = parseInt(courseId);
+  const cId = parseInt(courseId, 10);
   const userId = parseInt(localStorage.getItem('userId'), 10);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openDialog, setOpenDialog] = React.useState(false);
   const viewThread = () => {
-    console.log(forum.threadId);
+    // console.log(forum.threadId);
     const threadId = parseInt(forum.threadId);
-    console.log(cId, threadId, 'abcdefg');
+    // console.log(cId, threadId, 'abcdefg');
     history.push(`/course/forum/${threadId}`);
   };
   
@@ -94,7 +105,7 @@ export function CardForum({ forum }) {
       toast(error);
     }
   };
-  console.log({ forum });
+  // console.log({ forum });
   return (
     <Grid item>
       <Card width="100%" className={classes.root}>
@@ -196,12 +207,58 @@ export function CardForum({ forum }) {
 }
 
 export default function ({ thread }) {
-  console.log({ thread });
+  const [value, setValue] = React.useState(0);
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const { courseId } = useParams();
+  const cId = parseInt(courseId, 10);
+  const [totalPage, setTotalPage] = React.useState(1);
+  const [isLoading, setLoading] = useState(false);
+  const [allThreads, setAllThreads] = useState([]);
+  const pageSize = 5;
+  const handlePagination = (event, pageNum) => {
+    setPageNumber(pageNum);
+    const fetchContent = async () => {
+      await fetchThreadList(cId ,pageNum - 1, pageSize);
+      window.scrollTo(0, 900);
+    };
+    fetchContent();
+  }
+  const fetchThreadList = async (cId , pageNumber, pageSize) => {
+    try{
+      const result = await getThreadList(cId ,pageNumber, pageSize);
+      const parsedResult = result.data;
+      if(parsedResult){
+        setAllThreads(parsedResult.threadList.threadList);
+        setTotalPage(parsedResult.threadList.totalPages);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error){
+      toast(error);
+    }
+  }
+  useEffect(() => {
+    const fetchContent = async () => {
+      setLoading(true);
+      await fetchThreadList(cId ,pageNumber - 1, pageSize);
+      setLoading(false);
+    };
+    fetchContent();
+  }, []);
   return (
     <>
-      {thread.map((forum) => (
+      {allThreads.map((forum) => (
         <CardForum forum={forum} />
       ))}
+      {/* PAGINATE */}
+      <Grid container justify="center">
+        <Pagination
+          count={totalPage}
+          page={pageNumber}
+          color="primary"
+          onChange={handlePagination}
+        />
+      </Grid>
     </>
   );
 }
