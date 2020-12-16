@@ -11,13 +11,13 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
-export function CourseCard({ course }) {
+export function CourseCard({ course, isEnrolled }) {
   const classes = useStyles();
-  const backGroundArr = [
-    classes.greenBack,
-    classes.blueBack,
-    classes.yellowBack,
-  ];
+  // const backGroundArr = [
+  //   classes.greenBack,
+  //   classes.blueBack,
+  //   classes.yellowBack,
+  // ];
   const teacherName = `Lecturer: ${course.host.lastName} ${course.host.firstName}`;
   // const backGround = backGroundArr[course.courseId % 3];
   const backGround = classes.grayBack;
@@ -52,23 +52,33 @@ export function CourseCard({ course }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth={Boolean(true)}
+                >
                   Go to Course
                 </Button>
                 <br />
-                <Grid item>
-                  <Box py={3}>
-                    <Link to={linkToForum}>
-                      <Typography
-                        classname={classes.center}
-                        variant="body1"
-                        // className={classes.blackText}
-                      >
-                        Go to forum
-                      </Typography>
-                    </Link>
-                  </Box>
-                </Grid>
+                {isEnrolled ? (
+                  <>
+                    <Grid item>
+                      <Box py={3}>
+                        <Link to={linkToForum}>
+                          <Typography
+                            classname={classes.center}
+                            variant="body1"
+                            // className={classes.blackText}
+                          >
+                            Go to forum
+                          </Typography>
+                        </Link>
+                      </Box>
+                    </Grid>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -80,9 +90,7 @@ export function CourseCard({ course }) {
               </Box>
               <Link>
                 {/* <Typography variant="subtitle2" className={classes.blackText}> */}
-                <Typography variant="subtitle2">
-                  {teacherName}
-                </Typography>
+                <Typography variant="subtitle2">{teacherName}</Typography>
               </Link>
             </Grid>
           </Grid>
