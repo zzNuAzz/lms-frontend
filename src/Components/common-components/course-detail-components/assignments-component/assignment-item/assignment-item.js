@@ -163,15 +163,6 @@ const AssignmentItem = ({ assignment }) => {
               return (
                 <>
                   <div className="file-upload">
-                    <DropzoneArea
-                      filesLimit={5}
-                      showPreviews
-                      showPreviewsInDropzone={false}
-                      useChipsForPreview
-                      showAlerts={false}
-                      onChange={handleOnFilesChange}
-                    />
-                    <br />
                     <TextField
                       type="text"
                       name="assignment-description"
@@ -179,6 +170,16 @@ const AssignmentItem = ({ assignment }) => {
                       variant="outlined"
                       onChange={(event) => setDecription(event.target.value)}
                       fullWidth
+                    />
+                    <br />
+                    <br />
+                    <DropzoneArea
+                      filesLimit={5}
+                      showPreviews
+                      showPreviewsInDropzone={false}
+                      useChipsForPreview
+                      showAlerts={false}
+                      onChange={handleOnFilesChange}
                     />
                   </div>
                   <br />
