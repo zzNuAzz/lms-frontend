@@ -8,6 +8,7 @@ import { ProfileEdit } from './profile-page';
 import LoginPage from './account-control-pages/LoginPage';
 import CourseDetailPage from './course-pages-chung/course-detail-pages/course-detail-page';
 import SignUpPage from './account-control-pages/SignUpPage';
+import {ViewProfile} from './profile-page';
 import NotFound404 from './not-found-page'
 
 const defaultConfig = { hasContainer: true, hasNavbar: true, hasFooter: true }
@@ -23,7 +24,8 @@ const routes = [
   { path: '/course/:id', component: CourseDetailPage, ...defaultConfig, hasContainer: false },
   { path: '/signup', component: SignUpPage, ...defaultConfig },
   { path: '/profile/edit', component: ProfileEdit, ...defaultConfig },
-
+  { path: '/profile/view', component: ViewProfile, ...defaultConfig, hasContainer: false },
+  
   // de cai route nay o cuoi cung nha
   {component: NotFound404, ...defaultConfig}
 ];
