@@ -4,11 +4,12 @@ import {
   Button,
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
- import graphqlMultipleUpload from '../../../../api/graphql/graphql-multiple-upload';
+import graphqlMultipleUpload from '../../../../api/graphql/graphql-multiple-upload';
 import { toast } from 'react-toastify';
+import toastFetchErrors from '../../../tools/toast-fetch-errors';
 
 // TODO: Submit button loading state and success/failure messages
-const FileUpload = ({ title }) => {
+const FileUpload = ({ setUploadedFiles }) => {
   const [files, setFiles] = React.useState([]);
 
   const handleOnFilesChange = (addedFiles) => {
@@ -16,19 +17,20 @@ const FileUpload = ({ title }) => {
   };
 
   const handleFilesSubmit = async () => {
-    const result = await graphqlMultipleUpload(files);
-    if (result.data?.uploadFileMultiple?.length !== 0) {
-      toast.success('Assignments uploaded successfully!', {
-        autoClose: 3000,
-      });
-    } else {
-      toast.error('No assignments were uploaded.');
+    try {
+      const result = await graphqlMultipleUpload(files);
+      if (result.data?.uploadFileMultiple?.length !== 0) {
+        setUploadedFiles(result.data.uploadFileMultiple);
+      } else {
+        toastFetchErrors(result);
+      }
+    } catch (error) {
+      toast.error(error);
     }
   };
 
   return (
     <div className="file-upload">
-      <Typography variant="h5">{title}</Typography>
       <br />
       <DropzoneArea
         filesLimit={5}
@@ -44,16 +46,6 @@ const FileUpload = ({ title }) => {
         // }}
         onChange={handleOnFilesChange}
       />
-      <br />
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        onClick={handleFilesSubmit}
-        fullWidth
-      >
-        Submit
-      </Button>
     </div>
   );
 };

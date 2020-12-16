@@ -7,9 +7,10 @@ import {
   DialogTitle,
   Grid,
   makeStyles,
+  Typography,
+  Paper,
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { toast } from 'react-toastify';
 
 import createAssignment from '../../../../../api/graphql/create-assignment';
@@ -21,14 +22,12 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const EditAssignmentComponent = ({
-  assignmentId,
-  currentTitle,
-  currentContent,
+  assignment,
   fetchAssignments
 }) => {
-  const [title, setTitle] = useState(currentTitle);
-  const [content, setContent] = useState(currentContent);
-  const [dueDate, setDueDate] = useState('');
+  const [title, setTitle] = useState(assignment.title);
+  const [content, setContent] = useState(assignment.content);
+  const [dueDate, setDueDate] = useState(assignment.dueDate);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -130,18 +129,18 @@ const EditAssignmentComponent = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Button
-        variant="contained"
-        color="primary"
-        size="small"
-        fullWidth
-        onClick={handleDialogOpen}
-        style={{ height: 54 }}
-      >
-        Edit
-      </Button>
-      <br />
-      <br />
+      <Paper elevation={2} style={{ display: 'flex', padding: '10px 10px' }}>
+        <Typography variant="h6" style={{ flexGrow: 3 }}>{assignment.title}</Typography>
+        <Button
+          variant="text"
+          color="primary"
+          size="small"
+          onClick={handleDialogOpen}
+          style={{ float: 'right' }}
+        >
+          Edit
+        </Button>
+      </Paper>
     </>
   );
 };
