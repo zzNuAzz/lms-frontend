@@ -10,18 +10,20 @@ import CourseDetailPage from './course-pages/course-detail-pages/course-detail-p
 import SignUpPage from './account-control-pages/SignUpPage';
 import {ViewProfile} from './profile-page';
 
+const defaultConfig = {hasContainer: true, hasNavbar: true, hasFooter: true }
+
 const routes = [
-  { path: '/home', component: HomePage, hasContainer: true },
-  { path: '/login', component: LoginPage, hasContainer: true },
-  { path: '/courses', component: CoursePage, hasContainer: true },
-  { path: '/course/:courseId/forum', component: ForumPage, hasContainer: false },
-  { path: '/course/:courseId/newthread', component: NewThread, hasContainer: false },
-  // { path: "/course/:courseId/forum/:threadId", component: ViewPost, hasContainer: false },
-  { path: '/course/forum/:threadId', component: ViewPost, hasContainer: false },
-  { path: '/course/:id', component: CourseDetailPage, hasContainer: true },
-  { path: '/signup', component: SignUpPage, hasContainer: true },
-  { path: '/profile/edit', component: ProfileEdit, hasContainer: true},
-  { path: '/profile/view', component: ViewProfile, hasContainer: false}
+    { path: '/home', component: HomePage, ...defaultConfig },
+    { path: '/login', component: LoginPage, ...defaultConfig },
+    { path: '/courses', component: CoursePage, ...defaultConfig },
+    { path: '/course/:courseId/forum', component: ForumPage, ...defaultConfig, hasContainer: false },
+    { path: '/course/:courseId/newthread',  component: NewThread, ...defaultConfig, hasContainer: false },
+    // { path: "/course/:courseId/forum/:threadId", component: ViewPost, hasContainer: false },
+    { path: '/course/forum/:threadId',  component: ViewPost, ...defaultConfig, hasContainer: false },
+    { path: '/course/:id', component: CourseDetailPage, ...defaultConfig },
+    { path: '/signup', component: SignUpPage, ...defaultConfig },
+    { path: '/profile/edit', component: ProfileEdit, ...defaultConfig },
+    { path: '/profile/view', component: ViewProfile, ...defaultConfig, hasContainer: false },
 ];
 
 export default routes;
