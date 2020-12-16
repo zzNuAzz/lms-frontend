@@ -64,15 +64,12 @@ export default function Forum() {
 
   useEffect(()=> fetchUser(), [userId]); 
 
-  console.log({user});
-
-  // console.log({user});
   useEffect(() => {
     if(user.role === 'Teacher') {
       // console.log(typeof(user.userId));
       let hostId = parseInt(userId, 10);
       console.log(typeof(hostId));
-      getTeacherCourseList({ hostId })
+      getTeacherCourseList(hostId)
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
         console.log({result});
