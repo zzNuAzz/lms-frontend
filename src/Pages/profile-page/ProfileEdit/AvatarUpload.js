@@ -15,8 +15,10 @@ export default function AvatarUpload({ userProfile }) {
     const apply = file => {
         uploadAvatar(file).then(result => {
             if (result?.success) {
-				history.push('/profile');
-                toast.success('Upload avatar successful.');
+                history.push('/profile');
+                toast.success('Upload avatar successful.', {
+                    autoClose: 3000,
+                });
             } else {
                 toast.error(
                     result?.message ? result?.message : 'Upload failed.'

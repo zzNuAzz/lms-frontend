@@ -24,6 +24,10 @@ import MostHelpful from './MostHelpful';
 import { NewPostBox } from './NewPostBox';
 import getThreadList from '../../api/graphql/get-thread-list';
 import getUserCourseList from '../../api/graphql/get-user-course-list';
+import getUserInformation from '../../api/graphql/get-user-information';
+import { toast } from 'react-toastify';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+import getTeacherCourseList from '../../api/graphql/get-teacher-course-list';
 
 export default function Forum() {
   const history = useHistory();
@@ -31,6 +35,7 @@ export default function Forum() {
   const { courseId } = useParams();
   // console.log({courseId});
   const [course, setCourse] = useState({ name: "Course's Name" });
+  const [user, setUser] = useState({});
   const [userId, setUserId] = useState(
     parseInt(localStorage.getItem('userId'), 10),
   );
@@ -42,16 +47,51 @@ export default function Forum() {
   const [thread, setThread] = useState([]);
   const [courseList, setCourseList] = useState([]);
 
+  const fetchUser = async () => {
+    try{
+      const result = await getUserInformation(userId);
+      const parsedResult = JSON.parse(result);
+      if(parsedResult.data){
+        console.log(parsedResult.data.userProfile);
+        setUser(parsedResult.data.userProfile);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
+    }
+  }
+
+  useEffect(()=> fetchUser(), [userId]); 
+
   useEffect(() => {
-    getUserCourseList({ userId })
+    if(user.role === 'Teacher') {
+      // console.log(typeof(user.userId));
+      let hostId = parseInt(userId, 10);
+      console.log(typeof(hostId));
+      getTeacherCourseList(hostId)
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
-        setCourseList(JSON.parse(result).data.userCourseList.courseList);
+        console.log({result});
+        setCourseList(JSON.parse(result).data.courseList.courseList);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+    }
+    else if(user.role === 'Student') {
+      console.log(user.role);
+      getUserCourseList({ userId })
+      .then((result) => {
+        if (result.errors) throw new Error(result.errors[0].message);
+        setCourseList(JSON.parse(result).data.userCourseList.courseList);
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     getThreadList(parseInt(courseId, 10))
