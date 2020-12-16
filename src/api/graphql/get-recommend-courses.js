@@ -1,10 +1,10 @@
 import { graphQLFetch } from './graphql-fetch';
 
 // eslint-disable-next-line import/prefer-default-export
-const getAllCourses = async (pageNumber, pageSize) => {
+const getRecommendCourses = async (pageSize) => {
   const query = `
-  query getAllCourses($pageNumber: Int!, $pageSize: Int!) {
-    courseList(pageNumber: $pageNumber, pageSize: $pageSize) {
+  query getAllCourses($pageSize: Int!) {
+    courseList(pageSize: $pageSize) {
       courseList {
         name
         courseId
@@ -17,18 +17,15 @@ const getAllCourses = async (pageNumber, pageSize) => {
           lastName
         }
       }
-      totalPages
       totalRecords
-      pageNumber
     }
   }
   `;
   const vars = {
-    pageNumber,
     pageSize,
   };
   const result = await graphQLFetch(query, vars);
   return result;
 };
 
-export default getAllCourses;
+export default getRecommendCourses;

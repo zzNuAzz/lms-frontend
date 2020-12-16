@@ -52,7 +52,12 @@ const LoggedInButton = ({ setUsername }) => {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={(event) => handleClick(event)}>
+      <Button
+        variant="contained"
+        color="default"
+        // style={{ color: '#1f1f1f', backgroundColor: '#f3c800' }}
+        onClick={(event) => handleClick(event)}
+      >
         <SentimentVerySatisfiedRoundedIcon />
         &nbsp;
         {username}
@@ -72,14 +77,19 @@ const LoggedInButton = ({ setUsername }) => {
           <MenuItem>Logout</MenuItem>
         </div>
       </Menu>
-      <Dialog
-        open={logoutDialogOpen}
-        onClose={handleLogoutDialogClose}
-      >
+      <Dialog open={logoutDialogOpen} onClose={handleLogoutDialogClose}>
         <DialogTitle>Are you sure you want to log out?</DialogTitle>
         <DialogActions>
-          <Button color="primary" variant="text" onClick={handleLogout}>Yes, I'm sure</Button>
-          <Button color="primary" variant="text" onClick={handleLogoutDialogClose}>No, bring me back!</Button>
+          <Button color="primary" variant="text" onClick={handleLogout}>
+            Yes, I'm sure
+          </Button>
+          <Button
+            color="primary"
+            variant="text"
+            onClick={handleLogoutDialogClose}
+          >
+            No, bring me back!
+          </Button>
         </DialogActions>
       </Dialog>
     </>

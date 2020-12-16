@@ -6,7 +6,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import { AccountCircleRounded } from '@material-ui/icons';
-import {ToastContainer, toast} from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify';
 
 import LoginComponent from '../../login-component/login-component';
 import LoggedInButton from './logged-in-button/logged-in-button';
@@ -56,10 +56,14 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
         // TODO: Logout and Account Information menu
         <LoggedInButton setUsername={setUsername} />
       ) : (
-        <Button variant="contained" color="primary" onClick={handleOpen}>
+        <Button
+          variant="contained"
+          color="default"
+          // style={{ color: '#1f1f1f', backgroundColor: '#f3c800' }}
+          onClick={handleOpen}
+        >
           <AccountCircleRounded />
-          &nbsp;
-          Sign In
+          &nbsp; Sign In
         </Button>
       )}
       <Modal

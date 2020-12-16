@@ -1,7 +1,7 @@
 import { graphQLFetch } from './graphql-fetch';
 
 // eslint-disable-next-line import/prefer-default-export
-const getTeacherCourseList = async (hostId, pageNumber = 0, pageSize = 10) => {
+const getTeacherCourseList = async (hostId, pageNumber = 0, pageSize = 5) => {
   const query = `
   query getTeacherCourseList($hostId: Int!, $pageNumber: Int = 0, $pageSize: Int = 10) {
     courseList (hostId: $hostId, pageSize: $pageSize, pageNumber: $pageNumber) {
@@ -21,6 +21,8 @@ const getTeacherCourseList = async (hostId, pageNumber = 0, pageSize = 10) => {
         }
         name
         description
+        createAt
+        updateAt
       }
       totalRecords
       pageNumber
