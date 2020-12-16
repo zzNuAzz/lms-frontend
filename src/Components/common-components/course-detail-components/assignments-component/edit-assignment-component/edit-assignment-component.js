@@ -14,10 +14,26 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
 
 import createAssignment from '../../../../../api/graphql/create-assignment';
+import { grey } from '@material-ui/core/colors';
 
 const useStyle = makeStyles((theme) => ({
   dialog: {
     width: '960px',
+  },
+  paper: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: '10px 10px',
+  },
+  title: {
+    flexBasis: '33.33%',
+    flexShrink: 0,
+    fontWeight: theme.typography.fontWeightBold,
+  },
+  dueDate: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
+    flexGrow: 1,
   },
 }));
 
@@ -27,7 +43,7 @@ const EditAssignmentComponent = ({
 }) => {
   const [title, setTitle] = useState(assignment.title);
   const [content, setContent] = useState(assignment.content);
-  const [dueDate, setDueDate] = useState(assignment.dueDate);
+  const [dueDate, setDueDate] = useState(new Date(assignment.dueDate));
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -39,6 +55,9 @@ const EditAssignmentComponent = ({
 
   const handleDialogClose = () => {
     setDialogOpen(false);
+  };
+
+  const handleDeleteDialogOpen = () => {
   };
 
   const handleSubmit = async () => {
@@ -129,8 +148,11 @@ const EditAssignmentComponent = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Paper elevation={2} style={{ display: 'flex', padding: '10px 10px' }}>
-        <Typography variant="h6" style={{ flexGrow: 3 }}>{assignment.title}</Typography>
+      <Paper elevation={2} className={classes.paper}>
+        <Typography className={classes.title} variant="h6">{assignment.title}</Typography>
+        <Typography className={classes.dueDate} variant="h6">
+          {`Due: ${assignment.dueDate ? dueDate.toLocaleString() : 'none'}`}
+        </Typography>
         <Button
           variant="text"
           color="primary"
@@ -139,6 +161,15 @@ const EditAssignmentComponent = ({
           style={{ float: 'right' }}
         >
           Edit
+        </Button>
+        <Button
+          variant="text"
+          color="secondary"
+          size="small"
+          onClick={handleDeleteDialogOpen}
+          style={{ float: 'right' }}
+        >
+          Delete
         </Button>
       </Paper>
     </>

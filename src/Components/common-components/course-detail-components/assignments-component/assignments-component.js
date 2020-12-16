@@ -44,11 +44,11 @@ const AssignmentsComponent = ({ assignments, courseId, fetchAssignments }) => {
 
   return (
     <div className="assignments">
-      {role === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetchAssignments} /> : null}
       <div className={classes.title}>
         <Typography variant="h3">Assignments</Typography>
       </div>
       <br />
+      {role === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetchAssignments} /> : null}
       {
         role === 'Student'
           ? (

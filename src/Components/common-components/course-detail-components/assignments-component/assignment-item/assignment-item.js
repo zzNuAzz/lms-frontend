@@ -10,6 +10,7 @@ import {
   TextField,
   makeStyles,
   Tabs,
+  Tab,
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tabActive: {
     fontWeight: theme.typography.fontWeightBold,
-    borderBottom: '5px solid',
+    borderBottom: '3px solid',
     borderBottomColor: theme.palette.primary.main,
   },
   accordionBody: {
@@ -63,7 +64,7 @@ const AssignmentItem = ({ assignment }) => {
   const [files, setFiles] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [tab, setTab] = useState('Content');
+  const [tab, setTab] = useState(0);
 
   const handleOnFilesChange = (addedFiles) => {
     setFiles(addedFiles);
@@ -122,34 +123,43 @@ const AssignmentItem = ({ assignment }) => {
           >
             <Grid item>
               <div
-                className={tab === 'Content' ? classes.tabActive : classes.tabInactive}
+                className={tab === 0 ? classes.tabActive : classes.tabInactive}
                 role="tab"
-                onClick={() => setTab('Content')}
+                onClick={() => setTab(0)}
               >
                 Content
               </div>
             </Grid>
             <Grid item>
               <div
-                className={tab === 'Submission' ? classes.tabActive : classes.tabInactive}
+                className={tab === 1 ? classes.tabActive : classes.tabInactive}
                 role="tab"
-                onClick={() => setTab('Submission')}
+                onClick={() => setTab(1)}
               >
                 My Submission
               </div>
             </Grid>
           </Grid>
+          {/* <Tabs
+            value={tab}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={(event, newVal) => setTab(newVal)}
+          >
+            <Tab label="Content" />
+            <Tab label="My Submission" />
+          </Tabs> */}
         </div>
         <br />
         {(() => {
           switch (tab) {
-            case 'Content':
+            case 0:
               return (
                 <Typography className={classes.bodyDescription} variant="body1">
                   {assignment.content}
                 </Typography>
               )
-            case 'Submission':
+            case 1:
               return (
                 <>
                   <div className="file-upload">
