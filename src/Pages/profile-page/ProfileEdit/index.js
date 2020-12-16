@@ -52,11 +52,7 @@ export default function ProfileEdit() {
 			<hr></hr>
 			<div>
 				<div style={{fontSize: "150%"}}>Information</div>
-<<<<<<< HEAD
 				<div>Let the Learning Management System community of other learners and instructors recognize you.</div>
-=======
-				<div>Let your friends and teachers recognize you.</div>
->>>>>>> 5b09ff835b730712f2f00c4bfe647b3b0d20d808
 				<Grid container>
 					<Grid container direction="column" item xs={12} lg={6}>
 						<AvatarUpload userProfile={userProfile} />
