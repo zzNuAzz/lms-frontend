@@ -9,7 +9,7 @@ import {
   Avatar,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 export function CourseCard({ course, isEnrolled }) {
   const classes = useStyles();
@@ -18,6 +18,8 @@ export function CourseCard({ course, isEnrolled }) {
   //   classes.blueBack,
   //   classes.yellowBack,
   // ];
+  const history = useHistory();
+
   const teacherName = `Lecturer: ${course.host.lastName} ${course.host.firstName}`;
   // const backGround = backGroundArr[course.courseId % 3];
   const backGround = classes.grayBack;
@@ -25,7 +27,9 @@ export function CourseCard({ course, isEnrolled }) {
   // console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
   const linkToCourse = `/course/${course.courseId}`;
-
+  const handleRedirectToCourse = () => {
+    history.push(linkToCourse);
+  }
   return (
     <Box mt={10}>
       <Container className={backGround} maxWidth="md">
@@ -53,36 +57,46 @@ export function CourseCard({ course, isEnrolled }) {
               <Grid item xs={0} lg={6}>
                 <Box className={classes.whiteBack}></Box>
               </Grid>
-              <Grid item xs={12} lg={6} container justify="center">
-                <Link to={linkToCourse}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth={Boolean(true)}
-                  >
-                    Go to Course
-                  </Button>
-                </Link>
-                <br />
+              <Grid
+                item
+                xs={12}
+                lg={6}
+                container
+                justify="center"
+                // direction="column"
+                // alignItems="center"
+              >
+                {/* <Grid item> */}
+                  {/* <Link to={linkToCourse}> */}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth={Boolean(true)}
+                      onClick={handleRedirectToCourse}
+                    >
+                      Go to Course
+                    </Button>
+                  {/* </Link> */}
+                {/* </Grid> */}
                 {isEnrolled ? (
-                  <>
-                    <Grid item>
-                      <Box py={3}>
-                        <Link to={linkToForum}>
-                          <Typography
-                            classname={classes.center}
-                            variant="body1"
-                            // className={classes.blackText}
-                          >
-                            Go to forum
-                          </Typography>
-                        </Link>
-                      </Box>
-                    </Grid>
-                  </>
-                ) : (
+                <>
+                  <Grid item>
+                    <Box py={3}>
+                      <Link to={linkToForum}>
+                        <Typography
+                          classname={classes.center}
+                          variant="body1"
+                          // className={classes.blackText}
+                        >
+                          Go to forum
+                        </Typography>
+                      </Link>
+                    </Box>
+                  </Grid>
+                </>
+                 ) : (
                   <></>
-                )}
+                )} 
               </Grid>
             </Grid>
             <Grid item xs={12}>
