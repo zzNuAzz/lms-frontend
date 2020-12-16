@@ -27,7 +27,7 @@ const getTeacherCourseList = async (hostId, pageNumber = 0, pageSize = 5) => {
       totalRecords
       pageNumber
       totalPages
-    } 
+    }
   }
 `;
   const vars = {
