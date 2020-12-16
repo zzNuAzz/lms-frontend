@@ -24,6 +24,8 @@ export function CourseCard({ course, isEnrolled }) {
 
   // console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
+  const linkToCourse = `/course/${course.courseId}`;
+
   return (
     <Box mt={10}>
       <Container className={backGround} maxWidth="md">
@@ -33,7 +35,7 @@ export function CourseCard({ course, isEnrolled }) {
           </Box>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} lg={6} className={classes.bodyCourse}>
-              <Link>
+              <Link to={linkToCourse}>
                 <Typography
                   variant="h5"
                   color="primary"
@@ -52,13 +54,15 @@ export function CourseCard({ course, isEnrolled }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth={Boolean(true)}
-                >
-                  Go to Course
-                </Button>
+                <Link to={linkToCourse}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth={Boolean(true)}
+                  >
+                    Go to Course
+                  </Button>
+                </Link>
                 <br />
                 {isEnrolled ? (
                   <>

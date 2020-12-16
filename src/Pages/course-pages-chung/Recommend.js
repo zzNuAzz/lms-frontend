@@ -18,25 +18,25 @@ import { Link } from 'react-router-dom';
 export function Recommend({ recommendArr, title }) {
   const classes = useStyles();
 
-  function shuffle(array) {
-    var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
+  // function shuffle(array) {
+  //   var currentIndex = array.length,
+  //     temporaryValue,
+  //     randomIndex;
 
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
+  //   // While there remain elements to shuffle...
+  //   while (0 !== currentIndex) {
+  //     // Pick a remaining element...
+  //     randomIndex = Math.floor(Math.random() * currentIndex);
+  //     currentIndex -= 1;
 
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
+  //     // And swap it with the current element.
+  //     temporaryValue = array[currentIndex];
+  //     array[currentIndex] = array[randomIndex];
+  //     array[randomIndex] = temporaryValue;
+  //   }
 
-    return array;
-  }
+  //   return array;
+  // }
 
   function getRandom(arr, n) {
     var result = new Array(n),
@@ -60,7 +60,7 @@ export function Recommend({ recommendArr, title }) {
     'https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/f4/acffe00bd811e8bfabed507b508fa4/ds0105en-square.png?auto=format%2Ccompress&dpr=1&w=250',
     'https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera.s3.amazonaws.com/topics/ml/large-icon.png?auto=format%2Ccompress&dpr=1&w=250',
   ];
-  shuffle(recommendCoursesImgArr);
+  // shuffle(recommendCoursesImgArr);
   const breakPoints = [
     { width: 1, itemsToShow: 1, itemsToScroll: 1 },
     { width: 550, itemsToShow: 2, itemsToScroll: 2 },
@@ -84,38 +84,41 @@ export function Recommend({ recommendArr, title }) {
         <Carousel breakPoints={breakPoints}>
           {recommendCourses.map((course, index) => (
             <Card className={classes.card}>
-              <CardActionArea>
-                <CardMedia
-                  className={classes.media}
-                  image={recommendCoursesImgArr[index]}
-                  title="Contemplative Reptile"
-                />
-                <CardContent className={classes.content}>
-                  <Avatar
-                    src={course.host.pictureUrl}
-                    variant="rounded"
-                    className={classes.large}
-                  ></Avatar>
-                  <Box mt={5}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {course.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {course.host.firstname} {course.host.lastname}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </CardActionArea>
+              <Link to={`/course/${course.courseId}`}>
+                <CardActionArea>
+                  <CardMedia
+                    className={classes.media}
+                    image={recommendCoursesImgArr[index]}
+                    title="Contemplative Reptile"
+                  />
+                  <CardContent className={classes.content}>
+                    <Avatar
+                      src={course.host.pictureUrl}
+                      variant="rounded"
+                      className={classes.large}
+                    ></Avatar>
+                    <Box mt={5}>
+                      <Typography gutterBottom variant="h5" component="h2" style={{color: "black"}}>
+                        {course.name}
+                      </Typography>
+                      {/* <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        {course.host.firstname} {course.host.lastname}
+                      </Typography> */}
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Link>
               <Divider variant="fullWidth"></Divider>
               <CardActions>
                 <Box pl={3}>
                   <Link>
                     <Typography variant="subtitle2">
-                      Lecturer: {course.host.lastName + " " + course.host.firstName}
+                      Lecturer:{' '}
+                      {course.host.lastName + ' ' + course.host.firstName}
                     </Typography>
                   </Link>
                 </Box>
