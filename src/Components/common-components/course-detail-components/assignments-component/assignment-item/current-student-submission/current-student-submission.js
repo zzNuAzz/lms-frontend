@@ -35,7 +35,6 @@ const CurrentStudentSubmission = ({ files, description, fetchSubmission }) => {
           )
           : (
             <>
-              <hr />
               <Typography variant="h6">
                 Description
               </Typography>
