@@ -12,8 +12,8 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import SentimentVerySatisfiedRoundedIcon from '@material-ui/icons/SentimentVerySatisfiedRounded';
 import { toast } from 'react-toastify';
+import userLogout from '../../../../api/user-logout';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -48,18 +48,22 @@ const LoggedInButton = ({ setUsername }) => {
     history.go(0);
   };
 
-  const handleLogout = () => {
-    // TODO: Remove Cookies (necessary?)
-    localStorage.clear();
-    setUsername('');
-    setLogoutDialogOpen(false);
-    toast.info('See you soon!', {
-      autoClose: 2000,
-    });
-    setTimeout(() => {
-      history.push('/home');
-      history.go(0);
-    }, 2000);
+  const handleLogout = async () => {
+    const result = await userLogout();
+    if (result.success) {
+      localStorage.clear();
+      setUsername('');
+      setLogoutDialogOpen(false);
+      toast.info('See you soon!', {
+        autoClose: 1000,
+      });
+      setTimeout(() => {
+        history.push('/home');
+        history.go(0);
+      }, 1000);
+    } else {
+      toast.error('Unable to logout, please try again!');
+    }
   };
 
   const handleLogoutDialogClose = () => {
