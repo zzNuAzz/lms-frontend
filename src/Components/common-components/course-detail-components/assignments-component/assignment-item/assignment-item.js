@@ -3,23 +3,18 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Button,
   Grid,
-  Paper,
   Typography,
-  TextField,
   makeStyles,
-  Tabs,
-  Tab,
 } from '@material-ui/core';
-import { DropzoneArea } from 'material-ui-dropzone';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
-
-import graphqlMultipleUpload from '../../../../../api/graphql/graphql-multiple-upload';
-import { toast } from 'react-toastify';
-import toastFetchErrors from '../../../../tools/toast-fetch-errors';
-import createSubmission from '../../../../../api/graphql/create-submission';
 import { grey } from '@material-ui/core/colors';
+import { toast } from 'react-toastify';
+
+import getSubmission from '../../../../../api/graphql/get-submission';
+import toastFetchErrors from '../../../../tools/toast-fetch-errors';
+import CreateSubmissionComponent from './create-submission-component/create-submission-component';
+import CurrentStudentSubmission from './current-student-submission/current-student-submission';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -41,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   tabInactive: {
     '&:hover': {
       backgroundColor: grey['200'],
-    }
+    },
   },
   tabActive: {
     fontWeight: theme.typography.fontWeightBold,
@@ -59,52 +54,28 @@ const useStyles = makeStyles((theme) => ({
 
 const AssignmentItem = ({ assignment }) => {
   const classes = useStyles();
-  const [description, setDecription] = useState('');
+
+  const [submissionFiles, setSubmissionFiles] = useState([]);
+  const [submissionDescription, setSubmissionDescription] = useState('');
   const [dueDate, setDueDate] = useState(new Date(assignment.dueDate));
-  const [files, setFiles] = useState([]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [isLoading, setLoading] = useState(false);
   const [tab, setTab] = useState(0);
 
-  const handleOnFilesChange = (addedFiles) => {
-    setFiles(addedFiles);
-  };
-
-  const handleAssignmentsSubmit = async (assignmentId) => {
-    setLoading(true);
+  const fetchSubmission = async () => {
     try {
-      const fileUploadResult = await graphqlMultipleUpload(files);
-      if (fileUploadResult.data?.uploadFileMultiple?.length !== 0) {
-        setUploadedFiles(fileUploadResult.data.uploadFileMultiple);
-        const result = await createSubmission(
-          assignmentId,
-          description,
-          uploadedFiles,
-        );
-        const parsedResult = JSON.parse(result);
-        if (parsedResult.data) {
-          if (parsedResult.data.createSubmission.success) {
-            toast.success('Assignment uploaded successfully!', {
-              autoClose: 3000,
-            });
-            setLoading(false);
-          } else {
-            toast.error(parsedResult.data.createSubmission.message);
-            setLoading(false);
-          }
-        } else {
-          toastFetchErrors(parsedResult);
-          setLoading(false);
+      const result = await getSubmission(parseInt(assignment.assignmentId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.submission) {
+          setSubmissionFiles(parsedResult.data.submission.files);
+          setSubmissionDescription(parsedResult.data.submission.description);
         }
       } else {
-        toastFetchErrors(fileUploadResult);
-        setLoading(false);
+        toastFetchErrors(parsedResult);
       }
     } catch (error) {
       toast.error(error);
-      setLoading(false);
     }
-  }
+  };
 
   return (
     <Accordion>
@@ -140,15 +111,6 @@ const AssignmentItem = ({ assignment }) => {
               </div>
             </Grid>
           </Grid>
-          {/* <Tabs
-            value={tab}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={(event, newVal) => setTab(newVal)}
-          >
-            <Tab label="Content" />
-            <Tab label="My Submission" />
-          </Tabs> */}
         </div>
         <br />
         {(() => {
@@ -158,49 +120,34 @@ const AssignmentItem = ({ assignment }) => {
                 <Typography className={classes.bodyDescription} variant="body1">
                   {assignment.content}
                 </Typography>
-              )
+              );
             case 1:
               return (
-                <>
-                  <div className="file-upload">
-                    <TextField
-                      type="text"
-                      name="assignment-description"
-                      label="Description (Optional)"
-                      variant="outlined"
-                      onChange={(event) => setDecription(event.target.value)}
-                      fullWidth
-                    />
-                    <br />
-                    <br />
-                    <DropzoneArea
-                      filesLimit={5}
-                      showPreviews
-                      showPreviewsInDropzone={false}
-                      useChipsForPreview
-                      showAlerts={false}
-                      onChange={handleOnFilesChange}
-                    />
-                  </div>
+                <div className="submission">
+                  <Typography variant="h5">
+                    Your submission
+                  </Typography>
+                  <CurrentStudentSubmission
+                    files={submissionFiles}
+                    description={submissionDescription}
+                    key={assignment.assignmentId}
+                    fetchSubmission={fetchSubmission}
+                  />
                   <br />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleAssignmentsSubmit(assignment.assignmentId, description)}
-                    fullWidth
-                    disabled={isLoading}
-                  >
-                    Submit
-                  </Button>
-                </>
-              )
+                  <CreateSubmissionComponent
+                    assignmentId={assignment.assignmentId}
+                    key={assignment.assignmentId}
+                    fetchSubmission={fetchSubmission}
+                  />
+                </div>
+              );
             default:
-              break;
+              return null;
           }
         })()}
       </AccordionDetails>
     </Accordion>
-  )
+  );
 };
 
 export default AssignmentItem;
