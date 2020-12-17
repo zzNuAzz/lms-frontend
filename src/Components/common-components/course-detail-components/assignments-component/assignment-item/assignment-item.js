@@ -124,9 +124,6 @@ const AssignmentItem = ({ assignment }) => {
             case 1:
               return (
                 <div className="submission">
-                  <Typography variant="h5">
-                    Your submission
-                  </Typography>
                   <CurrentStudentSubmission
                     files={submissionFiles}
                     description={submissionDescription}
