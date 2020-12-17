@@ -47,6 +47,7 @@ const CreateSubmissionComponent = ({ assignmentId, fetchSubmission }) => {
             });
             setLoading(false);
             fetchSubmission();
+            handleCloseSubmission();
           } else {
             toast.error(parsedResult.data.createSubmission.message);
             setLoading(false);
