@@ -31,7 +31,6 @@ import getTeacherCourseList from '../../api/graphql/get-teacher-course-list';
 
 export default function Forum() {
   const history = useHistory();
-
   const { courseId } = useParams();
   // console.log({courseId});
   const [course, setCourse] = useState({ name: "Course's Name" });
@@ -43,7 +42,6 @@ export default function Forum() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
   const [thread, setThread] = useState([]);
   const [courseList, setCourseList] = useState([]);
 
@@ -52,7 +50,7 @@ export default function Forum() {
       const result = await getUserInformation(userId);
       const parsedResult = JSON.parse(result);
       if(parsedResult.data){
-        console.log(parsedResult.data.userProfile);
+        // console.log(parsedResult.data.userProfile);
         setUser(parsedResult.data.userProfile);
       } else {
         toastFetchErrors(parsedResult);
@@ -62,18 +60,21 @@ export default function Forum() {
     }
   }
 
-  useEffect(()=> fetchUser(), [userId]); 
+  useEffect(()=> {
+    let isMounted = true;
+    if (isMounted) fetchUser();
+    return () => { isMounted = false };
+  }
+  ,[userId]); 
 
   useEffect(() => {
+    let isMounted = true;
     if(user.role === 'Teacher') {
-      // console.log(typeof(user.userId));
       let hostId = parseInt(userId, 10);
-      console.log(typeof(hostId));
       getTeacherCourseList(hostId)
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
-        console.log({result});
-        setCourseList(JSON.parse(result).data.courseList.courseList);
+        if (isMounted) setCourseList(JSON.parse(result).data.courseList.courseList);
       })
       .catch((err) => {
         console.log(err);
@@ -84,16 +85,17 @@ export default function Forum() {
       getUserCourseList({ userId })
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
-        setCourseList(JSON.parse(result).data.userCourseList.courseList);
-        console.log(result);
+        if (isMounted) setCourseList(JSON.parse(result).data.userCourseList.courseList);
       })
       .catch((err) => {
         console.log(err);
       });
     }
+    return () => { isMounted = false };
   }, [user]);
 
   useEffect(() => {
+    let isMounted = true;
     getThreadList(parseInt(courseId, 10))
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
@@ -101,12 +103,13 @@ export default function Forum() {
           threadList: { threadList },
           course,
         } = result.data;
-        setThread(threadList);
-        setCourse(course);
+        if (isMounted) setThread(threadList);
+        if (isMounted) setCourse(course);
       })
       .catch((err) => {
         console.log(err);
       });
+      return () => { isMounted = false };
   }, [courseId]);
 
   const handleClick = (event) => {
