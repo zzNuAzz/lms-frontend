@@ -44,15 +44,15 @@ export default function ProfileEdit() {
 	useEffect(fetchUserProfile, []);
 
 	return (
-		<Container>
+		<Container style={{marginTop:'20px'}}>
 			<Grid container direction="row" justify="space-between" alignItems="flex-end">
 				<h2>Edit my profile</h2>
-				<Button size="large" variant="contained" color="primary" onClick={()=>{history.push('/profile/view')}}>View Profile</Button>
+				<Button size="large" variant="contained" color="primary" onClick={()=>{history.push('/profile/view/'+userId)}}>View Profile</Button>
 			</Grid>
 			<hr></hr>
 			<div>
 				<div style={{fontSize: "150%"}}>Information</div>
-				<div>Let the Learning Management System community of other learners and instructors recognize you.</div>
+				<div>Let your friends and teachers recognize you.</div>
 				<Grid container>
 					<Grid container direction="column" item xs={12} lg={6}>
 						<AvatarUpload userProfile={userProfile} />
