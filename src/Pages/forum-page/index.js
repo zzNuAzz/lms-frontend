@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import SearchBar from 'material-ui-search-bar';
 import {
@@ -126,6 +127,7 @@ export default function Forum() {
   };
   // console.log('CourseList: ', courseList);
   const newThreadLink = `/course/${courseId}/newthread`;
+  const coursesLink = `/courses`;
   return (
     <>
       <div className={classes.root}>
@@ -186,6 +188,14 @@ export default function Forum() {
                     <AddBoxIcon />
                     <Typography variant="subtitle1" color="primary">
                       Add new topic
+                    </Typography>
+                  </IconButton>
+                </Link>
+                <Link to={coursesLink}>
+                  <IconButton edge="start" color="primary" aria-label="menu">
+                    <ArrowBackIcon/>
+                    <Typography variant="subtitle1" color="primary">
+                      Back to Courses
                     </Typography>
                   </IconButton>
                 </Link>

@@ -57,6 +57,7 @@ export function CardForum({ forum }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [flag, setFlag] = React.useState(true);
   const viewThread = () => {
     // console.log(forum.threadId);
     const threadId = parseInt(forum.threadId);
@@ -79,6 +80,10 @@ export function CardForum({ forum }) {
 
   const handleEdit = () => {
     setAnchorEl(null);
+  };
+
+  const handleLike = () => {
+    setFlag(!flag);
   };
 
   const handleClose = () => {
@@ -160,7 +165,11 @@ export function CardForum({ forum }) {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites" color="primary">
+          <IconButton 
+            aria-label="add to favorites"  
+            onClick={handleLike}
+            color={flag ? "action" : "primary"}
+          >
             <ThumbUpIcon />
           </IconButton>
           <Typography variant="caption" gutterTop>
