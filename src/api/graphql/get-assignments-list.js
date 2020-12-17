@@ -5,7 +5,7 @@ const getAssignmentsList = async (courseId, pageNumber = 0, pageSize = 10) => {
   query getAssignments(
     $courseId: Int!
     $pageNumber: Int = 0 
-    $pageSize: Int = 10
+    $pageSize: Int = 100
   ) {
     assignmentList(courseId: $courseId, pageNumber: $pageNumber, pageSize: $pageSize) {
       assignmentList {
