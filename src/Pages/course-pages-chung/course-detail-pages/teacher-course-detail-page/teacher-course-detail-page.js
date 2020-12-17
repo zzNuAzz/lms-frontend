@@ -29,7 +29,6 @@ import { toast } from 'react-toastify';
 
 import OverviewComponent from '../../../../Components/common-components/course-detail-components/overview-component/overview-component';
 import AssignmentsComponent from '../../../../Components/common-components/course-detail-components/assignments-component/assignments-component';
-import ForumComponent from '../../../../Components/common-components/course-detail-components/forum-component/forum-component';
 import DocumentComponent from '../../../../Components/common-components/course-detail-components/document-component/document-component';
 import getAssignmentsList from '../../../../api/graphql/get-assignments-list';
 import CourseMembersComponent from '../../../../Components/teacher-components/course-members-component/course-members-component';
@@ -57,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       background: grey['50'],
     },
-    fontWeight: 'lighter',
   },
   tabButtonActive: {
     display: 'flex',

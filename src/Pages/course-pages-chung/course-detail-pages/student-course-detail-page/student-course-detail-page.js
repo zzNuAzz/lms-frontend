@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       background: grey['50'],
     },
-    fontWeight: 'lighter',
   },
   tabButtonActive: {
     display: 'flex',
