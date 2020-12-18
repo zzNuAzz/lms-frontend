@@ -37,7 +37,7 @@ const CourseMembersComponent = ({ courseId }) => {
   const [rejectedMembers, setRejectedMembers] = useState([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   //* Current member id for menu (different scope and is required for status update)
   const [currentMemberId, setCurrentMemberId] = useState();
 

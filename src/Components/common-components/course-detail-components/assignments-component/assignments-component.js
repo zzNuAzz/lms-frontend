@@ -27,7 +27,7 @@ const AssignmentsComponent = ({ courseId }) => {
   const role = localStorage.getItem('role');
 
   const [assignments, setAssignments] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   const fetchAssignments = async () => {
     try {
@@ -54,30 +54,41 @@ const AssignmentsComponent = ({ courseId }) => {
   }, []);
 
   const RenderComponent = (
-    <div className="assignments">
-      {role === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetch} /> : null}
+    <>
       {
-        role === 'Student'
+        assignments.length === 0
           ? (
-            <div className={classes.assignmentItem}>
-              {assignments.map((assignment) => (
-                <AssignmentItem assignment={assignment} key={assignment.assignmentId} />
-              ))}
+            <div className="no-assignment" style={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant="h6">Hooray! No assignments!</Typography>
             </div>
           )
-          : (
-            <div className={classes.editAssignmentItem}>
-              {assignments.map((assignment) => (
-                <>
-                  <EditAssignmentComponent assignment={assignment} key={assignment.assignmentId} />
-                  <br />
-                </>
-              ))}
-            </div>
-          )
+          : null
       }
+      <div className="assignments">
+        {role === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetch} /> : null}
+        {
+          role === 'Student'
+            ? (
+              <div className={classes.assignmentItem}>
+                {assignments.map((assignment) => (
+                  <AssignmentItem assignment={assignment} key={assignment.assignmentId} />
+                ))}
+              </div>
+            )
+            : (
+              <div className={classes.editAssignmentItem}>
+                {assignments.map((assignment) => (
+                  <>
+                    <EditAssignmentComponent assignment={assignment} key={assignment.assignmentId} />
+                    <br />
+                  </>
+                ))}
+              </div>
+            )
+        }
 
-    </div>
+      </div>
+    </>
   );
 
   return (

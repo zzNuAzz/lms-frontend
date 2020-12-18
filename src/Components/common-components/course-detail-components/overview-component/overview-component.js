@@ -39,7 +39,7 @@ const OverviewComponent = ({
   const [courseName, setCourseName] = useState('');
   const [courseDescription, setCourseDescription] = useState('');
   const [courseShortDescription, setCourseShortDescription] = useState('');
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   const fetchCourseHost = async () => {
     try {

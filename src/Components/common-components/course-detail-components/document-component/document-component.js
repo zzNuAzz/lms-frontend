@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const DocumentComponent = ({ courseId }) => {
   const classes = useStyles();
   const [documents, setDocuments] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const role = localStorage.getItem('role') || '';
 
   const fetchDocuments = async () => {
