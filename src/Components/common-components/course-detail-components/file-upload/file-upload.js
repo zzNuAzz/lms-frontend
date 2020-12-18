@@ -25,7 +25,7 @@ const FileUpload = ({ setUploadedFiles }) => {
         toastFetchErrors(result);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.toString());
     }
   };
 

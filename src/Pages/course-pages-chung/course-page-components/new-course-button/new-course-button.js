@@ -48,7 +48,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.toString());
     }
   };
 

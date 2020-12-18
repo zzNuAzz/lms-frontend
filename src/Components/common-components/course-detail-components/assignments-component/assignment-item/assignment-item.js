@@ -73,7 +73,7 @@ const AssignmentItem = ({ assignment }) => {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.toString());
     }
   };
 
@@ -117,7 +117,7 @@ const AssignmentItem = ({ assignment }) => {
           switch (tab) {
             case 0:
               return (
-                <Typography className={classes.bodyDescription} variant="body1">
+                <Typography variant="body1">
                   {assignment.content}
                 </Typography>
               );
