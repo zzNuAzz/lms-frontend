@@ -7,18 +7,19 @@ import ProfileForm from './ProfileForm';
 import {getProfile, editProfile} from '../../../api/graphql/profile'
 import { toast } from 'react-toastify';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 
 
 export default function ViewProfile() {
-	const [userId, setUserId] = useState(parseInt(localStorage.getItem('userId'), 10));
+	const [currentUserId] = useState(parseInt(localStorage.getItem('userId'), 10));
 	const [userProfile, setUserProfile] = useMergeState({});
 	const history = useHistory();
+	const {userId} = useParams();
 
 	
 	const fetchUserProfile = () => {
-		getProfile(userId).then(result => {
+		getProfile(parseInt(userId, 10)).then(result => {
 			result.userProfile.isChanged = false;
 			setUserProfile(result.userProfile);
 	  	});
@@ -43,13 +44,15 @@ export default function ViewProfile() {
 	useEffect(fetchUserProfile, []);
 
 	return (
-		<Container>
-            <Grid container direction="row" justify="space-between" alignItems="flex-end">
-                <h2>Profile</h2>
-                <IconButton onClick={()=>{history.push('/profile/edit')}}>
-                    <BorderColorIcon style={{color: 'black'}} fontSize="large"></BorderColorIcon>
-                </IconButton>
-               
+		<Container style={{marginTop:'20px'}}>
+			<Grid container direction="row" justify="space-between" alignItems="flex-end">
+					<h2>Profile</h2>
+					{ (userId==currentUserId) ?
+					<IconButton onClick={()=>{history.push('/profile/edit')}}>
+							<BorderColorIcon style={{color: 'black'}} fontSize="large"></BorderColorIcon>
+					</IconButton>
+					: null	
+					}
 			</Grid>
 			<hr></hr>
 			<div>
@@ -59,7 +62,7 @@ export default function ViewProfile() {
 					<Grid container direction="column" item xs={6} >
 						<Avatar userProfile={userProfile} />
 					</Grid>
-					<Grid container item xs={6} style={{marginTop: '70px'}}>
+					<Grid container item xs={6} style={{marginTop: '25px'}}>
 						<ProfileForm userProfile={userProfile} setUserProfile={setUserProfile} />
 					</Grid>
 				</Grid>

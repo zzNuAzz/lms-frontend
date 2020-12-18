@@ -65,15 +65,20 @@ class ChangePassword extends Component {
         if(this.state.newPassword !== this.state.confirmPassword){
             this.setState({
                 error: "Wrong confirm password, please try again!"
-            })
+            });
             return;
         }
         const result = await updatePassword(this.state.currentPassword, this.state.newPassword);
-        console.log(result);
         if(result.data.updateUserPassword.success) {
-            toast.success('Update successfully!');
+            // toast.success('Update successfully!');
+            this.setState({
+                error:'Update successfully!'
+            });
         } else {
-            toast.error(result.data.updateUserPassword?.message);
+            // toast.error(result.data.updateUserPassword?.message);
+            this.setState({
+                error: 'Incorrect password'
+            });
         }
     }
 
@@ -83,6 +88,7 @@ class ChangePassword extends Component {
             newPassword:'',
             confirmPassword:'',
             isChanged: false,
+            error:'',
         })
 
     }
@@ -184,6 +190,11 @@ class ChangePassword extends Component {
                         </Grid>
                     </Grid>
                 </Grid>
+                { (self.state.error!='') ?
+                <Grid style={{marginTop: '40px'}} container direction="row" justify="center" alignItems="center">
+                    <i style={{color: 'red'}}>{self.state.error}</i>
+                </Grid>
+                : null}
                 <Grid style={{marginTop: '40px'}} container direction="row" justify="center" alignItems="center">
 					<Button size="large" variant="contained" color="secondary" disabled={!self.state.isChanged} onClick={self.cancel} style={{marginRight: "30px", marginLeft: "-15px"}} >
 						Cancel 

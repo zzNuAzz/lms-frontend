@@ -9,29 +9,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import PhoneAndroidIcon from '@material-ui/icons/PhoneAndroid';
 
 
-
-
-
-
-function TextInput(props) {
-  const {name, value, onChange, label, fullWidth, variant, ...rest} = props;
-  return (
-    <Grid style={{marginTop: "25px"}} container direction="row">
-      <Grid item container xs={2} justify="flex-end" alignItems="center" style={{paddingRight: "1rem",fontWeight: "bold" }} >{label}</Grid>
-      <Grid item xs={8}>
-        <TextField 
-          name={name ? name : ""}
-          value={value ? value : ""}
-          onChange={onChange ? onChange : null}
-          variant={variant === undefined ?  "outlined" : variant} 
-          fullWidth={fullWidth === undefined ? true : fullWidth} 
-          {...rest}
-        />
-      </Grid>
-    </Grid>
-  )
-}
-
 const useStyles = makeStyles((theme) => ({
     root: {
       width: '100%',
@@ -53,13 +30,6 @@ export default function ProfileForm({userProfile, setUserProfile}) {
 
   return (
     <Fragment>
-      {/* <TextInput label="Username" name="username" value={username} InputProps={{readOnly: true}}/>
-      <TextInput label="First Name" name="firstName" value={firstName} onChange={handleInputChange} InputProps={{readOnly: true}} />
-      <TextInput label="Last Name" name="lastName" value={lastName} onChange={handleInputChange} InputProps={{readOnly: true}}/>
-      <TextInput label="Birthday" name="birthday" value={birthday} type="date" format="dd/MM/yyyy" onChange={handleInputChange} InputProps={{readOnly: true}}/>
-      <TextInput label="Email "name="email" value={email} onChange={handleInputChange} InputProps={{readOnly: true}}/>
-      <TextInput label="Phone" name="phone" value={phone} onChange={handleInputChange} InputProps={{readOnly: true}}/>
-      <TextInput label="Address" name="address" value={address} onChange={handleInputChange} InputProps={{readOnly: true}}/> */}
         <List className={classes.root}>
             <ListItem>
                 <ListItemAvatar>
@@ -67,7 +37,7 @@ export default function ProfileForm({userProfile, setUserProfile}) {
                     <AccountBoxIcon/>
                 </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={username} bold/>
+                <ListItemText primary="Username" secondary={username} bold/>
             </ListItem>
             <Divider variant="inset" component="li" />
             <ListItem>
@@ -76,7 +46,7 @@ export default function ProfileForm({userProfile, setUserProfile}) {
                     <DnsIcon />
                 </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={firstName+' '+lastName} />
+                <ListItemText primary="Name" secondary={firstName+' '+lastName} />
             </ListItem>
             <Divider variant="inset" component="li" />
             <ListItem>
@@ -85,7 +55,7 @@ export default function ProfileForm({userProfile, setUserProfile}) {
                     <CakeIcon />
                 </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={birthday}/>
+                <ListItemText primary="Birthday" secondary={birthday ? birthday : "None"}/>
             </ListItem>
             <Divider variant="inset" component="li" />
             <ListItem>
@@ -94,7 +64,7 @@ export default function ProfileForm({userProfile, setUserProfile}) {
                     <EmailIcon />
                 </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={email}/>
+                <ListItemText primary="Email" secondary={email ? email : "None"}/>
             </ListItem>
             <Divider variant="inset" component="li" />
             <ListItem>
@@ -103,7 +73,7 @@ export default function ProfileForm({userProfile, setUserProfile}) {
                     <PhoneAndroidIcon />
                 </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={phone}/>
+                <ListItemText primary="Phone" secondary={phone ? phone : "None"}/>
             </ListItem>
             <Divider variant="inset" component="li" />
             <ListItem>
@@ -112,7 +82,7 @@ export default function ProfileForm({userProfile, setUserProfile}) {
                     <HomeIcon />
                 </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={address}/>
+                <ListItemText primary="Address" secondary={address ? address : "None"}/>
             </ListItem>
         </List>
     </Fragment>
