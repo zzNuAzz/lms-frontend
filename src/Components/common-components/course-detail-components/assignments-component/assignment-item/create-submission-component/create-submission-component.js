@@ -61,7 +61,7 @@ const CreateSubmissionComponent = ({ assignmentId, fetchSubmission }) => {
         setLoading(false);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.toString());
       setLoading(false);
     }
   }

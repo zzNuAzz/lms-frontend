@@ -76,132 +76,8 @@ const TeacherCourseDetailPage = () => {
   const history = useHistory();
 
   const { id } = useParams();
-  const [isLoading, setLoading] = useState(false);
-  const [courseName, setCourseName] = useState('');
-  const [courseId, setCourseId] = useState(id);
-  const [courseDescription, setCourseDescription] = useState('');
-  const [courseShortDescription, setCourseShortDescription] = useState('');
-  const [courseHostId, setCourseHostId] = useState(0);
-  const [host, setHost] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    birthday: '',
-    address: '',
-    pictureUrl: '',
-  });
-
-  const [enrolledMembers, setEnrolledMembers] = useState([]);
-  const [pendingMembers, setPendingMembers] = useState([]);
-  const [rejectedMembers, setRejectedMembers] = useState([]);
-
-  const [assignments, setAssignments] = useState([]);
 
   const [tabPosition, setTabPosition] = useState('Course Info');
-
-  const fetchCourseHost = async () => {
-    try {
-      const result = await getCourseHost(parseInt(courseId, 10));
-      const parsedResult = JSON.parse(result);
-      if (parsedResult.data) {
-        setHost({
-          firstName: parsedResult.data.course.host.firstName,
-          lastName: parsedResult.data.course.host.lastName,
-          phone: parsedResult.data.course.host.phone,
-          email: parsedResult.data.course.host.email,
-          birthday: parsedResult.data.course.host.birthday,
-          address: parsedResult.data.course.host.address,
-          pictureUrl: parsedResult.data.course.host.pictureUrl,
-        });
-      } else {
-        toast(result);
-      }
-    } catch (error) {
-      toast(error);
-    }
-  };
-
-  const fetchCourseDetails = async () => {
-    try {
-      let result = await getCourseDetails(parseInt(courseId, 10));
-      result = JSON.parse(result);
-      if (result.data) {
-        setCourseName(result.data.course.name);
-        setCourseShortDescription(result.data.course.shortDescription || '')
-        setCourseDescription(result.data.course.description || '');
-        setCourseHostId(result.data.course.host.userId);
-      } else {
-        toastFetchErrors(result);
-      }
-    } catch (error) {
-      toast(error);
-    }
-  };
-
-  const fetchAssignments = async () => {
-    try {
-      const result = await getAssignmentsList(parseInt(courseId, 10));
-      const parsedResult = JSON.parse(result);
-      if (parsedResult.data) {
-        setAssignments(parsedResult.data.assignmentList.assignmentList);
-      } else {
-        toastFetchErrors(parsedResult);
-      }
-    } catch (err) {
-      toast(err);
-    }
-  };
-
-  const fetchMembers = async (status) => {
-    try {
-      const result = await getCourseMemberList(parseInt(courseId, 10), status);
-      const parsedResult = JSON.parse(result);
-      if (parsedResult.data.courseMemberList) {
-        switch (status) {
-          case 'Accepted':
-            setEnrolledMembers(parsedResult.data.courseMemberList.memberList);
-            break;
-          case 'Pending':
-            setPendingMembers(parsedResult.data.courseMemberList.memberList);
-            break;
-          case 'Rejected':
-            setRejectedMembers(parsedResult.data.courseMemberList.memberList);
-            break;
-          default:
-            break;
-        }
-      } else {
-        const { errors } = parsedResult;
-        errors.forEach((error) => {
-          toast(error.message, {
-            type: 'error',
-            autoClose: 5000,
-          });
-        });
-      }
-    } catch (error) {
-      toast.error(error);
-    }
-  };
-
-  const fetchAllMembers = () => {
-    fetchMembers('Accepted');
-    fetchMembers('Pending');
-    fetchMembers('Rejected');
-  };
-
-  useEffect(() => {
-    const fetchContent = async () => {
-      setLoading(true);
-      await fetchCourseDetails();
-      await fetchCourseHost();
-      await fetchAssignments();
-      await fetchAllMembers();
-      setLoading(false);
-    };
-    fetchContent();
-  }, []);
 
   const handleTabChange = (newTab) => {
     setTabPosition(newTab);
@@ -297,38 +173,31 @@ const TeacherCourseDetailPage = () => {
                   return (
                     <Paper elevation="3" style={{ padding: '20px 20px' }}>
                       <OverviewComponent
-                        courseName={courseName}
-                        host={host}
-                        description={courseDescription}
-                        fetchCourseDetails={fetchCourseDetails}
+                        courseId={id}
                       />
                     </Paper>
                   );
                 case 'Edit Course':
                   return (
-                    <EditCourseComponent
-                      courseName={courseName}
-                      currentDescription={courseDescription}
-                      currentShortDescription={courseShortDescription}
-                      fetchCourseDetails={fetchCourseDetails}
-                    />
+                    // <EditCourseComponent
+                    //   courseName={courseName}
+                    //   currentDescription={courseDescription}
+                    //   currentShortDescription={courseShortDescription}
+                    // />
+                    <p>To be implemented into Teacher's Course info page</p>
                   );
                 case 'Members':
                   return (
                     <CourseMembersComponent
                       courseId={id}
-                      enrolledMembers={enrolledMembers}
-                      pendingMembers={pendingMembers}
-                      rejectedMembers={rejectedMembers}
-                      fetchAllMembers={fetchAllMembers}
                     />
                   );
                 case 'Documents':
-                  return <DocumentComponent />;
+                  return <DocumentComponent courseId={id} />;
                 case 'Assignments':
-                  return <AssignmentsComponent assignments={assignments} courseId={id} fetchAssignments={fetchAssignments} />;
+                  return <AssignmentsComponent courseId={id} />;
                 case 'Forum':
-                  history.push(`/course/${courseId}/forum`);
+                  history.push(`/course/${id}/forum`);
                   history.go(0);
                   break;
                 default:
@@ -343,9 +212,7 @@ const TeacherCourseDetailPage = () => {
 
   return (
     <>
-      {
-        isLoading ? <LinearProgress /> : RenderComponent
-      }
+      {RenderComponent}
     </>
   );
 };
