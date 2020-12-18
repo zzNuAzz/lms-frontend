@@ -151,17 +151,21 @@ export function CardForum({ forum }) {
         />
         <CardContent>
           <Box fontWeight="fontWeightMedium" m={1}>
-            <Typography variant="h6">{forum.title}</Typography>
+            <Typography 
+              variant="h6" 
+              onClick={viewThread}
+              style={{ cursor: 'pointer' }}
+            >
+              {forum.title}
+            </Typography>
           </Box>
           <Typography
             variant="body2"
             color="textSecondary"
             component="p"
-            onClick={viewThread}
-            style={{ cursor: 'pointer' }}
           >
             {renderHTML(forum.content)}
-            {console.log("forum content: " ,forum.content)}
+            {/* {console.log("forum content: " ,forum.content)} */}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
