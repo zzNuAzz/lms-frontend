@@ -24,7 +24,7 @@ const routes = [
   { path: '/course/:id', component: CourseDetailPage, ...defaultConfig, hasContainer: false },
   { path: '/signup', component: SignUpPage, ...defaultConfig },
   { path: '/profile/edit', component: ProfileEdit, ...defaultConfig },
-  { path: '/profile/view', component: ViewProfile, ...defaultConfig, hasContainer: false },
+  { path: '/profile/view/:userId', component: ViewProfile, ...defaultConfig, hasContainer: false },
   
   // de cai route nay o cuoi cung nha
   {component: NotFound404, ...defaultConfig}
