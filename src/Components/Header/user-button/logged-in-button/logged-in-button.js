@@ -55,12 +55,9 @@ const LoggedInButton = ({ setUsername }) => {
       setUsername('');
       setLogoutDialogOpen(false);
       toast.info('See you soon!', {
-        autoClose: 1000,
+        autoClose: 3000,
       });
-      setTimeout(() => {
-        history.push('/home');
-        history.go(0);
-      }, 1000);
+      history.push('/home');
     } else {
       toast.error('Unable to logout, please try again!');
     }
