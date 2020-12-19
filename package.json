@@ -29,6 +29,7 @@
     "jodit-react": "^1.0.66",
     "jquery": "^3.5.1",
     "material-ui-dropzone": "^3.5.0",
+    "material-ui-password-field": "^2.1.2",
     "material-ui-search-bar": "^1.0.0",
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",
