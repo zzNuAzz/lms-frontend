@@ -109,6 +109,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
         <Grid item>
           <DropzoneArea
             filesLimit={5}
+            maxFileSize={100000000}
             showPreviews
             showPreviewsInDropzone={false}
             useChipsForPreview
