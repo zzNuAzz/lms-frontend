@@ -26,6 +26,8 @@ const getUserCourseList = async ({
             userId
             username
             pictureUrl
+            firstName
+            lastName
           }
         }
         status

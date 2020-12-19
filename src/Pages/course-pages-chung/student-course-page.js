@@ -41,14 +41,28 @@ function TabPanel(props) {
     </div>
   );
 }
-
+const reduceAllCourses = (arr1, arr2) => {
+  var pendingIdList = [];
+  var result = [];
+  for(var i = 0; i < arr2.length; i++){
+    pendingIdList.push(arr2[i].courseId);
+  }
+  console.log("Reduce1", pendingIdList);
+  for(var i = 0; i < arr1.length; i++){
+    if (!pendingIdList.includes(arr1[i].courseId)) {
+      result.push(arr1[i]);
+    }
+  }
+  console.log("Reduce2", result);
+  return result;
+};
 //CoursePage
 export default function CoursePage() {
   const [isLoading, setLoading] = useState(false);
   const userId = parseInt(localStorage.getItem('userId'), 10);
   const [courses, setCourses] = useState([]);
   const [pendingCourses, setPendingCourses] = useState([]);
-  const [allCourses, setAllCourses] = useState([]);
+  var [allCourses, setAllCourses] = useState([]);
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -180,9 +194,13 @@ export default function CoursePage() {
     fetchContent();
   }, []);
 
+  if (allCourses.length > 0) {
+    allCourses = reduceAllCourses(allCourses, courses);
+  }
+
   console.log({ courses });
   console.log({ allCourses });
-  console.log({ pendingCourses });
+  // console.log({ pendingCourses });
   const RenderComponent = (
     <>
       <Box className={classes.root}>
@@ -244,14 +262,14 @@ export default function CoursePage() {
             <Container maxWidth="md">
               <Box mb={-6}>
                 <Grid container justify="center">
-                  <Grid item xs={4}>
+                  <Grid item xs={12} sm={5}>
                     <Box pl={3}>
                       <Typography variant="h5" className={classes.fw700}>
-                        All Courses:
+                        You might be interested in:
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={8} container justify="flex-end">
+                  <Grid item xs={12} sm={7} container justify="flex-end">
                     <Box pr={3}>
                       <Pagination
                         count={totalPage}
@@ -299,7 +317,7 @@ export default function CoursePage() {
             </Container>
             <Container maxWidth="lg">
               {courses.map((course) => (
-                <CourseCard course={course} />
+                <CourseCard course={course} isEnrolled={new Boolean(true)}/>
               ))}
             </Container>
           </Box>
