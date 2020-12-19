@@ -15,8 +15,10 @@ export default function AvatarUpload({ userProfile }) {
     const apply = file => {
         uploadAvatar(file).then(result => {
             if (result?.success) {
-				history.push('/profile');
-                toast.success('Upload avatar successful.');
+                history.push('/profile');
+                toast.success('Upload avatar successful.', {
+                    autoClose: 3000,
+                });
             } else {
                 toast.error(
                     result?.message ? result?.message : 'Upload failed.'
@@ -38,7 +40,8 @@ export default function AvatarUpload({ userProfile }) {
     };
     return (
         <Fragment>
-            <div className="mr-5 ml-4 mt-5">
+            {/* <div className="mr-5 ml-4 mt-5"> */}
+            <div  className="mt-5">
                 <div
                     style={{
                         backgroundImage: `url(${pictureUrl})`,

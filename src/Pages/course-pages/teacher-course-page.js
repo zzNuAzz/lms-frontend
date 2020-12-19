@@ -16,7 +16,7 @@ import NewCourseButton from './course-page-components/new-course-button/new-cour
 import toastFetchErrors from '../../Components/tools/toast-fetch-errors.js';
 
 export default function CoursePage() {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [courseView, setCourseView] = useState('list');
   const hostId = parseInt(localStorage.getItem('userId'), 10);
   const [courses, setCourses] = useState([]);
@@ -43,7 +43,6 @@ export default function CoursePage() {
 
   useEffect(() => {
     const fetchContent = async () => {
-      setLoading(true);
       await fetchTeacherCourse();
       setLoading(false);
     };
@@ -58,7 +57,9 @@ export default function CoursePage() {
       />
       <Typography variant="h4">My Courses</Typography>
       <br />
-      <NewCourseButton />
+      <NewCourseButton
+        fetchTeacherCourse={fetchTeacherCourse}
+      />
       <br />
       {
         courseView === 'list'
@@ -81,11 +82,13 @@ export default function CoursePage() {
     </div>
   );
 
+  if (isLoading) {
+    return <LinearProgress />;
+  }
+
   return (
     <>
-      {
-        isLoading ? <LinearProgress /> : RenderComponent
-      }
+      {RenderComponent}
     </>
   );
 }

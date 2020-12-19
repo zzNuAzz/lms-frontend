@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const graphqlMultipleUpload = async (files) => {
   const data = new FormData();
-  console.log(files[0]);
 
   //* Operation field
   const query = `
@@ -49,7 +48,7 @@ const graphqlMultipleUpload = async (files) => {
     withCredentials: true,
     data,
   });
-  console.log(response);
+  return response.data;
 };
 
 export default graphqlMultipleUpload;

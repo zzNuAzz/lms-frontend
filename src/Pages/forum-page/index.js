@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import SearchBar from 'material-ui-search-bar';
 import {
@@ -24,13 +25,17 @@ import MostHelpful from './MostHelpful';
 import { NewPostBox } from './NewPostBox';
 import getThreadList from '../../api/graphql/get-thread-list';
 import getUserCourseList from '../../api/graphql/get-user-course-list';
+import getUserInformation from '../../api/graphql/get-user-information';
+import { toast } from 'react-toastify';
+import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+import getTeacherCourseList from '../../api/graphql/get-teacher-course-list';
 
 export default function Forum() {
   const history = useHistory();
-
   const { courseId } = useParams();
   // console.log({courseId});
   const [course, setCourse] = useState({ name: "Course's Name" });
+  const [user, setUser] = useState({});
   const [userId, setUserId] = useState(
     parseInt(localStorage.getItem('userId'), 10),
   );
@@ -38,22 +43,60 @@ export default function Forum() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
   const [thread, setThread] = useState([]);
   const [courseList, setCourseList] = useState([]);
 
+  const fetchUser = async () => {
+    try{
+      const result = await getUserInformation(userId);
+      const parsedResult = JSON.parse(result);
+      if(parsedResult.data){
+        // console.log(parsedResult.data.userProfile);
+        setUser(parsedResult.data.userProfile);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast(error);
+    }
+  }
+
+  useEffect(()=> {
+    let isMounted = true;
+    if (isMounted) fetchUser();
+    return () => { isMounted = false };
+  }
+  ,[userId]); 
+
   useEffect(() => {
-    getUserCourseList({ userId })
+    let isMounted = true;
+    if(user.role === 'Teacher') {
+      let hostId = parseInt(userId, 10);
+      getTeacherCourseList(hostId)
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
-        setCourseList(JSON.parse(result).data.userCourseList.courseList);
+        if (isMounted) setCourseList(JSON.parse(result).data.courseList.courseList);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+    }
+    else if(user.role === 'Student') {
+      console.log(user.role);
+      getUserCourseList({ userId })
+      .then((result) => {
+        if (result.errors) throw new Error(result.errors[0].message);
+        if (isMounted) setCourseList(JSON.parse(result).data.userCourseList.courseList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+    return () => { isMounted = false };
+  }, [user]);
 
   useEffect(() => {
+    let isMounted = true;
     getThreadList(parseInt(courseId, 10))
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
@@ -61,12 +104,13 @@ export default function Forum() {
           threadList: { threadList },
           course,
         } = result.data;
-        setThread(threadList);
-        setCourse(course);
+        if (isMounted) setThread(threadList);
+        if (isMounted) setCourse(course);
       })
       .catch((err) => {
         console.log(err);
       });
+      return () => { isMounted = false };
   }, [courseId]);
 
   const handleClick = (event) => {
@@ -83,6 +127,7 @@ export default function Forum() {
   };
   // console.log('CourseList: ', courseList);
   const newThreadLink = `/course/${courseId}/newthread`;
+  const coursesLink = `/courses`;
   return (
     <>
       <div className={classes.root}>
@@ -143,6 +188,14 @@ export default function Forum() {
                     <AddBoxIcon />
                     <Typography variant="subtitle1" color="primary">
                       Add new topic
+                    </Typography>
+                  </IconButton>
+                </Link>
+                <Link to={coursesLink}>
+                  <IconButton edge="start" color="primary" aria-label="menu">
+                    <ArrowBackIcon/>
+                    <Typography variant="subtitle1" color="primary">
+                      Back to Courses
                     </Typography>
                   </IconButton>
                 </Link>

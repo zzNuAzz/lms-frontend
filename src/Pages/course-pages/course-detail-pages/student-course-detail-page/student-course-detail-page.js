@@ -1,22 +1,19 @@
 import { LinearProgress, Tab, Tabs } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import SubjectRoundedIcon from '@material-ui/icons/SubjectRounded';
 import DescriptionRoundedIcon from '@material-ui/icons/DescriptionRounded';
 import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
 import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import PersonPinRoundedIcon from '@material-ui/icons/PersonPinRounded';
-import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import { getCourseById } from '../../../../api/graphql/get-course-by-id';
 import CourseCardLarge from '../../../../Components/common-components/course-card/course-card-large';
 import OverviewComponent from '../../../../Components/common-components/course-detail-components/overview-component/overview-component';
 import AssignmentsComponent from '../../../../Components/common-components/course-detail-components/assignments-component/assignments-component';
-import ForumComponent from '../../../../Components/common-components/course-detail-components/forum-component/forum-component';
 import DocumentComponent from '../../../../Components/common-components/course-detail-components/document-component/document-component';
 import ContactComponent from '../../../../Components/common-components/course-detail-components/contact-component/contact-component';
 import getAssignmentsList from '../../../../api/graphql/get-assignments-list';
-import { toast } from 'react-toastify';
 import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
 import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';

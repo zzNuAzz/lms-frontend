@@ -2,20 +2,31 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import {
+  Avatar,
   Button,
   Dialog,
   DialogActions,
   DialogTitle,
   Menu,
   MenuItem,
+  makeStyles,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import SentimentVerySatisfiedRoundedIcon from '@material-ui/icons/SentimentVerySatisfiedRounded';
 import { toast } from 'react-toastify';
+import userLogout from '../../../../api/user-logout';
+
+const useStyles = makeStyles((theme) => ({
+  avatar: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+}));
 
 const LoggedInButton = ({ setUsername }) => {
   const history = useHistory();
+  const classes = useStyles();
   const username = localStorage.getItem('username') || '';
+  const avatarUrl = localStorage.getItem('pictureUrl') || '';
   const [anchorEl, setAnchorEl] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
@@ -32,18 +43,24 @@ const LoggedInButton = ({ setUsername }) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    // TODO: Remove Cookies (necessary?)
-    localStorage.clear();
-    setUsername('');
-    setLogoutDialogOpen(false);
-    toast.info('See you soon!', {
-      autoClose: 2000,
-    });
-    setTimeout(() => {
+  const handleProfileRedirect = () => {
+    history.push('/profile/edit');
+    history.go(0);
+  };
+
+  const handleLogout = async () => {
+    const result = await userLogout();
+    if (result.success) {
+      localStorage.clear();
+      setUsername('');
+      setLogoutDialogOpen(false);
+      toast.info('See you soon!', {
+        autoClose: 3000,
+      });
       history.push('/home');
-      history.go(0);
-    }, 2000);
+    } else {
+      toast.error('Unable to logout, please try again!');
+    }
   };
 
   const handleLogoutDialogClose = () => {
@@ -54,11 +71,12 @@ const LoggedInButton = ({ setUsername }) => {
     <>
       <Button
         variant="contained"
-        color="default"
-        // style={{ color: '#1f1f1f', backgroundColor: '#f3c800' }}
+        color="primary"
         onClick={(event) => handleClick(event)}
+        style={{margin: '10px 10px'}}
       >
-        <SentimentVerySatisfiedRoundedIcon />
+        {/* <SentimentVerySatisfiedRoundedIcon /> */}
+        <Avatar alt="User's Avatar" src={avatarUrl} className={classes.avatar} />
         &nbsp;
         {username}
       </Button>
@@ -72,7 +90,9 @@ const LoggedInButton = ({ setUsername }) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem>My Account</MenuItem>
+        <div onClick={handleProfileRedirect}>
+          <MenuItem>My Account</MenuItem>
+        </div>
         <div onClick={handleDialog}>
           <MenuItem>Logout</MenuItem>
         </div>

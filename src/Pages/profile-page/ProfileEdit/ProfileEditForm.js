@@ -38,7 +38,7 @@ export default function ProfileEditForm({userProfile, setUserProfile}) {
       <TextInput label="Last Name" name="lastName" value={lastName} onChange={handleInputChange}/>
       <TextInput label="Birthday" name="birthday" value={birthday} type="date" format="dd/MM/yyyy" onChange={handleInputChange}/>
       <TextInput label="Email "name="email" value={email} onChange={handleInputChange}/>
-      <TextInput label="Phone" name="phone" value={phone} onChange={handleInputChange}/>
+      <TextInput label="Phone" name="phone" type="number" value={phone} onChange={handleInputChange}/>
       <TextInput label="Address" name="address" value={address} onChange={handleInputChange}/>
     </Fragment>
   );

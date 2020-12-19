@@ -10,21 +10,15 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link, useHistory } from 'react-router-dom';
+import ReactHtmlParser from 'react-html-parser';
 
 export function CourseCard({ course, isEnrolled }) {
   const classes = useStyles();
-  // const backGroundArr = [
-  //   classes.greenBack,
-  //   classes.blueBack,
-  //   classes.yellowBack,
-  // ];
   const history = useHistory();
 
   const teacherName = `Lecturer: ${course.host.lastName} ${course.host.firstName}`;
-  // const backGround = backGroundArr[course.courseId % 3];
   const backGround = classes.grayBack;
 
-  // console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
   const linkToCourse = `/course/${course.courseId}`;
   const handleRedirectToCourse = () => {
@@ -40,63 +34,33 @@ export function CourseCard({ course, isEnrolled }) {
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} lg={6} className={classes.bodyCourse}>
               <Link to={linkToCourse}>
-                <Typography
-                  variant="h5"
-                  color="primary"
-                  // className={`${classes.fw700} ${classes.blackText}`}
-                  className={`${classes.fw700}`}
-                >
+                <Typography variant="h5" color="primary" className={`${classes.fw700}`}>
                   {course.name}
                 </Typography>
               </Link>
               <Typography variant="body2">
-                {course.description.substring(0, 200) + '...'}
+                {ReactHtmlParser(course.description.substring(0, 200) + '...')}
               </Typography>
             </Grid>
             <Grid item xs={12} lg={6} container justify="flex-end">
               <Grid item xs={0} lg={6}>
                 <Box className={classes.whiteBack}></Box>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                lg={6}
-                container
-                justify="center"
-                // direction="column"
-                // alignItems="center"
-              >
-                {/* <Grid item> */}
-                  {/* <Link to={linkToCourse}> */}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth={Boolean(true)}
-                      onClick={handleRedirectToCourse}
-                    >
+              <Grid item xs={12} lg={6} container justify="center">
+                    <Button variant="contained" color="primary" fullWidth={Boolean(true)} onClick={handleRedirectToCourse}>
                       Go to Course
                     </Button>
-                  {/* </Link> */}
-                {/* </Grid> */}
                 {isEnrolled ? (
-                <>
                   <Grid item>
                     <Box py={3}>
                       <Link to={linkToForum}>
-                        <Typography
-                          classname={classes.center}
-                          variant="body1"
-                          // className={classes.blackText}
-                        >
+                        <Typography className={classes.center} variant="body1">
                           Go to forum
                         </Typography>
                       </Link>
                     </Box>
                   </Grid>
-                </>
-                 ) : (
-                  <></>
-                )} 
+                 ) : null} 
               </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -107,7 +71,6 @@ export function CourseCard({ course, isEnrolled }) {
                 <Avatar src={course.host.pictureUrl}></Avatar>
               </Box>
               <Link>
-                {/* <Typography variant="subtitle2" className={classes.blackText}> */}
                 <Typography variant="subtitle2">{teacherName}</Typography>
               </Link>
             </Grid>
@@ -135,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#00d2a1',
   },
   bodyCourse: {
-    height: 170,
+    height: 'fit-content',
   },
   fw700: {
     fontWeight: 700,
@@ -150,7 +113,6 @@ const useStyles = makeStyles((theme) => ({
   },
   courseCard: {
     marginBottom: '28px',
-    // color: '#1f1f1f',
   },
   dFlex: {
     display: 'flex',

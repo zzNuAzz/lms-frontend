@@ -11,28 +11,52 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
 
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import createCourse from '../../../../api/graphql/create-course';
+import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 
-const NewCourseButton = () => {
+const NewCourseButton = ({ fetchTeacherCourse }) => {
   const [isLoading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
 
-  const handleSubmit = () => {
-
+  const handleSubmit = async () => {
+    try {
+      const result = await createCourse(name, description);
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.createCourse.success) {
+          toast.success(`Successfully created course ${name}`, {
+            autoClose: 3000,
+          });
+          setDialogOpen(false);
+          fetchTeacherCourse();
+        } else {
+          toast.error(parsedResult.data.createCourse.message);
+        }
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast.error(error.toString());
+    }
   };
 
   const NewCourseForm = (
     <ValidatorForm onSubmit={handleSubmit}>
       <Grid
         container
-        direction="row"
-        justify="center"
-        alignItems="center"
+        direction="column"
         spacing={2}
       >
         <Grid item>
@@ -50,16 +74,10 @@ const NewCourseButton = () => {
           />
         </Grid>
         <Grid item>
-          <TextValidator
-            label="Description"
-            name="description"
-            type="text"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            validators={['required']}
-            errorMessages={['This field is required']}
-            variant="outlined"
-            fullWidth
+          <CKEditor
+            editor={ClassicEditor}
+            data={description}
+            onBlur={(event, editor) => { setDescription(editor.getData()) }}
           />
         </Grid>
       </Grid>
@@ -71,9 +89,9 @@ const NewCourseButton = () => {
       <Dialog
         open={dialogOpen}
         onClose={handleDialogClose}
-        maxWidth="md"
+        maxWidth="lg"
       >
-        <DialogTitle>Add a new Assignment</DialogTitle>
+        <DialogTitle>Add a new course</DialogTitle>
         <DialogContent>
           {NewCourseForm}
         </DialogContent>
@@ -98,6 +116,7 @@ const NewCourseButton = () => {
         variant="contained"
         color="primary"
         fullWidth
+        onClick={handleDialogOpen}
       >
         <AddRoundedIcon />
         New course

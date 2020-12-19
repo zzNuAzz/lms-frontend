@@ -1,53 +1,108 @@
-import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Paper, Typography } from '@material-ui/core';
-import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
-import React from 'react';
-import AddAssignmentComponent from '../../../teacher-components/add-assignment-component/add-assignment-component';
-import FileUpload from '../file-upload/file-upload';
+import {
+  LinearProgress,
+  makeStyles, Typography,
+} from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+
+import AddAssignmentComponent from './add-assignment-component/add-assignment-component';
+import EditAssignmentComponent from './edit-assignment-component';
+import AssignmentItem from './assignment-item/assignment-item';
+import getAssignmentsList from '../../../../api/graphql/get-assignments-list';
+import toastFetchErrors from '../../../tools/toast-fetch-errors';
 
 const useStyles = makeStyles((theme) => ({
-  accordionHeader: {
-    fontSize: theme.typography.pxToRem(20),
-    fontWeight: theme.typography.fontWeightBold,
-  },
-  accordionBody: {
+  title: {
+    display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
   },
-  bodyDescription: {
-    fontSize: theme.typography.pxToRem(20),
-    fontWeight: theme.typography.fontWeightRegular,
+  assignmentItem: {
+    width: '100%',
   },
 }));
 
-const AssignmentsComponent = ({ assignments, courseId, fetchAssignments }) => {
+const AssignmentsComponent = ({ courseId }) => {
   const classes = useStyles();
+  const role = localStorage.getItem('role');
 
-  const assignmentsList = assignments.map((assignment) => (
+  const [assignments, setAssignments] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+
+  const fetchAssignments = async () => {
+    try {
+      const result = await getAssignmentsList(parseInt(courseId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        setAssignments(parsedResult.data.assignmentList.assignmentList);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (err) {
+      toast.error(err.toString());
+    }
+  };
+
+  const fetch = async () => {
+    setLoading(true);
+    await fetchAssignments();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const RenderComponent = (
     <>
-      <Paper elevation={4}>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreRoundedIcon />}
-            className={classes.accordionHeader}
-          >
-            {assignment.title}
-          </AccordionSummary>
-          <AccordionDetails className={classes.accordionBody}>
-            <Typography className={classes.bodyDescription} variant="body1">
-              {assignment.content}
-            </Typography>
-            <FileUpload />
-          </AccordionDetails>
-        </Accordion>
-      </Paper>
-      <br />
+      {
+        assignments.length === 0
+          ? (
+            <div className="no-assignment" style={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant="h6">Hooray! No assignments!</Typography>
+            </div>
+          )
+          : null
+      }
+      <div className="assignments">
+        {role === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetch} /> : null}
+        {
+          role === 'Student'
+            ? (
+              <div className={classes.assignmentItem}>
+                {assignments.map((assignment) => (
+                  <AssignmentItem assignment={assignment} key={assignment.assignmentId} />
+                ))}
+              </div>
+            )
+            : (
+              <div className={classes.editAssignmentItem}>
+                {assignments.map((assignment) => (
+                  <>
+                    <EditAssignmentComponent assignment={assignment} key={assignment.assignmentId} />
+                    <br />
+                  </>
+                ))}
+              </div>
+            )
+        }
+
+      </div>
     </>
-  ));
+  );
 
   return (
-    <div className="assignments">
-      {localStorage.getItem('role') === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetchAssignments} /> : null}
-      {assignmentsList}
-    </div>
+    <>
+      <div className={classes.title}>
+        <Typography variant="h3">Assignments</Typography>
+      </div>
+      <hr />
+      {
+        isLoading
+          ? <LinearProgress />
+          : RenderComponent
+      }
+    </>
   );
 };
 
