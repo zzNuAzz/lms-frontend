@@ -16,8 +16,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import ReactHtmlParser from "react-html-parser";
-import DeleteForeverRoundedIcon from "@material-ui/icons/DeleteForeverRounded";
 
 import deleteCourseById from "../../api/graphql/deleteCourseById";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
