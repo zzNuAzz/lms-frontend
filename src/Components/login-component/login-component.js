@@ -16,6 +16,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import 'react-toastify/dist/ReactToastify.css';
 
 import userLogin from '../../api/user-login';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 function LoginComponent({ setUsername, callbackToParent }) {
   const classes = useStyles();
-
+  const history = useHistory();
   const [submitted, setSubmitted] = useState(false);
   const [formUsername, setFormUsername] = useState('');
   const [formPassword, setFormPassword] = useState('');
@@ -57,6 +58,8 @@ function LoginComponent({ setUsername, callbackToParent }) {
       localStorage.setItem('role', result.credentials.user.role);
       localStorage.setItem('pictureUrl', result.credentials.user.pictureUrl);
       toast.success(`😄 Welcome ${formUsername}!`);
+      history.push('/home');
+      history.go(0);
       callbackToParent();
     } else if (result.code === 400 || 401) {
       toast.error('😞 Wrong username or password, please try again!');

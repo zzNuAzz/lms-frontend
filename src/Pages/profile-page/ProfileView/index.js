@@ -29,7 +29,6 @@ export default function ViewProfile() {
 		fetchUserProfile();
 	}
 
-	
 	const submitForm = () => {
 		editProfile(userProfile).then(result => {
 			if(result.updateUserProfile.success) {
