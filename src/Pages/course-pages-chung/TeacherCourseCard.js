@@ -8,7 +8,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -27,6 +27,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export function TeacherCourseCard({ course, fetchTeacherCourse }) {
   const classes = useStyles();
+  const history = useHistory();
+
   // const [open, setOpen] = React.useState(false);
 
   // const handleClickOpen = () => {
@@ -37,6 +39,10 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
   //   setOpen(false);
   // };
   const [open, setOpen] = React.useState(false);
+
+  const handleRedirectToCourse = () => {
+    history.push(linkToCourse);
+  };
 
   const openAlertDelete = () => {
     setOpen(true);
@@ -55,6 +61,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
 
   console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
+  const linkToCourse = `/course/${course.courseId}`;
   const deleteCourse = async () => {
     try {
       const courseName = course.name;
@@ -85,7 +92,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
           </Box>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} lg={6} className={classes.bodyCourse}>
-              <Link>
+              <Link to={linkToCourse}>
                 <Typography
                   variant="h5"
                   color="primary"
@@ -105,6 +112,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                   variant="contained"
                   color="primary"
                   fullWidth={Boolean(true)}
+                  onClick={handleRedirectToCourse}
                 >
                   Go to Course
                 </Button>
