@@ -15,6 +15,7 @@ const getThreadById = async (threadId) => {
       title
       content
       tags
+      postCount
       createAt
       updateAt
     }

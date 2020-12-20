@@ -35,8 +35,7 @@ import deleteThread from "../../api/graphql/deleteThread";
 import moment from "moment";
 import getPostList from "../../api/graphql/get-post-list";
 import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import LoginComponent from "../../Components/login-component/login-component";
+import getThreadById from "../../api/graphql/get-thread-by-id";
 import EditComponent from "./edit-thread-component";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -76,9 +75,9 @@ export function CardForum({ forum, isView }) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [flag, setFlag] = React.useState(true);
   const [postList, setPostList] = useState(() => []);
+  const [thread, setThread] = useState([]);
   const threadId = parseInt(forum.threadId);
   const profileLink = `/profile/view/${userId}`;
-  const viewThreadLink = `/course/forum/${threadId}`;
   const [openEditModal, setOpenEditModal] = useState(false);
 
   const viewThread = () => {
@@ -95,6 +94,18 @@ export function CardForum({ forum, isView }) {
         console.log(err);
       });
   }, [courseId]);
+  useEffect(() => {
+    getThreadById(parseInt(threadId, 10))
+      .then((result) => {
+        if (result.errors) throw new Error(result.errors[0].message);
+        const data = result.data.thread;
+        setThread(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [threadId]);
+  console.log({thread})
   const openAlertDelete = () => {
     setAnchorEl(null);
     setOpenDialog(true);
@@ -214,7 +225,8 @@ export function CardForum({ forum, isView }) {
               </IconButton>
               <Typography variant="caption" gutterTop style={{fontWeight: "bolder"}}>
                 {forum.comment}
-                {postList.length} Comment
+                {console.log(thread.postCount)}
+                {thread.postCount} Comment
               </Typography>
             </div>
           )}
