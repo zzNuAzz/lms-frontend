@@ -41,7 +41,6 @@
     "react-html-parser": "^2.0.2",
     "react-material-ui-form-validator": "^2.1.1",
     "react-motion": "^0.5.2",
-    "react-native-render-html": "^5.0.1",
     "react-render-html": "^0.6.0",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.2.0",
