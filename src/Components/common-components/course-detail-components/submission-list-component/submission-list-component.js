@@ -55,10 +55,6 @@ const SubmissionListComponent = ({ courseId }) => {
 
   const RenderComponent = (
     <>
-      <div className="submission-title" style={{ display: 'flex', justifyContent: 'center' }}>
-        <Typography variant="h3">Submissions</Typography>
-      </div>
-      <hr />
       <Typography variant="h6">Select an Assignment</Typography>
       <Select
         value={assignmentId}
@@ -99,6 +95,10 @@ const SubmissionListComponent = ({ courseId }) => {
 
   return (
     <>
+      <div className="submission-title" style={{ display: 'flex', justifyContent: 'center' }}>
+        <Typography variant="h3">Submissions</Typography>
+      </div>
+      <hr />
       {
         isLoading
           ? <LinearProgress />
