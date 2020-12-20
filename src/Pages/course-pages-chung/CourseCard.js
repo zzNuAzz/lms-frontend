@@ -24,7 +24,7 @@ export function CourseCard({ course, isEnrolled }) {
   const handleRedirectToCourse = () => {
     history.push(linkToCourse);
   };
-  console.log("ShortDescription: ", course.shortDescription);
+  // console.log("ShortDescription: ", course.shortDescription);
   return (
     <Box mt={10}>
       <Container className={backGround} maxWidth="md">
@@ -58,7 +58,7 @@ export function CourseCard({ course, isEnrolled }) {
                   fullWidth={Boolean(true)}
                   onClick={handleRedirectToCourse}
                 >
-                  Go to Course
+                  View Course
                 </Button>
                 {isEnrolled ? (
                   <Grid item>

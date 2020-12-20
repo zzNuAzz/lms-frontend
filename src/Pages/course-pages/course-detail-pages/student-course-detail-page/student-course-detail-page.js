@@ -1,4 +1,10 @@
-import { LinearProgress, Tab, Tabs } from "@material-ui/core";
+import {
+  Divider,
+  LinearProgress,
+  Tab,
+  Tabs,
+  Typography,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import SubjectRoundedIcon from "@material-ui/icons/SubjectRounded";
