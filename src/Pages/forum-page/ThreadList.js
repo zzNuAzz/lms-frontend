@@ -287,7 +287,7 @@ export default function ({ thread }) {
       setLoading(false);
     };
     fetchContent();
-  }, []);
+  }, [cId]);
   return (
     <>
       {allThreads.map((forum) => (
