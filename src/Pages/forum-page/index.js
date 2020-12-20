@@ -51,7 +51,7 @@ export default function Forum() {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 

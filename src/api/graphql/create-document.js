@@ -1,9 +1,7 @@
-import axios from 'axios';
+import { graphQLFetch } from './graphql-fetch';
 
-const createDocument = async (document, files) => {
-  const data = new FormData();
-
-  //* Operation field
+// eslint-disable-next-line import/prefer-default-export
+const createDocument = async (courseId, title, description, files) => {
   const query = `
   mutation createDocument($document: DocumentInput!) {
     createDocument(document: $document) {
@@ -11,47 +9,17 @@ const createDocument = async (document, files) => {
       insertedId
       message
     }
-  }
-  `;
-
-  const filesNull = [];
-  const map = {};
-  for (let i = 0; i < files.length; ++i) {
-    filesNull.push(null);
-
-    //* Map field
-    map[i] = [
-      `variables.files.${i}`,
-    ];
-  }
-
-  const tempVar = document;
-  tempVar.files = filesNull;
-
-  const variables = {
-    document: tempVar,
-  };
-  data.append('operations', JSON.stringify({ query, variables }));
-
-  //* Map field
-  data.append('map', JSON.stringify(map));
-
-  //* Files field
-  for (let i = 0; i < files.length; i++) {
-    data.append(i, files[i]);
-  }
-
-  //* Send data to server
-  const response = await axios({
-    url: '/api/graphql',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
+  }`;
+  const vars = {
+    document: {
+      courseId,
+      title,
+      description,
+      files,
     },
-    withCredentials: true,
-    data,
-  });
-  console.log(response);
+  };
+  const result = await graphQLFetch(query, vars);
+  return result;
 };
 
 export default createDocument;

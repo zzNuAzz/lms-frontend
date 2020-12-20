@@ -1,8 +1,8 @@
-import { graphQLFetch } from './graphql-fetch';
+import { graphQLFetch } from "./graphql-fetch";
 
 const getUserCourseList = async ({
   userId,
-  status = 'Accepted',
+  status = "Accepted",
   pageNumber,
   pageSize,
 }) => {
@@ -22,10 +22,13 @@ const getUserCourseList = async ({
           courseId
           name
           description
+          shortDescription
           host {
             userId
             username
             pictureUrl
+            firstName
+            lastName
           }
         }
         status

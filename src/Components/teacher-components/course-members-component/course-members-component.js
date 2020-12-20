@@ -2,7 +2,7 @@
 //! IT.IT.VERY.UNOPTIMIZED.AND.REQUIRES.REFACTOR...
 //! (but it still runs fast tho...)
 //! "PROUDLY".WRITTEN.BY.NHAT.LE.QUANG...
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Menu,
   MenuItem,
@@ -13,23 +13,75 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  makeStyles,
   LinearProgress,
 } from '@material-ui/core';
-import { grey } from '@material-ui/core/colors';
 import { toast } from 'react-toastify';
 import MemberStatusButton from './member-status-button/member-status-button';
 import updateCourseMember from '../../../api/graphql/update-course-member';
+import getCourseMemberList from '../../../api/graphql/get-course-member-list';
 
-const CourseMembersComponent = ({ enrolledMembers, pendingMembers, rejectedMembers, fetchAllMembers }) => {
+const useStyles = makeStyles((theme) => ({
+  title: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+}));
+
+const CourseMembersComponent = ({ courseId }) => {
+  const classes = useStyles();
+
+  const [enrolledMembers, setEnrolledMembers] = useState([]);
+  const [pendingMembers, setPendingMembers] = useState([]);
+  const [rejectedMembers, setRejectedMembers] = useState([]);
+
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   //* Current member id for menu (different scope and is required for status update)
   const [currentMemberId, setCurrentMemberId] = useState();
+
+  const fetchMembers = async (status) => {
+    try {
+      const result = await getCourseMemberList(parseInt(courseId, 10), status);
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data.courseMemberList) {
+        switch (status) {
+          case 'Accepted':
+            setEnrolledMembers(parsedResult.data.courseMemberList.memberList);
+            break;
+          case 'Pending':
+            setPendingMembers(parsedResult.data.courseMemberList.memberList);
+            break;
+          case 'Rejected':
+            setRejectedMembers(parsedResult.data.courseMemberList.memberList);
+            break;
+          default:
+            break;
+        }
+      } else {
+        const { errors } = parsedResult;
+        errors.forEach((error) => {
+          toast(error.message, {
+            type: 'error',
+            autoClose: 5000,
+          });
+        });
+      }
+    } catch (error) {
+      toast.error(error.toString());
+    }
+  };
+
+  const fetchAllMembers = async () => {
+    await fetchMembers('Accepted');
+    await fetchMembers('Pending');
+    await fetchMembers('Rejected');
+  };
 
   const handleStatusButtonClick = (event, id) => {
     setAnchorEl(event.currentTarget);
     setCurrentMemberId(parseInt(id, 10));
-    console.log(id);
   };
 
   const handleClose = () => {
@@ -54,6 +106,15 @@ const CourseMembersComponent = ({ enrolledMembers, pendingMembers, rejectedMembe
     }
     handleClose();
   };
+
+  useEffect(() => {
+    const fetch = async () => {
+      setLoading(true);
+      await fetchAllMembers();
+      setLoading(false);
+    };
+    fetch();
+  }, []);
 
   // TODO: Show member's profile pic instead of icons.
   const MemberRows = (members, status) => {
@@ -89,30 +150,40 @@ const CourseMembersComponent = ({ enrolledMembers, pendingMembers, rejectedMembe
         <MenuItem data-status="Pending" onClick={(event) => handleStatusChange(event)}>Pending</MenuItem>
         <MenuItem data-status="Rejected" onClick={(event) => handleStatusChange(event)}>Rejected</MenuItem>
       </Menu>
-      <Paper elevation={3}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Enroll Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {MemberRows(enrolledMembers, 'Accepted')}
-            {MemberRows(pendingMembers, 'Pending')}
-            {MemberRows(rejectedMembers, 'Rejected')}
-          </TableBody>
-        </Table>
-      </Paper>
+      <div className="members-table">
+        <Paper elevation={3}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>First Name</TableCell>
+                <TableCell>Last Name</TableCell>
+                <TableCell>Username</TableCell>
+                <TableCell>Enroll Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {MemberRows(enrolledMembers, 'Accepted')}
+              {MemberRows(pendingMembers, 'Pending')}
+              {MemberRows(rejectedMembers, 'Rejected')}
+            </TableBody>
+          </Table>
+        </Paper>
+      </div>
     </>
   );
 
   return (
     <>
-      {RenderComponent}
+      <div className={classes.title}>
+        <Typography variant="h3">Members</Typography>
+      </div>
+      <hr />
+      {
+        isLoading
+          ? <LinearProgress />
+          : RenderComponent
+      }
     </>
   );
 };

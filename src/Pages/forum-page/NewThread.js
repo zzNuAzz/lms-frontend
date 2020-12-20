@@ -86,7 +86,7 @@ export default function NewThread() {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
   return (

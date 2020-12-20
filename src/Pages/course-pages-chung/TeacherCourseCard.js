@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Button,
@@ -6,22 +6,20 @@ import {
   Grid,
   Typography,
   Divider,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import ReactHtmlParser from 'react-html-parser';
-import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Link, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 
-import deleteCourseById from '../../api/graphql/deleteCourseById';
-import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
-import EditCourseButton from './course-page-components/edit-course-button/edit-course-button';
+import deleteCourseById from "../../api/graphql/deleteCourseById";
+import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
+import EditCourseButton from "./course-page-components/edit-course-button/edit-course-button";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -29,6 +27,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export function TeacherCourseCard({ course, fetchTeacherCourse }) {
   const classes = useStyles();
+  const history = useHistory();
+
   // const [open, setOpen] = React.useState(false);
 
   // const handleClickOpen = () => {
@@ -39,6 +39,10 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
   //   setOpen(false);
   // };
   const [open, setOpen] = React.useState(false);
+
+  const handleRedirectToCourse = () => {
+    history.push(linkToCourse);
+  };
 
   const openAlertDelete = () => {
     setOpen(true);
@@ -57,6 +61,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
 
   console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
+  const linkToCourse = `/course/${course.courseId}`;
   const deleteCourse = async () => {
     try {
       const courseName = course.name;
@@ -74,7 +79,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
     setOpen(false);
   };
@@ -87,7 +92,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
           </Box>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} lg={6} className={classes.bodyCourse}>
-              <Link>
+              <Link to={linkToCourse}>
                 <Typography
                   variant="h5"
                   color="primary"
@@ -96,17 +101,20 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                   {course.name}
                 </Typography>
               </Link>
-              <Typography variant="body2">
-                {course.description.substring(0, 200) + '...'}
-              </Typography>
+              <Typography variant="body2">{course.shortDescription}</Typography>
             </Grid>
             <Grid item xs={12} lg={6} container justify="flex-end">
               <Grid item xs={0} lg={6}>
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
-                  Go to Course
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth={Boolean(true)}
+                  onClick={handleRedirectToCourse}
+                >
+                  View Course
                 </Button>
                 <br />
                 <Grid item>
@@ -195,44 +203,44 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
 
 const useStyles = makeStyles((theme) => ({
   whiteBack: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   blueBack: {
-    backgroundColor: '#1e94eb',
+    backgroundColor: "#1e94eb",
   },
   yellowBack: {
-    backgroundColor: '#f3c800',
+    backgroundColor: "#f3c800",
   },
   greenBack: {
-    backgroundColor: '#00d2a1',
+    backgroundColor: "#00d2a1",
   },
   grayBack: {
-    backgroundColor: '#f5f7fa',
+    backgroundColor: "#f5f7fa",
   },
   bodyCourse: {
-    height: 'fit-content',
+    height: "fit-content",
   },
   fw700: {
     fontWeight: 700,
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.palette.text.secondary,
   },
   center: {
-    margin: 'auto',
+    margin: "auto",
   },
   courseCard: {
-    marginBottom: '28px',
-    color: '#1f1f1f',
+    marginBottom: "28px",
+    color: "#1f1f1f",
   },
   dFlex: {
-    display: 'flex',
-    marginBlock: 'auto',
+    display: "flex",
+    marginBlock: "auto",
   },
   blackText: {
-    color: '#1f1f1f',
+    color: "#1f1f1f",
   },
   fw700: {
     fontWeight: 700,

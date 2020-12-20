@@ -11,9 +11,10 @@ import {
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import DownloadRoundedIcon from '@material-ui/icons/GetAppRounded';
+import FileViewer from '../../../../file-viewer/file-viewer';
 
 const CurrentStudentSubmission = ({ files, description, fetchSubmission }) => {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
@@ -35,40 +36,11 @@ const CurrentStudentSubmission = ({ files, description, fetchSubmission }) => {
           )
           : (
             <>
-              <Typography variant="h6">
-                Description
-              </Typography>
+              <Typography variant="h6">Description</Typography>
               <Typography variant="body1">{description}</Typography>
               <br />
               <Typography variant="h6">Files</Typography>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Filename</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    files.map((file) => (
-                      <TableRow hover>
-                        <TableCell>{file.filename}</TableCell>
-                        <TableCell>
-                          <Link to={file.url} target="_blank" style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                            >
-                              <DownloadRoundedIcon />
-                            </Button>
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  }
-                </TableBody>
-              </Table>
+              <FileViewer files={files} />
             </>
           )
       }

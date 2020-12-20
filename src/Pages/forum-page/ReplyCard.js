@@ -86,7 +86,7 @@ export function ReplyCard({ content }) {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
   return (

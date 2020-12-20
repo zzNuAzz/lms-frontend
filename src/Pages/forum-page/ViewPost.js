@@ -103,6 +103,7 @@ export default function ViewPost({ courseId }) {
     getPostList(parseInt(threadId, 10))
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
+        // console.log("Post List", { result });
         const data = result.data.postList.postList;
         setPostList(data);
       })
@@ -112,23 +113,24 @@ export default function ViewPost({ courseId }) {
   }, [courseId]);
 
   const handleReply = async () => {
+    // console.log(replyContent);
     try {
       const result = await addPost(parseInt(threadId, 10), replyContent);
       // TODO
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
         toast.success("Replied", {
-          autoClose: 1000,
+          autoClose: 3000,
         });
         setTimeout(() => {
-          console.log("replied successfully");
-        }, 0);
+          // console.log("replied successfully");
+        }, 3000);
         window.location.reload();
       } else {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
   return (
@@ -149,6 +151,7 @@ export default function ViewPost({ courseId }) {
               {/* title */}
               <Typography variant="h4" style={{ fontWeight: "700" }}>
                 {thread.title}
+                {/* {console.log({ thread })} */}
               </Typography>
               <hr style={{ color: "#000000" }} />
               {/* topic */}
