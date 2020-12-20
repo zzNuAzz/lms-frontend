@@ -18,6 +18,7 @@ const SubmissionListComponent = ({ courseId }) => {
   const [assignmentId, setAssignmentId] = useState(-1);
   const [assignmentContent, setAssignmentContent] = useState('');
   const [assignmentTitle, setAssignmentTitle] = useState('');
+  const [assignmentDueDate, setAssignmentDueDate] = useState('');
   const [isLoading, setLoading] = useState(true);
 
   const fetchAssignments = async () => {
@@ -45,10 +46,11 @@ const SubmissionListComponent = ({ courseId }) => {
   }, []);
 
   const handleSelectedAssignmentChange = (event) => {
-    const { id, title, content } = event.target.value;
+    const { id, title, content, dueDate } = event.target.value;
     setAssignmentId(id);
     setAssignmentContent(content);
     setAssignmentTitle(title);
+    setAssignmentDueDate(dueDate);
   };
 
   const RenderComponent = (
@@ -72,6 +74,7 @@ const SubmissionListComponent = ({ courseId }) => {
                 title: assignment.title,
                 id: assignment.assignmentId,
                 content: assignment.content,
+                dueDate: assignment.dueDate,
               }}
             >
               {assignment.title}
@@ -86,6 +89,7 @@ const SubmissionListComponent = ({ courseId }) => {
             <SubmissionComponent
               assignmentId={assignmentId}
               description={assignmentContent}
+              dueDate={assignmentDueDate}
             />
           )
           : null

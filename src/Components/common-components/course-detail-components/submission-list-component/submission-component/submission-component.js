@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Button,
   Collapse,
   IconButton,
   LinearProgress,
@@ -10,11 +11,13 @@ import {
   TableRow,
   Typography,
   makeStyles,
+  Paper,
 } from '@material-ui/core';
 import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from '@material-ui/icons';
 import { toast } from 'react-toastify';
 import getSubmissionList from '../../../../../api/graphql/get-submission-list';
 import toastFetchErrors from '../../../../tools/toast-fetch-errors';
+import FileViewer from '../../../file-viewer/file-viewer';
 
 const useStyles = makeStyles((theme) => ({
   tableRow: {
@@ -23,11 +26,30 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+
+  onTimeButton: {
+    color: '#FFFFFF',
+    background: theme.palette.success.main,
+    '&:hover': {
+      backgroundColor: theme.palette.success.dark,
+    },
+  },
+
+  overdueButton: {
+    color: '#FFFFFF',
+    background: theme.palette.error.main,
+    '&:hover': {
+      backgroundColor: theme.palette.error.dark,
+    },
+  },
 }));
 
 const SubmissionComponent = ({ assignmentId, description, dueDate }) => {
+  const classes = useStyles();
+
   const [submissionList, setSubmissionList] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const due = new Date(dueDate);
 
   const fetchSubmissionList = async () => {
     try {
@@ -56,8 +78,21 @@ const SubmissionComponent = ({ assignmentId, description, dueDate }) => {
     fetch();
   }, [assignmentId]);
 
+  const SubmissionStatusButton = ({ isOverdue }) => (
+    <>
+      {
+        isOverdue
+          ? (
+            <Button variant="contained" className={classes.overdueButton}>Overdue</Button>
+          )
+          : (
+            <Button variant="contained" className={classes.onTimeButton}>On time</Button>
+          )
+      }
+    </>
+  );
+
   const Row = ({ submission }) => {
-    const classes = useStyles();
     const [open, setOpen] = useState(false);
     const lastUpdated = new Date(submission.updateAt);
 
@@ -67,7 +102,13 @@ const SubmissionComponent = ({ assignmentId, description, dueDate }) => {
           <TableCell>{submission.author.userId}</TableCell>
           <TableCell>{submission.author.lastName.concat(' ', submission.author.firstName)}</TableCell>
           <TableCell>{lastUpdated.toLocaleDateString()}</TableCell>
-          <TableCell>Overdue status button</TableCell>
+          <TableCell>
+            {
+              lastUpdated > due
+                ? <SubmissionStatusButton isOverdue />
+                : <SubmissionStatusButton />
+            }
+          </TableCell>
           <TableCell>
             <IconButton size="small" onClick={() => setOpen(!open)}>
               {
@@ -81,9 +122,8 @@ const SubmissionComponent = ({ assignmentId, description, dueDate }) => {
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
             <Collapse in={open} unmountOnExit>
-              <Typography variant="body1">
-                Placeholder for submission item
-              </Typography>
+              <Typography variant="h6">Submission Files</Typography>
+              <FileViewer files={submission.files} />
             </Collapse>
           </TableCell>
         </TableRow>
@@ -93,28 +133,33 @@ const SubmissionComponent = ({ assignmentId, description, dueDate }) => {
 
   const RenderSubmissionTable = (
     <>
-      <Typography variant="h6">Description</Typography>
-      <Typography variant="body1">{description}</Typography>
-      <hr />
-      <Typography variant="h6">Submission List</Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Student ID</TableCell>
-            <TableCell>Student Name</TableCell>
-            <TableCell>Last Updated</TableCell>
-            <TableCell>Overdue</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {
-            submissionList.map((submission) => (
-              <Row submission={submission} />
-            ))
-          }
-        </TableBody>
-      </Table>
+      <Paper elevation={3} style={{padding: '15px 15px'}}>
+        <Typography variant="h6">Description</Typography>
+        <Typography variant="body1">{description}</Typography>
+        <br />
+        <Typography variant="h6">Due date</Typography>
+        <Typography variant="body1">{due.toLocaleDateString()}</Typography>
+        <hr />
+        <Typography variant="h6">Submission List</Typography>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Student ID</TableCell>
+              <TableCell>Student Name</TableCell>
+              <TableCell>Last Updated</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              submissionList.map((submission) => (
+                <Row submission={submission} />
+              ))
+            }
+          </TableBody>
+        </Table>
+      </Paper>
     </>
   );
 
