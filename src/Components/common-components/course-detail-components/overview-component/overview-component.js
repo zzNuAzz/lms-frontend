@@ -59,7 +59,7 @@ const OverviewComponent = ({
         toast(result);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 

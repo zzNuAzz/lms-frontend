@@ -79,7 +79,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
     setOpen(false);
   };

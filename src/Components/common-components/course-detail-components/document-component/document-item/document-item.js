@@ -24,8 +24,13 @@ import editDocument from '../../../../../api/graphql/edit-document';
 
 const useStyles = makeStyles((theme) => ({
   title: {
+    flexBasis: '33.33%',
     fontSize: theme.typography.pxToRem(20),
     fontWeight: theme.typography.fontWeightBold,
+  },
+  dateCreated: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
   },
   accordionBody: {
     flexDirection: 'column',
@@ -48,6 +53,9 @@ const DocumentItem = ({ document, fetchDocuments }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
+
+  const createAt = new Date(document.createAt);
+  const updateAt = new Date(document.updateAt);
 
   const handleOnFilesChange = (addedFiles) => {
     setNewFiles(addedFiles);
@@ -154,7 +162,8 @@ const DocumentItem = ({ document, fetchDocuments }) => {
         />
         <Typography variant="h6">Add new files</Typography>
         <DropzoneArea
-          filesLimit={5}
+          filesLimit={100}
+          maxFileSize={100000000}
           showPreviews
           showPreviewsInDropzone={false}
           useChipsForPreview
@@ -226,6 +235,9 @@ const DocumentItem = ({ document, fetchDocuments }) => {
           expandIcon={<ExpandMoreRoundedIcon />}
         >
           <Typography className={classes.title}>{document.title}</Typography>
+          <Typography className={classes.dateCreated}>
+            {`Last updated: ${updateAt.toLocaleDateString()}`}
+          </Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordionBody}>
           <Typography variant="h6">Description</Typography>

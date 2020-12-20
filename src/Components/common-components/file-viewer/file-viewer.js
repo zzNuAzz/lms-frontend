@@ -92,7 +92,7 @@ const FileViewer = ({
     </Table>
   );
 
-  return (
+  const RenderComponent = (
     <>
       <Table size="small">
         <TableHead>
@@ -121,7 +121,7 @@ const FileViewer = ({
                       ? (
                         <>
                           &nbsp;
-                          <Button
+                        <Button
                             variant="contained"
                             color="secondary"
                             size="small"
@@ -148,6 +148,18 @@ const FileViewer = ({
             </>
           )
           : null
+      }
+    </>
+  );
+
+  return (
+    <>
+      {
+        files.length === 0
+          ? (
+            <Typography variant="body1">No files available</Typography>
+          )
+          : RenderComponent
       }
     </>
   );

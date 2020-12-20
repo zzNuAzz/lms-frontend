@@ -14,7 +14,7 @@ import DownloadRoundedIcon from '@material-ui/icons/GetAppRounded';
 import FileViewer from '../../../../file-viewer/file-viewer';
 
 const CurrentStudentSubmission = ({ files, description, fetchSubmission }) => {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {

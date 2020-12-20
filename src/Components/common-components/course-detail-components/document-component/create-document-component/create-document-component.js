@@ -37,39 +37,37 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const fileUploadResult = await graphqlMultipleUpload(files);
-      if (fileUploadResult.data?.uploadFileMultiple?.length !== 0) {
-        const result = await createDocument(
-          parseInt(courseId, 10),
-          title,
-          description,
-          fileUploadResult.data.uploadFileMultiple,
-        )
-        const parsedResult = JSON.parse(result);
-        if (parsedResult.data) {
-          if (parsedResult.data.createDocument.success) {
-            toast.success(`Successfully added document ${title}!`, {
-              autoClose: 3000,
-            });
-            await fetchDocuments();
-            setLoading(false);
-            setDialogOpen(false);
-          } else {
-            toast.error(parsedResult.data.createDocument.message);
-            setLoading(false);
-          }
+      let fileUploadResult = [];
+      if (files.length !== 0) {
+        fileUploadResult = await graphqlMultipleUpload(files);
+        if (fileUploadResult.data?.uploadFileMultiple?.length === 0) {
+          toast.error('Error(s) occured while uploading files');
+        }
+      }
+      const result = await createDocument(
+        parseInt(courseId, 10),
+        title,
+        description,
+        fileUploadResult,
+      )
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.createDocument.success) {
+          toast.success(`Successfully added document ${title}!`, {
+            autoClose: 3000,
+          });
+          await fetchDocuments();
+          setDialogOpen(false);
         } else {
-          toastFetchErrors(parsedResult);
-          setLoading(false);
+          toast.error(parsedResult.data.createDocument.message);
         }
       } else {
-        toastFetchErrors(fileUploadResult);
-        setLoading(false);
+        toastFetchErrors(parsedResult);
       }
     } catch (error) {
       toast.error(error.toString());
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const CreateDocumentForm = (
@@ -108,7 +106,8 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
         </Grid>
         <Grid item>
           <DropzoneArea
-            filesLimit={5}
+            filesLimit={100}
+            maxFileSize={100000000}
             showPreviews
             showPreviewsInDropzone={false}
             useChipsForPreview

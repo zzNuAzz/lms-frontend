@@ -146,7 +146,7 @@ export default function CoursePage() {
         toastFetchErrors(temp);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 
@@ -163,7 +163,7 @@ export default function CoursePage() {
       }
       // console.log({ parsedResult });
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 
@@ -179,7 +179,7 @@ export default function CoursePage() {
       }
       // console.log({ parsedResult });
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 

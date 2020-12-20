@@ -86,7 +86,7 @@ const TeacherCourseDetailPage = () => {
         toast(result);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 
@@ -102,7 +102,7 @@ const TeacherCourseDetailPage = () => {
         toastFetchErrors(result);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 
@@ -148,7 +148,7 @@ const TeacherCourseDetailPage = () => {
         });
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 
