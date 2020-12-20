@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -7,19 +7,19 @@ import {
   Typography,
   Tabs,
   Tab,
-} from '@material-ui/core';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { toast } from 'react-toastify';
-import Pagination from '@material-ui/lab/Pagination';
-import SwipeableViews from 'react-swipeable-views';
+} from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { toast } from "react-toastify";
+import Pagination from "@material-ui/lab/Pagination";
+import SwipeableViews from "react-swipeable-views";
 
-import { CourseCard } from './CourseCard';
+import { CourseCard } from "./CourseCard";
 
-import getUserCourseList from '../../api/graphql/get-user-course-list';
-import getAllCourses from '../../api/graphql/get-all-courses.js';
-import getRecommendCourses from '../../api/graphql/get-recommend-courses.js';
-import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
-import { Recommend } from './Recommend';
+import getUserCourseList from "../../api/graphql/get-user-course-list";
+import getAllCourses from "../../api/graphql/get-all-courses.js";
+import getRecommendCourses from "../../api/graphql/get-recommend-courses.js";
+import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
+import { Recommend } from "./Recommend";
 
 // TabPanel
 function TabPanel(props) {
@@ -44,22 +44,22 @@ function TabPanel(props) {
 const reduceAllCourses = (arr1, arr2) => {
   var pendingIdList = [];
   var result = [];
-  for(var i = 0; i < arr2.length; i++){
+  for (var i = 0; i < arr2.length; i++) {
     pendingIdList.push(arr2[i].courseId);
   }
-  console.log("Reduce1", pendingIdList);
-  for(var i = 0; i < arr1.length; i++){
+  // console.log("Reduce1", pendingIdList);
+  for (var i = 0; i < arr1.length; i++) {
     if (!pendingIdList.includes(arr1[i].courseId)) {
       result.push(arr1[i]);
     }
   }
-  console.log("Reduce2", result);
+  // console.log("Reduce2", result);
   return result;
 };
 //CoursePage
 export default function CoursePage() {
   const [isLoading, setLoading] = useState(false);
-  const userId = parseInt(localStorage.getItem('userId'), 10);
+  const userId = parseInt(localStorage.getItem("userId"), 10);
   const [courses, setCourses] = useState([]);
   const [pendingCourses, setPendingCourses] = useState([]);
   var [allCourses, setAllCourses] = useState([]);
@@ -102,7 +102,7 @@ export default function CoursePage() {
   function a11yProps(index) {
     return {
       id: `full-width-tab-${index}`,
-      'aria-controls': `full-width-tabpanel-${index}`,
+      "aria-controls": `full-width-tabpanel-${index}`,
     };
   }
   // API
@@ -111,7 +111,7 @@ export default function CoursePage() {
       //* Fetch enrolled courses
       const acceptedResult = await getUserCourseList({
         userId,
-        status: 'Accepted',
+        status: "Accepted",
         pageNumber,
         pageSize,
       });
@@ -122,7 +122,7 @@ export default function CoursePage() {
           setCourses(parsedResult.data.userCourseList.courseList);
           setTotalPageIPCourses(parsedResult.data.userCourseList.totalPages);
         } else {
-          toast.error('You have no enrolled courses... :(');
+          toast.error("You have no enrolled courses... :(");
         }
       } else {
         toastFetchErrors(parsedResult);
@@ -132,7 +132,7 @@ export default function CoursePage() {
       //* Fetch pending courses
       const result = await getUserCourseList({
         userId,
-        status: 'Pending',
+        status: "Pending",
         pageNumber: pageNumber,
         pageSize: pageSize,
       });
@@ -198,8 +198,8 @@ export default function CoursePage() {
     allCourses = reduceAllCourses(allCourses, courses);
   }
 
-  console.log({ courses });
-  console.log({ allCourses });
+  // console.log({ courses });
+  // console.log({ allCourses });
   // console.log({ pendingCourses });
   const RenderComponent = (
     <>
@@ -243,7 +243,7 @@ export default function CoursePage() {
 
       {/* COURSE CARD */}
       <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={value}
         onChangeIndex={handleChangeIndex}
       >
@@ -317,7 +317,7 @@ export default function CoursePage() {
             </Container>
             <Container maxWidth="lg">
               {courses.map((course) => (
-                <CourseCard course={course} isEnrolled={new Boolean(true)}/>
+                <CourseCard course={course} isEnrolled={new Boolean(true)} />
               ))}
             </Container>
           </Box>
@@ -371,33 +371,33 @@ export default function CoursePage() {
   return (
     <>
       {isLoading ? (
-        <LinearProgress style={{ backGround: '#2a73cc' }} />
+        <LinearProgress style={{ backGround: "#2a73cc" }} />
       ) : (
-          RenderComponent
-        )}
+        RenderComponent
+      )}
     </>
   );
 }
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#f5f7fa',
+    backgroundColor: "#f5f7fa",
   },
   whiteBack: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   header: {
     backgroundImage: `url("//s3.amazonaws.com/coursera_assets/logged-in-home/header-bg-alt_optim.png")`,
-    backgroundColor: '#d7eef7',
-    width: '100%',
-    backgroundPosition: 'right 120px center',
-    backgroundPositionX: 'right 120px',
-    backgroundPositionY: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundRepeatX: 'no-repeat',
-    backgroundRepeatY: 'no-repeat',
-    backgroundSize: 'contain',
-    height: 'fit-content',
+    backgroundColor: "#d7eef7",
+    width: "100%",
+    backgroundPosition: "right 120px center",
+    backgroundPositionX: "right 120px",
+    backgroundPositionY: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundRepeatX: "no-repeat",
+    backgroundRepeatY: "no-repeat",
+    backgroundSize: "contain",
+    height: "fit-content",
   },
   bodyCourse: {
     height: 170,
@@ -406,29 +406,29 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
   },
   welcome: {
-    color: '#271066',
-    fontSize: '3rem',
-    lineHeight: '3.75rem',
+    color: "#271066",
+    fontSize: "3rem",
+    lineHeight: "3.75rem",
     fontWeight: 700,
     paddingTop: 90,
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.palette.text.secondary,
   },
   center: {
-    margin: 'auto',
+    margin: "auto",
   },
   courseCard: {
-    marginTop: '28px',
+    marginTop: "28px",
   },
   middleNav: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     width: 950,
   },
   tabs: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     fontSize: 14,
     fontWeight: 700,
   },

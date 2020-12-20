@@ -1,5 +1,5 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Fragment, useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
   Container,
@@ -8,36 +8,36 @@ import {
   Button,
   Card,
   CardContent,
-} from '@material-ui/core';
-import { Link, useParams } from 'react-router-dom';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { toast } from 'react-toastify';
-import MostHelpful from './MostHelpful';
-import { CardForum } from './ThreadList';
-import { ReplyCard } from './ReplyCard';
-import { NewPostBox } from './NewPostBox';
+} from "@material-ui/core";
+import { Link, useParams } from "react-router-dom";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { toast } from "react-toastify";
+import MostHelpful from "./MostHelpful";
+import { CardForum } from "./ThreadList";
+import { ReplyCard } from "./ReplyCard";
+import { NewPostBox } from "./NewPostBox";
 
-import getPostList from '../../api/graphql/get-post-list';
-import getThreadById from '../../api/graphql/get-thread-by-id';
-import addPost from '../../api/graphql/add-post';
-import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+import getPostList from "../../api/graphql/get-post-list";
+import getThreadById from "../../api/graphql/get-thread-by-id";
+import addPost from "../../api/graphql/add-post";
+import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#f5f7fa',
+    backgroundColor: "#f5f7fa",
   },
   search: {
-    backgroundImage: `url(${'https://uploads-us-west-2.insided.com/coursera-en/attachment/0ee512f0-c148-4e6c-a3c5-ae5ea674bbf9_thumb.jpg'})`,
-    backgroundPosition: 'center center',
-    backgroundSize: 'cover',
+    backgroundImage: `url(${"https://uploads-us-west-2.insided.com/coursera-en/attachment/0ee512f0-c148-4e6c-a3c5-ae5ea674bbf9_thumb.jpg"})`,
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
     padding: 30,
-    width: '100%',
+    width: "100%",
     height: 250,
     marginBottom: 50,
   },
   whiteBack: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     marginBottom: 20,
     marginTop: 10,
     marginRight: 5,
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ViewPost() {
   const classes = useStyles();
-  const [thread, setThread] = useState('');
+  const [thread, setThread] = useState("");
   const [postList, setPostList] = useState(() => []);
   const [replyContent, setReplyContent] = useState();
   const { threadId } = useParams();
@@ -98,7 +98,7 @@ export default function ViewPost() {
     getPostList(parseInt(threadId, 10))
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
-        console.log('Post List', { result });
+        // console.log("Post List", { result });
         const data = result.data.postList.postList;
         setPostList(data);
       })
@@ -108,17 +108,17 @@ export default function ViewPost() {
   }, [courseId]);
 
   const handleReply = async () => {
-    console.log(replyContent);
+    // console.log(replyContent);
     try {
       const result = await addPost(parseInt(threadId, 10), replyContent);
       // TODO
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
-        toast.success('Replied', {
+        toast.success("Replied", {
           autoClose: 3000,
         });
         setTimeout(() => {
-          console.log('replied successfully');
+          // console.log("replied successfully");
         }, 3000);
         window.location.reload();
       } else {
@@ -145,18 +145,18 @@ export default function ViewPost() {
               className={classes.whiteBack}
             >
               {/* title */}
-              <Typography variant="h4" style={{ fontWeight: '700' }}>
+              <Typography variant="h4" style={{ fontWeight: "700" }}>
                 {thread.title}
-                {console.log({ thread })}
+                {/* {console.log({ thread })} */}
               </Typography>
-              <hr style={{ color: '#000000' }} />
+              <hr style={{ color: "#000000" }} />
               {/* topic */}
               <Grid item>{thread && <CardForum forum={thread} />}</Grid>
               {/* replyList */}
               <Grid item>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6" style={{ fontWeight: '700' }}>
+                    <Typography variant="h6" style={{ fontWeight: "700" }}>
                       {postList.length < 2
                         ? `${postList.length} reply:`
                         : `${postList.length} replies:`}
@@ -172,7 +172,7 @@ export default function ViewPost() {
               </Grid>
               {/* reply */}
               <Grid item>
-                <Typography variant="h6" style={{ fontWeight: '900' }}>
+                <Typography variant="h6" style={{ fontWeight: "900" }}>
                   Reply
                 </Typography>
                 <hr />
@@ -180,8 +180,7 @@ export default function ViewPost() {
                   className={classes.editor}
                   editor={ClassicEditor}
                   data={replyContent}
-                  onReady={(editor) => {
-                  }}
+                  onReady={(editor) => {}}
                   onChange={(event, editor) => {
                     const data = editor.getData();
                     setReplyContent(data);
@@ -196,7 +195,7 @@ export default function ViewPost() {
                 />
                 <Button
                   className={classes.padding13}
-                  style={{ margin: '20px' }}
+                  style={{ margin: "20px" }}
                   variant="contained"
                   color="primary"
                   onClick={handleReply}

@@ -114,7 +114,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
                   fullWidth={Boolean(true)}
                   onClick={handleRedirectToCourse}
                 >
-                  Go to Course
+                  View Course
                 </Button>
                 <br />
                 <Grid item>
