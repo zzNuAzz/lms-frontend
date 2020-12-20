@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
-import React, { Fragment, useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import {
   Box,
   Container,
@@ -13,10 +12,8 @@ import {
 import { toast } from "react-toastify";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import editThread from "../../api/graphql/edit-thread";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
-import MostHelpful from "./MostHelpful";
-import createThread from "../../api/graphql/create-thread";
-import getThreadById from "../../api/graphql/get-thread-by-id";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,34 +46,29 @@ const useStyles = makeStyles((theme) => ({
 
 function EditComponent({ thread: originThread, handleClose }) {
   const classes = useStyles();
-  const history = useHistory();
-
   const [thread, setThread] = useMergeState(originThread);
   let courseId = useParams();
-  const forumLink = `/course/${courseId.courseId}/forum`;
-
-
+  const history = useHistory();
+  console.log(thread.threadId);
   courseId = parseInt(courseId.courseId, 10);
-  const handlePublish = async () => {
-    // const title = titleInput.current.value;
-    // const tag = tagInput.current.value;
+  const handleSubmit = async () => {
 
     try {
-      // const result = await createThread(courseId, title, body);
-      // // TODO
-      // const parsedResult = JSON.parse(result);
-      // if (parsedResult.data) {
-      //   // toast.success("Your topic will be displayed after 3 seconds", {
-      //   //   autoClose: 3000,
-      //   // });
-      //   // setTimeout(() => {
-      //   //   history.push(`/course/${courseId}/forum`);
-      //   // }, 3000);
-      //   console.log({ parsedResult });
-      //   history.push(`/course/${courseId}/forum`);
-      // } else {
-      //   toastFetchErrors(parsedResult);
-      // }
+      const result = await editThread(thread.threadId, thread.title, thread.content);
+      // TODO
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        // toast.success("Your topic will be displayed after 3 seconds", {
+        //   autoClose: 3000,
+        // });
+        // setTimeout(() => {
+        //   history.push(`/course/${courseId}/forum`);
+        // }, 3000);
+        console.log({ parsedResult });
+        history.push(`/course/${courseId}/forum`);
+      } else {
+        toastFetchErrors(parsedResult);
+      }
     } catch (error) {
       toast(error);
     }
@@ -111,12 +103,7 @@ function EditComponent({ thread: originThread, handleClose }) {
                   setThread({content: data});
                 }}
               />
-              {/* <Typography className={classes.padding13} required variant="subtitle2">
-                Tags (Optional)
-              </Typography>
-              <TextField variant="outlined" value={thread.tags} title="tags" onChange={handleChange}/> */}
-
-              <Button className={classes.padding13} style={{ margin: "20px" }} variant="contained" color="primary" onClick={handlePublish}>
+              <Button className={classes.padding13} style={{ margin: "20px" }} variant="contained" color="primary" onClick={handleSubmit}>
                 Confirm
               </Button>
               <Grid container justify="flex-end">

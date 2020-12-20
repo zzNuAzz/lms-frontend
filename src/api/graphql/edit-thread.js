@@ -4,7 +4,7 @@ import { graphQLFetch } from "./graphql-fetch";
 const editThread = async (threadId, title, content) => {
   const query = `
   mutation editThread($threadId: Int!, $title: String, $content: String) {
-    editCourse(threadId: $threadId, title: $title, content: $content) {
+    editThread(threadId: $threadId, title: $title, content: $content) {
       success
       message
     } 
