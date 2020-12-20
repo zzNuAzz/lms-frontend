@@ -15,6 +15,7 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  Badge,
 } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors'
 import React, { useEffect, useState } from 'react';
@@ -76,10 +77,23 @@ const TeacherCourseDetailPage = () => {
   const history = useHistory();
 
   const { id } = useParams();
-
+  const [pendingMember, setPendingMember] = useState(0);
   const [tabPosition, setTabPosition] = useState('Course Info');
 
+  const _getPendingMember = () => {
+    getCourseMemberList(+id, 'Pending').then(result => {
+      setPendingMember(JSON.parse(result).data?.courseMemberList?.totalRecords || 0)
+    }).catch(err => {
+      toast.error(err.message);
+    })
+  }
+
+  useEffect(()=> {
+    _getPendingMember();
+  },[])
+
   const handleTabChange = (newTab) => {
+    _getPendingMember();
     setTabPosition(newTab);
   };
 
@@ -99,8 +113,7 @@ const TeacherCourseDetailPage = () => {
                 onClick={() => handleTabChange('Course Info')}
               >
                 <div className="tab-item">
-                  <SubjectRoundedIcon />
-                  &nbsp;
+                  <SubjectRoundedIcon style={{marginRight: "1rem"}}/>
                   Course Info
                 </div>
               </div>
@@ -112,8 +125,7 @@ const TeacherCourseDetailPage = () => {
                 onClick={() => handleTabChange('Edit Course')}
               >
                 <div className="tab-item">
-                  <EditRoundedIcon />
-                  &nbsp;
+                  <EditRoundedIcon style={{marginRight: "1rem"}} />
                   Edit Course
                 </div>
               </div>
@@ -124,9 +136,10 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Members' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Members')}
               >
-                <PeopleRoundedIcon />
-                &nbsp;
-                Members
+                <Badge badgeContent={pendingMember} color="primary" style={{marginRight: "1rem"}}>
+                  <PeopleRoundedIcon />
+                </Badge>
+                Members   
               </div>
             </Grid>
             <Grid item style={{ width: 'inherit' }}>
@@ -135,8 +148,7 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Documents' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Documents')}
               >
-                <DescriptionRoundedIcon />
-                &nbsp;
+                <DescriptionRoundedIcon style={{marginRight: "1rem"}}/>
                 Documents
               </div>
             </Grid>
@@ -146,8 +158,7 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Assignments' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Assignments')}
               >
-                <BorderColorRoundedIcon />
-                &nbsp;
+                <BorderColorRoundedIcon style={{marginRight: "1rem"}}/>
                 Assignments
               </div>
             </Grid>
@@ -157,8 +168,7 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Forum' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Forum')}
               >
-                <ForumRoundedIcon />
-                &nbsp;
+                <ForumRoundedIcon style={{marginRight: "1rem"}}/>
                 Forum
               </div>
             </Grid>
