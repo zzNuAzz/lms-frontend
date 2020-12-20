@@ -107,7 +107,7 @@ export function CardForum({ forum }) {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
   // console.log({ forum });
@@ -244,7 +244,7 @@ export default function ({ thread }) {
         toastFetchErrors(parsedResult);
       }
     } catch (error){
-      toast(error);
+      toast.error(error.toString());
     }
   }
   useEffect(() => {

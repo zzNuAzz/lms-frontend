@@ -1,23 +1,13 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
-  Box,
   Container,
-  LinearProgress,
-  Tab,
-  Tabs,
-  Typography,
   makeStyles,
   Grid,
-  Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Paper,
 } from '@material-ui/core';
-import { grey } from '@material-ui/core/colors'
-import React, { useEffect, useState } from 'react';
+import { grey } from '@material-ui/core/colors';
+import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import SubjectRoundedIcon from '@material-ui/icons/SubjectRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
@@ -25,6 +15,7 @@ import DescriptionRoundedIcon from '@material-ui/icons/DescriptionRounded';
 import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
 import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import PeopleRoundedIcon from '@material-ui/icons/PeopleRounded';
+import SubmissionListRoundedIcon from '@material-ui/icons/ListRounded';
 import { toast } from 'react-toastify';
 
 import OverviewComponent from '../../../../Components/common-components/course-detail-components/overview-component/overview-component';
@@ -37,6 +28,7 @@ import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
 import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 import EditCourseComponent from '../../../../Components/common-components/course-detail-components/edit-course-component/edit-course-component';
+import SubmissionListComponent from '../../../../Components/common-components/course-detail-components/submission-list-component/submission-list-component';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -154,6 +146,17 @@ const TeacherCourseDetailPage = () => {
             <Grid item style={{ width: 'inherit' }}>
               <div
                 role="tab"
+                className={tabPosition === 'Submissions' ? classes.tabButtonActive : classes.tabButtonInactive}
+                onClick={() => handleTabChange('Submissions')}
+              >
+                <SubmissionListRoundedIcon />
+                &nbsp;
+                Submissions
+              </div>
+            </Grid>
+            <Grid item style={{ width: 'inherit' }}>
+              <div
+                role="tab"
                 className={tabPosition === 'Forum' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Forum')}
               >
@@ -196,6 +199,8 @@ const TeacherCourseDetailPage = () => {
                   return <DocumentComponent courseId={id} />;
                 case 'Assignments':
                   return <AssignmentsComponent courseId={id} />;
+                case 'Submissions':
+                  return <SubmissionListComponent courseId={id} />;
                 case 'Forum':
                   history.push(`/course/${id}/forum`);
                   history.go(0);
