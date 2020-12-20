@@ -52,16 +52,18 @@ const useStyles = makeStyles((theme) => ({
   editor: {
     height: 500,
   },
+  replyWidth: {
+    backgroundColor: "#f5f7fa",
+    maxWidth: "800px",
+  },
 }));
 
-export default function ViewPost() {
+export default function ViewPost({ courseId }) {
   const classes = useStyles();
   const [thread, setThread] = useState("");
   const [postList, setPostList] = useState(() => []);
   const [replyContent, setReplyContent] = useState();
   const { threadId } = useParams();
-  const courseId = 2;
-
   // const forum = {
   //   author: {
   //     userId: '5',
@@ -93,6 +95,9 @@ export default function ViewPost() {
         console.log(err);
       });
   }, [threadId]);
+
+  courseId = thread.courseId;
+  const forumLink = `/course/${courseId}/forum`;
 
   useEffect(() => {
     getPostList(parseInt(threadId, 10))
@@ -132,7 +137,6 @@ export default function ViewPost() {
     <>
       <div className={classes.root}>
         <Box className={classes.search} />
-
         <Container className={classes.root}>
           <Grid container direction="row" spacing={5}>
             <Grid
@@ -151,10 +155,12 @@ export default function ViewPost() {
               </Typography>
               <hr style={{ color: "#000000" }} />
               {/* topic */}
-              <Grid item>{thread && <CardForum forum={thread} />}</Grid>
+              <Grid item>
+                {thread && <CardForum forum={thread} isView={true} />}
+              </Grid>
               {/* replyList */}
               <Grid item>
-                <Card>
+                <Card width="100%" className={classes.replyWidth}>
                   <CardContent>
                     <Typography variant="h6" style={{ fontWeight: "700" }}>
                       {postList.length < 2
@@ -164,7 +170,7 @@ export default function ViewPost() {
                   </CardContent>
                 </Card>
 
-                {postList.map((post) => (
+                {postList.reverse().map((post) => (
                   <Grid>
                     <ReplyCard content={post} />
                   </Grid>
@@ -184,14 +190,9 @@ export default function ViewPost() {
                   onChange={(event, editor) => {
                     const data = editor.getData();
                     setReplyContent(data);
-                    // console.log(replyContent);
                   }}
-                  onBlur={(event, editor) => {
-                    // console.log('Blur.', editor);
-                  }}
-                  onFocus={(event, editor) => {
-                    // console.log('Focus.', editor);
-                  }}
+                  onBlur={(event, editor) => {}}
+                  onFocus={(event, editor) => {}}
                 />
                 <Button
                   className={classes.padding13}
@@ -203,7 +204,7 @@ export default function ViewPost() {
                   Reply
                 </Button>
                 <Grid container justify="flex-end">
-                  <Link to="/course/2/forum" variant="caption">
+                  <Link to={forumLink} variant="caption">
                     Back to forum.
                   </Link>
                 </Grid>
