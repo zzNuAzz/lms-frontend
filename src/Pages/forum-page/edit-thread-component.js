@@ -19,6 +19,9 @@ import createThread from "../../api/graphql/create-thread";
 import getThreadById from "../../api/graphql/get-thread-by-id";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding:"1rem 2rem"
+  },
   paper: {
     // marginTop: theme.spacing(8),
     display: "flex",
@@ -44,28 +47,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EditComponent({ threadId, handleClose }) {
+function EditComponent({ thread: originThread, handleClose }) {
   const classes = useStyles();
   const history = useHistory();
-  const [body, setBody] = useState("");
-  // const titleInput = useRef(null);
-  // const tagInput = useRef(null);
-  const [thread, setThread] = useMergeState({});
+
+  const [thread, setThread] = useMergeState(originThread);
   let courseId = useParams();
   const forumLink = `/course/${courseId.courseId}/forum`;
 
-  useEffect(() => {
-    getThreadById(parseInt(threadId, 10))
-      .then((result) => {
-        if (result.errors) throw new Error(result.errors[0].message);
-        const data = result.data.thread;
-        setThread(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [threadId]);
-  console.log({ thread });
 
   courseId = parseInt(courseId.courseId, 10);
   const handlePublish = async () => {
@@ -93,8 +82,8 @@ function EditComponent({ threadId, handleClose }) {
     }
   };
 
-  const handleChange = (e, val) => {
-    console.log("12", e.target.value, val);
+  const handleChange = (e) => {
+    setThread({[e.target.name]:e.target.value});
   };
 
   return (
@@ -102,68 +91,35 @@ function EditComponent({ threadId, handleClose }) {
       <div className={classes.root}>
         <Container className={classes.root}>
           <Grid container direction="row" spacing={5}>
-            <Grid
-              container
-              item
-              xs={12}
-              lg={8}
-              direction="column"
-              className={classes.whiteBack}
-              spacing={5}
-            >
+            <Grid container item xs={12} lg={8} direction="column" className={classes.whiteBack} spacing={5}>
               <Typography item variant="h3">
                 Edit Post
               </Typography>
               <Typography className={classes.padding13} variant="subtitle2">
                 Title
               </Typography>
-              <TextField
-                variant="outlined"
-                // required
-                value={thread.title}
-                name="title"
-                onFocus={() => console.log("a")}
-                onChange={handleChange}
-                // inputRef={titleInput}
-              />
+              <TextField variant="outlined" required value={thread.title} name="title" onChange={handleChange}/>
               <Typography className={classes.padding13} variant="subtitle2">
                 Body
               </Typography>
-              {console.log(thread.content)}
               <CKEditor
                 className={classes.editor}
                 editor={ClassicEditor}
                 data={thread.content}
                 onChange={(event, editor) => {
-                  // const data = editor.getData();
-                  // setBody(data);
+                  const data = editor.getData();
+                  setThread({content: data});
                 }}
               />
-              <Typography
-                className={classes.padding13}
-                required
-                variant="subtitle2"
-              >
+              {/* <Typography className={classes.padding13} required variant="subtitle2">
                 Tags (Optional)
               </Typography>
-              <TextField
-                variant="outlined"
-                // value={thread.tags}
-                // inputRef={tagInput}
-              />
-              <Button
-                className={classes.padding13}
-                style={{ margin: "20px" }}
-                variant="contained"
-                color="primary"
-                onClick={handlePublish}
-              >
+              <TextField variant="outlined" value={thread.tags} title="tags" onChange={handleChange}/> */}
+
+              <Button className={classes.padding13} style={{ margin: "20px" }} variant="contained" color="primary" onClick={handlePublish}>
                 Confirm
               </Button>
               <Grid container justify="flex-end">
-                {/* <Link to={forumLink} variant="caption">
-                  Back to forum.
-                </Link> */}
                 <Button onClick={handleClose}>Back to forum</Button>
               </Grid>
             </Grid>

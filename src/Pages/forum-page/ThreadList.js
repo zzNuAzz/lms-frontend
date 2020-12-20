@@ -161,9 +161,7 @@ export function CardForum({ forum, isView }) {
                     <MoreVertIcon />
                   </IconButton>
                   <Menu id="fade-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose} TransitionComponent={Fade}>
-                    <MenuItem onClick={openModalEdit}>
-                      Edit Post
-                    </MenuItem>
+                    <MenuItem onClick={openModalEdit}>Edit Post</MenuItem>
                     <MenuItem onClick={openAlertDelete}>Delete Post</MenuItem>
                   </Menu>
                 </>
@@ -240,8 +238,13 @@ export function CardForum({ forum, isView }) {
           </Button>
         </DialogActions>
       </Dialog>
-
-    
+      <Modal aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" className={classes.modal} open={openEditModal} onClose={()=>setOpenEditModal(false)} >
+        <Fade in={openEditModal}>
+          <div className={classes.paper}>
+            <EditComponent thread={forum} handleClose={()=>setOpenEditModal(false)} />
+          </div>
+        </Fade>
+      </Modal>
     </Grid>
   );
 }
