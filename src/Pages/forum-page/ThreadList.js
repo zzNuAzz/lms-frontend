@@ -78,7 +78,7 @@ export function CardForum({ forum, isView }) {
   const [postList, setPostList] = useState(() => []);
   const threadId = parseInt(forum.threadId);
   const profileLink = `/profile/view/${userId}`;
-
+  const viewThreadLink = `/course/forum/${threadId}`;
   const [openEditModal, setOpenEditModal] = useState(false);
 
   const viewThread = () => {
@@ -208,11 +208,11 @@ export function CardForum({ forum, isView }) {
           {isView ? (
             <div></div>
           ) : (
-            <div>
+            <div onClick={viewThread} style={{ cursor: "pointer" }}>
               <IconButton aria-label="share">
                 <ChatBubbleIcon />
               </IconButton>
-              <Typography variant="caption" gutterTop>
+              <Typography variant="caption" gutterTop style={{fontWeight: "bolder"}}>
                 {forum.comment}
                 {postList.length} Comment
               </Typography>

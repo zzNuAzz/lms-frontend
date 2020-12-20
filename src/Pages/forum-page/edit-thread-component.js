@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
   Box,
@@ -14,6 +14,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import editThread from "../../api/graphql/edit-thread";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
+import { getCourseById } from "../../api/graphql/get-course-by-id";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,30 +50,24 @@ function EditComponent({ thread: originThread, handleClose }) {
   const [thread, setThread] = useMergeState(originThread);
   let courseId = useParams();
   const history = useHistory();
+  const [course, setCourse] = useState({});
   console.log(thread.threadId);
   courseId = parseInt(courseId.courseId, 10);
   const handleSubmit = async () => {
-
     try {
       const result = await editThread(thread.threadId, thread.title, thread.content);
-      // TODO
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
-        // toast.success("Your topic will be displayed after 3 seconds", {
-        //   autoClose: 3000,
-        // });
-        // setTimeout(() => {
-        //   history.push(`/course/${courseId}/forum`);
-        // }, 3000);
         console.log({ parsedResult });
         history.push(`/course/${courseId}/forum`);
+        history.go(0);
       } else {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
       toast(error);
     }
-  };
+  }
 
   const handleChange = (e) => {
     setThread({[e.target.name]:e.target.value});
