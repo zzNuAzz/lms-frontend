@@ -8,7 +8,7 @@ import {
   Badge,
 } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import SubjectRoundedIcon from '@material-ui/icons/SubjectRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
