@@ -125,6 +125,7 @@ const EditAssignmentComponent = ({
       <Dialog
         open={dialogOpen}
         onClose={handleDialogClose}
+        fullWidth
         maxWidth="md"
       >
         <DialogTitle>Edit Assignment</DialogTitle>

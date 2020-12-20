@@ -95,7 +95,7 @@ export default function CoursePage() {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
   const handleSwitchCourseType = (event, newValue) => {

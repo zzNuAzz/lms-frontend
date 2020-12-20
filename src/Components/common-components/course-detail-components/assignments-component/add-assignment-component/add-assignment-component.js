@@ -11,6 +11,7 @@ import {
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
 import createAssignment from '../../../../../api/graphql/create-assignment';
+import { AddRounded } from '@material-ui/icons';
 
 const useStyle = makeStyles((theme) => ({
   dialog: {
@@ -162,6 +163,8 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
         color="primary"
         onClick={handleDialogOpen}
       >
+        <AddRounded />
+        &nbsp;
         Add Assignment
       </Button>
       <br />
