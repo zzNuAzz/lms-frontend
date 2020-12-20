@@ -12,7 +12,6 @@ import {
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import { Button } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
@@ -20,7 +19,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import Pagination from "@material-ui/lab/Pagination";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
 import { toast } from "react-toastify";
@@ -35,6 +34,10 @@ import Slide from "@material-ui/core/Slide";
 import deleteThread from "../../api/graphql/deleteThread";
 import moment from "moment";
 import getPostList from "../../api/graphql/get-post-list";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import LoginComponent from "../../Components/login-component/login-component";
+import EditComponent from "./edit-thread-component";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -47,6 +50,18 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
     fontSize: 15,
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    width: "fit-content",
+    height: "fit-content",
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
 
@@ -62,6 +77,10 @@ export function CardForum({ forum, isView }) {
   const [flag, setFlag] = React.useState(true);
   const [postList, setPostList] = useState(() => []);
   const threadId = parseInt(forum.threadId);
+  const profileLink = `/profile/view/${userId}`;
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+
   const viewThread = () => {
     history.push(`/course/forum/${threadId}`);
   };
@@ -76,7 +95,6 @@ export function CardForum({ forum, isView }) {
         console.log(err);
       });
   }, [courseId]);
-  console.log(postList);
   const openAlertDelete = () => {
     setAnchorEl(null);
     setOpenDialog(true);
@@ -97,8 +115,12 @@ export function CardForum({ forum, isView }) {
     setFlag(!flag);
   };
 
+  const openModalEdit = () => {
+    setAnchorEl(null);
+    setOpenEditModal(true);
+  }
+
   const handleClickOnUser = () => {
-    console.log(userId);
     history.push(`/profile/view/${userId}`);
   };
 
@@ -130,13 +152,7 @@ export function CardForum({ forum, isView }) {
     <Grid item>
       <Card width="100%" className={classes.root}>
         <CardHeader
-          avatar={
-            <Avatar
-              aria-label="recipe"
-              className={classes.avatar}
-              src={`https://ritachan.site/${forum.author.pictureUrl}`}
-            />
-          }
+          avatar={<Avatar aria-label="recipe" className={classes.avatar} src={`${forum.author.pictureUrl}`} onClick={handleClickOnUser} style={{ cursor: "pointer" }}/>}
           action={
             <>
               {forum.author.userId == userId ? (
@@ -144,27 +160,25 @@ export function CardForum({ forum, isView }) {
                   <IconButton aria-label="settings" onClick={openEditMenu}>
                     <MoreVertIcon />
                   </IconButton>
-                  <Menu
-                    id="fade-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    TransitionComponent={Fade}
-                  >
-                    <MenuItem onClick={handleEdit}>Edit Post</MenuItem>
+                  <Menu id="fade-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose} TransitionComponent={Fade}>
+                    <MenuItem onClick={openModalEdit}>
+                      Edit Post
+                    </MenuItem>
                     <MenuItem onClick={openAlertDelete}>Delete Post</MenuItem>
                   </Menu>
                 </>
-              ) : (
-                <></>
-              )}
+              ) : null}
             </>
           }
-          title={`${forum.author.firstName} ${forum.author.lastName}`}
+          // title={`${forum.author.firstName} ${forum.author.lastName}`}
+          title={
+            <div>
+              <Link to={profileLink} style={{ color: "#2A73CC", fontWeight: "bolder" }}>
+                {forum.author.firstName} {forum.author.lastName}
+              </Link>
+            </div>
+          }
           subheader={moment(forum.createAt).calendar()}
-          onClick={handleClickOnUser}
-          style={{ cursor: "pointer" }}
         />
         <CardContent>
           <Box fontWeight="fontWeightMedium" m={1}>
@@ -173,11 +187,7 @@ export function CardForum({ forum, isView }) {
                 {forum.title}
               </Typography>
             ) : (
-              <Typography
-                variant="h6"
-                onClick={viewThread}
-                style={{ cursor: "pointer" }}
-              >
+              <Typography variant="h6" onClick={viewThread} style={{ cursor: "pointer" }}>
                 {forum.title}
               </Typography>
             )}
@@ -212,14 +222,7 @@ export function CardForum({ forum, isView }) {
           )}
         </CardActions>
       </Card>
-      <Dialog
-        open={openDialog}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseAlert}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
+      <Dialog open={openDialog} TransitionComponent={Transition} keepMounted onClose={handleCloseAlert} aria-labelledby="alert-dialog-slide-title" aria-describedby="alert-dialog-slide-description">
         <DialogTitle id="alert-dialog-slide-title">
           {"Are you sure to delete this post?"}
         </DialogTitle>
@@ -232,15 +235,13 @@ export function CardForum({ forum, isView }) {
           <Button onClick={deleteCourse} color="secondary" variant="contained">
             Yes, I'm SURE
           </Button>
-          <Button
-            onClick={handleCloseAlert}
-            color="primary"
-            variant="contained"
-          >
+          <Button onClick={handleCloseAlert} color="primary" variant="contained">
             No, Bring Me Back
           </Button>
         </DialogActions>
       </Dialog>
+
+    
     </Grid>
   );
 }

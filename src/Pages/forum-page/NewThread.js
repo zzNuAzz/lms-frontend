@@ -64,15 +64,12 @@ export default function NewThread() {
   const titleInput = useRef(null);
   const tagInput = useRef(null);
   let courseId = useParams();
-  console.log({ courseId });
   const forumLink = `/course/${courseId.courseId}/forum`;
 
   courseId = parseInt(courseId.courseId, 10);
-  console.log({ courseId });
   const handlePublish = async () => {
     const title = titleInput.current.value;
     const tag = tagInput.current.value;
-    console.log(titleInput.current.value, tagInput.current.value, body);
 
     try {
       const result = await createThread(courseId, title, body);

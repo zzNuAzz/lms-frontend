@@ -46,7 +46,6 @@ export default function Forum() {
       const result = await getUserInformation(userId);
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
-        // console.log(parsedResult.data.userProfile);
         setUser(parsedResult.data.userProfile);
       } else {
         toastFetchErrors(parsedResult);
@@ -78,7 +77,6 @@ export default function Forum() {
           console.log(err);
         });
     } else if (user.role === "Student") {
-      console.log(user.role);
       getUserCourseList({ userId })
         .then((result) => {
           if (result.errors) throw new Error(result.errors[0].message);
@@ -127,7 +125,6 @@ export default function Forum() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // console.log('CourseList: ', courseList);
   const newThreadLink = `/course/${courseId}/newthread`;
   const coursesLink = `/course/${courseId}`;
   return (
