@@ -1,5 +1,5 @@
-import React, { Fragment, useState, useRef } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Fragment, useState, useRef } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
   Container,
@@ -7,41 +7,41 @@ import {
   Grid,
   TextField,
   Button,
-} from '@material-ui/core';
-import { toast } from 'react-toastify';
-import { Link, useHistory, useParams } from 'react-router-dom';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import MostHelpful from './MostHelpful';
-import createThread from '../../api/graphql/create-thread';
-import toastFetchErrors from '../../Components/tools/toast-fetch-errors';
+} from "@material-ui/core";
+import { toast } from "react-toastify";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import MostHelpful from "./MostHelpful";
+import createThread from "../../api/graphql/create-thread";
+import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#f5f7fa',
+    backgroundColor: "#f5f7fa",
   },
   searchBar: {
     width: 300,
     marginBottom: 60,
   },
   search: {
-    backgroundImage: `url(${'https://uploads-us-west-2.insided.com/coursera-en/attachment/0ee512f0-c148-4e6c-a3c5-ae5ea674bbf9_thumb.jpg'})`,
-    backgroundPosition: 'center center',
-    backgroundSize: 'cover',
+    backgroundImage: `url(${"https://uploads-us-west-2.insided.com/coursera-en/attachment/0ee512f0-c148-4e6c-a3c5-ae5ea674bbf9_thumb.jpg"})`,
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
     padding: 30,
-    width: '100%',
+    width: "100%",
     height: 250,
     marginBottom: 50,
   },
   welcome: {
-    color: '#ffffff',
-    textColor: '#ffffff',
+    color: "#ffffff",
+    textColor: "#ffffff",
     fontWeight: 600,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   whiteBack: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     marginBottom: 20,
     marginTop: 10,
     marginRight: 10,
@@ -60,11 +60,13 @@ const useStyles = makeStyles((theme) => ({
 export default function NewThread() {
   const classes = useStyles();
   const history = useHistory();
-  const [body, setBody] = useState('');
+  const [body, setBody] = useState("");
   const titleInput = useRef(null);
   const tagInput = useRef(null);
-
   let courseId = useParams();
+  console.log({ courseId });
+  const forumLink = `/course/${courseId.courseId}/forum`;
+
   courseId = parseInt(courseId.courseId, 10);
   console.log({ courseId });
   const handlePublish = async () => {
@@ -77,7 +79,7 @@ export default function NewThread() {
       // TODO
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
-        toast.success('Your topic will be displayed after 3 seconds', {
+        toast.success("Your topic will be displayed after 3 seconds", {
           autoClose: 3000,
         });
         setTimeout(() => {
@@ -147,7 +149,7 @@ export default function NewThread() {
               />
               <Button
                 className={classes.padding13}
-                style={{ margin: '20px' }}
+                style={{ margin: "20px" }}
                 variant="contained"
                 color="primary"
                 onClick={handlePublish}
@@ -155,7 +157,7 @@ export default function NewThread() {
                 Publish
               </Button>
               <Grid container justify="flex-end">
-                <Link to="/course/2/forum" variant="caption">
+                <Link to={forumLink} variant="caption">
                   Back to forum.
                 </Link>
               </Grid>
