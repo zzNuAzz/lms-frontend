@@ -145,7 +145,7 @@ export function CardForum({ forum, isView }) {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
   return (
@@ -276,8 +276,8 @@ export default function ({ thread }) {
       } else {
         toastFetchErrors(parsedResult);
       }
-    } catch (error) {
-      toast(error);
+    } catch (error){
+      toast.error(error.toString());
     }
   };
   useEffect(() => {
@@ -287,7 +287,7 @@ export default function ({ thread }) {
       setLoading(false);
     };
     fetchContent();
-  }, []);
+  }, [cId]);
   return (
     <>
       {allThreads.map((forum) => (

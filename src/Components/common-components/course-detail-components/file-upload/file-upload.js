@@ -25,7 +25,7 @@ const FileUpload = ({ setUploadedFiles }) => {
         toastFetchErrors(result);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.toString());
     }
   };
 
@@ -33,7 +33,7 @@ const FileUpload = ({ setUploadedFiles }) => {
     <div className="file-upload">
       <br />
       <DropzoneArea
-        filesLimit={5}
+        filesLimit={100}
         showPreviews
         showPreviewsInDropzone={false}
         useChipsForPreview

@@ -1,9 +1,8 @@
 
-import { Button, Grid, IconButton, InputAdornment, OutlinedInput, TextField } from '@material-ui/core';
+import { Button, FormHelperText, Grid, IconButton, InputAdornment, OutlinedInput, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import React,{Component} from 'react';
 import updatePassword from '../../../api/graphql/update-password';
-import userLogin from '../../../api/user-login';
 import { toast } from 'react-toastify';
 
 class ChangePassword extends Component {
@@ -18,7 +17,7 @@ class ChangePassword extends Component {
             currentPassword: '',
             newPassword:'',
             confirmPassword:'',
-            error:'',
+            errorConfirmPwd: false,
         }
     }
 
@@ -62,24 +61,38 @@ class ChangePassword extends Component {
     };
  
     changePassword = async () => {
-        if(this.state.newPassword !== this.state.confirmPassword){
-            this.setState({
-                error: "Wrong confirm password, please try again!"
-            });
+        const { currentPassword, newPassword, confirmPassword } = this.state;
+        if(!currentPassword || !newPassword || !confirmPassword) {
+            return;
+        } 
+        if(newPassword !== confirmPassword){
             return;
         }
-        const result = await updatePassword(this.state.currentPassword, this.state.newPassword);
+        const result = await updatePassword(currentPassword, newPassword);
         if(result.data.updateUserPassword.success) {
-            // toast.success('Update successfully!');
+            toast.success('Update successfully!');
+        } else {
+            toast.error(result.data.updateUserPassword?.message);
+        }
+        this.setState({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+        });
+    }
+
+    onBlur = () => {
+        const { newPassword, confirmPassword } = this.state;
+        if(newPassword && confirmPassword && newPassword !== confirmPassword) {
             this.setState({
-                error:'Update successfully!'
+                errorConfirmPwd: true
             });
         } else {
-            // toast.error(result.data.updateUserPassword?.message);
             this.setState({
-                error: 'Incorrect password'
+                errorConfirmPwd: false
             });
         }
+
     }
 
     cancel = () =>{
@@ -95,6 +108,7 @@ class ChangePassword extends Component {
 
     render(){
         let self=this;
+        const { errorConfirmPwd } = this.state;
         return(     
             <div>
                 <div style={{fontSize: "150%"}}>Edit Password</div>
@@ -116,7 +130,7 @@ class ChangePassword extends Component {
                         <Grid item xs={7}>
                             <OutlinedInput
                                 style={{minWidth: '400px'}}
-                                id="outlined-adornment-password"
+                                id="current_password"
                                 type={self.state.showCurrentPassword ? 'text' : 'password'}
                                 value={self.state.currentPassword}
                                 onChange={this.handleChangeCurrentPassword}
@@ -131,6 +145,7 @@ class ChangePassword extends Component {
                                 </InputAdornment>
                                 }
                             />
+                            <FormHelperText></FormHelperText>
                         </Grid>
                     </Grid>
                     <Grid
@@ -143,22 +158,25 @@ class ChangePassword extends Component {
                         <Grid item container xs={3} justify="flex-start" alignItems="center" style={{paddingRight: "1rem",fontWeight: "bold" }} >New Password</Grid>
                         <Grid item xs={7}>
                             <OutlinedInput
+                                error={errorConfirmPwd}
+                                onBlur={this.onBlur}
                                 style={{minWidth: '400px'}}
-                                id="outlined-adornment-password"
+                                id="new_password"
                                 type={self.state.showNewPassword ? 'text' : 'password'}
                                 value={self.state.newPassword}
                                 onChange={this.handleChangeNewPassword}
                                 endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                    onClick={self.handleClickShowNewPassword}
-                                    edge="end"
-                                    >
-                                    {self.state.showNewPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                        onClick={self.handleClickShowNewPassword}
+                                        edge="end"
+                                        >
+                                        {self.state.showNewPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
                                 }
                             />
+                            <FormHelperText  error={errorConfirmPwd}></FormHelperText>
                         </Grid>
                     </Grid>
                     <Grid
@@ -171,8 +189,10 @@ class ChangePassword extends Component {
                         <Grid item container xs={3} justify="flex-start" alignItems="center" style={{paddingRight: "1rem",fontWeight: "bold" }} >Confirm Password</Grid>
                         <Grid item xs={7}>
                             <OutlinedInput
+                                error={errorConfirmPwd}
+                                onBlur={this.onBlur}
                                 style={{minWidth: '400px'}}
-                                id="outlined-adornment-password"
+                                id="confirm_password"
                                 type={self.state.showConfirmPassword ? 'text' : 'password'}
                                 value={self.state.confirmPassword}
                                 onChange={this.handleChangeConfirmPassword}
@@ -184,17 +204,13 @@ class ChangePassword extends Component {
                                     >
                                     {self.state.showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                                     </IconButton>
-                                </InputAdornment>
+                                </InputAdornment> 
                                 }
                             />
+                            <FormHelperText error={errorConfirmPwd}>{errorConfirmPwd ? "Confirm password wrong" :""}</FormHelperText>
                         </Grid>
                     </Grid>
                 </Grid>
-                { (self.state.error!='') ?
-                <Grid style={{marginTop: '40px'}} container direction="row" justify="center" alignItems="center">
-                    <i style={{color: 'red'}}>{self.state.error}</i>
-                </Grid>
-                : null}
                 <Grid style={{marginTop: '40px'}} container direction="row" justify="center" alignItems="center">
 					<Button size="large" variant="contained" color="secondary" disabled={!self.state.isChanged} onClick={self.cancel} style={{marginRight: "30px", marginLeft: "-15px"}} >
 						Cancel 

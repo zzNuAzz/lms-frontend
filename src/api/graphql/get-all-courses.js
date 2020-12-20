@@ -1,4 +1,4 @@
-import { graphQLFetch } from './graphql-fetch';
+import { graphQLFetch } from "./graphql-fetch";
 
 // eslint-disable-next-line import/prefer-default-export
 const getAllCourses = async (pageNumber, pageSize) => {
@@ -9,6 +9,7 @@ const getAllCourses = async (pageNumber, pageSize) => {
         name
         courseId
         description
+        shortDescription
         host {
           userId
           username

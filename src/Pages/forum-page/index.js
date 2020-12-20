@@ -26,6 +26,7 @@ import getThreadList from "../../api/graphql/get-thread-list";
 import getUserCourseList from "../../api/graphql/get-user-course-list";
 import getUserInformation from "../../api/graphql/get-user-information";
 import getTeacherCourseList from "../../api/graphql/get-teacher-course-list";
+import { getCourseById } from "../../api/graphql/get-course-by-id";
 
 export default function Forum() {
   const history = useHistory();
@@ -38,7 +39,6 @@ export default function Forum() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [user, setUser] = useState([]);
-  const [thread, setThread] = useState([]);
   const [courseList, setCourseList] = useState([]);
 
   const fetchUser = async () => {
@@ -51,7 +51,7 @@ export default function Forum() {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 
@@ -77,40 +77,37 @@ export default function Forum() {
           console.log(err);
         });
     } else if (user.role === "Student") {
-      getUserCourseList({ userId })
-        .then((result) => {
-          if (result.errors) throw new Error(result.errors[0].message);
-          if (isMounted)
-            setCourseList(JSON.parse(result).data.userCourseList.courseList);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+		getUserCourseList({ userId })
+			.then((result) => {
+				if (result.errors) throw new Error(result.errors[0].message);
+				if (isMounted)
+					setCourseList(JSON.parse(result).data.userCourseList.courseList);
+				})
+			.catch((err) => {
+				console.log(err);
+			});
     }
     return () => {
       isMounted = false;
     };
   }, [user]);
-
   useEffect(() => {
-    let isMounted = true;
-    getThreadList(parseInt(courseId, 10))
-      .then((result) => {
-        if (result.errors) throw new Error(result.errors[0].message);
-        const {
-          threadList: { threadList },
-          course,
-        } = result.data;
-        if (isMounted) setThread(threadList);
-        if (isMounted) setCourse(course);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [courseId]);
+		let isMounted = true;
+		getCourseById(+courseId)
+		.then(JSON.parse)
+		.then(result => {
+			if (result.errors) throw new Error(result.errors[0].message);
+			console.log(result)
+			const {  course } = result.data;
+			if (isMounted) setCourse(course);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+		return () => {
+			isMounted = false;
+		};
+	}, [courseId]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -119,7 +116,6 @@ export default function Forum() {
   const handleClickOnCourse = (course) => {
     setAnchorEl(null);
     history.push(`/course/${course.courseId}/forum`);
-    history.go(0);
   };
 
   const handleClose = () => {
@@ -143,86 +139,51 @@ export default function Forum() {
           </Container>
         </Box>
         <Container>
-          <Toolbar>
-            <Grid container>
-              <Grid item container alignItems="center" xs={5}>
-                <IconButton
-                  edge="start"
-                  className={classes.menuButton}
-                  color="primary"
-                  aria-label="menu"
-                  aria-controls="fade-menu"
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                >
-                  <ArrowDropDownIcon />
-                </IconButton>
-                <Menu
-                  id="fade-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={open}
-                  onClose={handleClose}
-                  TransitionComponent={Fade}
-                >
-                  {courseList.map((course) => (
-                    <MenuItem onClick={() => handleClickOnCourse(course)}>
-                      {course.name}
-                    </MenuItem>
-                  ))}
-                </Menu>
-                <Typography variant="h6" color="primary">
-                  {course.name}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                container
-                alignItems="center"
-                justify="flex-start"
-                direction="column"
-                xs={6}
+        <Link to={coursesLink}>
+          <IconButton edge="start" color="primary" aria-label="menu">
+            <ArrowBackIcon />
+            <Typography variant="subtitle1" color="primary">
+              Back to Course
+            </Typography>
+          </IconButton>
+        </Link>
+        <Toolbar>
+          <Grid container>
+            <Grid item container alignItems="center" xs={5}>
+              <IconButton edge="start" className={classes.menuButton} color="primary" aria-label="menu" aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}
               >
-                <Grid
-                  item
-                  container
-                  alignItems="center"
-                  justify="flex-start"
-                  xs={6}
-                >
-                  <Link to={newThreadLink}>
-                    <IconButton edge="start" color="primary" aria-label="menu">
-                      <AddBoxIcon />
-                      <Typography variant="subtitle1" color="primary">
-                        Add new topic
-                      </Typography>
-                    </IconButton>
-                  </Link>
-                </Grid>
-                <Grid
-                  item
-                  container
-                  alignItems="center"
-                  justify="flex-start"
-                  xs={6}
-                >
-                  <Link to={coursesLink}>
-                    <IconButton edge="start" color="primary" aria-label="menu">
-                      <ArrowBackIcon />
-                      <Typography variant="subtitle1" color="primary">
-                        Back to Course
-                      </Typography>
-                    </IconButton>
-                  </Link>
-                </Grid>
+                <ArrowDropDownIcon />
+              </IconButton>
+              <Menu id="fade-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose} TransitionComponent={Fade}>
+                {courseList.map((course) => (
+                  <MenuItem onClick={() => handleClickOnCourse(course)}>
+                    {course.name}
+                  </MenuItem>
+                ))}
+              </Menu>
+              <Typography variant="h6" color="primary">
+                {course.name}
+              </Typography>
+            </Grid>
+            <Grid item container alignItems="center" justify="flex-start" direction="column" xs={6}>
+              <Grid item container alignItems="center" justify="flex-start" xs={6}>
+                <Link to={newThreadLink}>
+                  <IconButton edge="start" color="primary" aria-label="menu">
+                    <AddBoxIcon />
+                    <Typography variant="subtitle1" color="primary">
+                      Add new topic
+                    </Typography>
+                  </IconButton>
+                </Link>
               </Grid>
             </Grid>
-          </Toolbar>
+          </Grid>
+        </Toolbar>
         </Container>
         <Container className={classes.root}>
           <Grid container direction="row" spacing={8}>
             <Grid container item xs={12} lg={8} direction="column" spacing={2}>
-              <ThreadList thread={thread} />
+              <ThreadList />
             </Grid>
             <Grid container item xs={12} lg={4} direction="column" spacing={2}>
               <MostHelpful />
@@ -248,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     padding: 30,
     width: "100%",
-    marginBottom: 50,
+    // marginBottom: 50,
   },
   searchIcon: {
     padding: theme.spacing(0, 2),

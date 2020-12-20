@@ -56,7 +56,7 @@ const AllCourseView = ({
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Button,
@@ -7,24 +7,24 @@ import {
   Typography,
   Divider,
   Avatar,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
-import ReactHtmlParser from 'react-html-parser';
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Link, useHistory } from "react-router-dom";
+import ReactHtmlParser from "react-html-parser";
 
-export function CourseCard({ course }) {
+export function CourseCard({ course, isEnrolled }) {
   const classes = useStyles();
-  const backGroundArr = [
-    classes.greenBack,
-    classes.blueBack,
-    classes.yellowBack,
-  ];
+  const history = useHistory();
+
   const teacherName = `Lecturer: ${course.host.lastName} ${course.host.firstName}`;
-  // const backGround = backGroundArr[course.courseId % 3];
   const backGround = classes.grayBack;
 
-  // console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
+  const linkToCourse = `/course/${course.courseId}`;
+  const handleRedirectToCourse = () => {
+    history.push(linkToCourse);
+  };
+  // console.log("ShortDescription: ", course.shortDescription);
   return (
     <Box mt={10}>
       <Container className={backGround} maxWidth="md">
@@ -34,18 +34,17 @@ export function CourseCard({ course }) {
           </Box>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} lg={6} className={classes.bodyCourse}>
-              <Link>
+              <Link to={linkToCourse}>
                 <Typography
                   variant="h5"
                   color="primary"
-                  // className={`${classes.fw700} ${classes.blackText}`}
                   className={`${classes.fw700}`}
                 >
                   {course.name}
                 </Typography>
               </Link>
               <Typography variant="body2">
-                {ReactHtmlParser(course.description.substring(0, 200) + '...')}
+                {ReactHtmlParser(course.shortDescription)}
               </Typography>
             </Grid>
             <Grid item xs={12} lg={6} container justify="flex-end">
@@ -53,37 +52,38 @@ export function CourseCard({ course }) {
                 <Box className={classes.whiteBack}></Box>
               </Grid>
               <Grid item xs={12} lg={6} container justify="center">
-                <Button variant="contained" color="primary" fullWidth={Boolean(true)}>
-                  Go to Course
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth={Boolean(true)}
+                  onClick={handleRedirectToCourse}
+                >
+                  View Course
                 </Button>
-                <br />
-                <Grid item>
-                  <Box py={3}>
-                    <Link to={linkToForum}>
-                      <Typography
-                        classname={classes.center}
-                        variant="body1"
-                      // className={classes.blackText}
-                      >
-                        Go to forum
-                      </Typography>
-                    </Link>
-                  </Box>
-                </Grid>
+                {isEnrolled ? (
+                  <Grid item>
+                    <Box pt={3}>
+                      <Link to={linkToForum}>
+                        <Typography className={classes.center} variant="body1">
+                          Go to forum
+                        </Typography>
+                      </Link>
+                    </Box>
+                  </Grid>
+                ) : null}
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Divider variant="fullWidth"></Divider>
+              <Box mt={3}>
+                <Divider variant="fullWidth"></Divider>
+              </Box>
             </Grid>
             <Grid style={{ marginBlock: 10 }} className={classes.dFlex}>
               <Box mr={2}>
                 <Avatar src={course.host.pictureUrl}></Avatar>
               </Box>
               <Link>
-                {/* <Typography variant="subtitle2" className={classes.blackText}> */}
-                <Typography variant="subtitle2">
-                  {teacherName}
-                </Typography>
+                <Typography variant="subtitle2">{teacherName}</Typography>
               </Link>
             </Grid>
           </Grid>
@@ -95,44 +95,43 @@ export function CourseCard({ course }) {
 
 const useStyles = makeStyles((theme) => ({
   whiteBack: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   blueBack: {
-    backgroundColor: '#1e94eb',
+    backgroundColor: "#1e94eb",
   },
   grayBack: {
-    backgroundColor: '#f5f7fa',
+    backgroundColor: "#f5f7fa",
   },
   yellowBack: {
-    backgroundColor: '#f3c800',
+    backgroundColor: "#f3c800",
   },
   greenBack: {
-    backgroundColor: '#00d2a1',
+    backgroundColor: "#00d2a1",
   },
   bodyCourse: {
-    height: 'fit-content',
+    height: "fit-content",
   },
   fw700: {
     fontWeight: 700,
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.palette.text.secondary,
   },
   center: {
-    margin: 'auto',
+    margin: "auto",
   },
   courseCard: {
-    marginBottom: '28px',
-    // color: '#1f1f1f',
+    marginBottom: "28px",
   },
   dFlex: {
-    display: 'flex',
-    marginBlock: 'auto',
+    display: "flex",
+    marginBlock: "auto",
   },
   blackText: {
-    color: '#1f1f1f',
+    color: "#1f1f1f",
   },
   fw700: {
     fontWeight: 700,
