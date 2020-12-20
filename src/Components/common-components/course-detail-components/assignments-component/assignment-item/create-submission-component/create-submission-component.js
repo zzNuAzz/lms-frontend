@@ -109,7 +109,7 @@ const CreateSubmissionComponent = ({ assignmentId, fetchSubmission }) => {
                   <br />
                   <br />
                   <DropzoneArea
-                    filesLimit={5}
+                    filesLimit={100}
                     maxFileSize={100000000}
                     showPreviews
                     showPreviewsInDropzone={false}

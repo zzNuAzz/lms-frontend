@@ -162,7 +162,7 @@ const DocumentItem = ({ document, fetchDocuments }) => {
         />
         <Typography variant="h6">Add new files</Typography>
         <DropzoneArea
-          filesLimit={5}
+          filesLimit={100}
           maxFileSize={100000000}
           showPreviews
           showPreviewsInDropzone={false}
