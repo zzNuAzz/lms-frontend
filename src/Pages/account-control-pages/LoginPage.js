@@ -9,7 +9,7 @@ export default function LoginPage() {
 
   const handleRedirectAfterLogIn = () => {
     history.push('/home');
-    history.go(0);
+    // history.go(0);
   };
 
   useEffect(() => {

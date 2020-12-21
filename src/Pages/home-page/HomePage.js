@@ -10,6 +10,7 @@ import CloudIcon from '@material-ui/icons/Cloud';
 import FaceIcon from '@material-ui/icons/Face';
 import { getSignedInUser } from './../../api/graphql/get-signedin-user';
 import homeImage from './home_image.png';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomePage() {
 	const classes = useStyles();
+	const history = useHistory();
 	const signedIn = Boolean(localStorage.getItem("userId"));
 	return (
 		<div className={classes.root}>
@@ -54,11 +56,11 @@ export default function HomePage() {
 					{
 						signedIn 
 						? 
-						<Button href="/courses" variant="outlined" color="primary">Go to Courses</Button>
+						<Button onClick={() => history.push("/courses")} variant="outlined" color="primary">Go to Courses</Button>
 						:
 						<Fragment>
-							<Button href="/login" variant="outlined" color="primary">Login</Button>
-							<Button href="/signup" variant="outlined" color="primary">Sign Up</Button>
+							<Button onClick={() => history.push("/login")} variant="outlined" color="primary">Login</Button>
+							<Button onClick={() => history.push("/signup")} variant="outlined" color="primary">Sign Up</Button>
 						</Fragment>
 					}
 					</div>

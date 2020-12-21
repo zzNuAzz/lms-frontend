@@ -59,7 +59,7 @@ function LoginComponent({ setUsername, callbackToParent }) {
       localStorage.setItem("pictureUrl", result.credentials.user.pictureUrl);
       toast.success(`😄 Welcome ${formUsername}!`);
       history.push("/home");
-      history.go(0);
+      // history.go(0);
       callbackToParent();
     } else if (result.code === 400 || 401) {
       toast.error("😞 Wrong username or password, please try again!");

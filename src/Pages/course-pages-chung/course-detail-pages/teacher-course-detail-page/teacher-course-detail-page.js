@@ -213,7 +213,6 @@ const TeacherCourseDetailPage = () => {
                   return <SubmissionListComponent courseId={id} />;
                 case 'Forum':
                   history.push(`/course/${id}/forum`);
-                  history.go(0);
                   break;
                 default:
                   return null;
