@@ -21,7 +21,7 @@ export default function ProfileEdit() {
 		getProfile(userId).then(result => {
 			result.userProfile.isChanged = false;
 			setUserProfile(result.userProfile);
-	  	});
+		});
 	}
 
 	const cancel = () =>{
@@ -44,6 +44,7 @@ export default function ProfileEdit() {
 	useEffect(fetchUserProfile, []);
 
 	return (
+		
 		<Container style={{marginTop:'20px'}}>
 			<Grid container direction="row" justify="space-between" alignItems="flex-end">
 				<h2>Edit my profile</h2>
