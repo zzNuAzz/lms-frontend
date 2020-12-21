@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    fontSize: theme.typography.pxToRem(20),
   },
   assignmentItem: {
     width: '100%',
@@ -65,28 +66,34 @@ const AssignmentsComponent = ({ courseId }) => {
           : null
       }
       <div className="assignments">
-        {role === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetch} /> : null}
+        {
+          role === 'Teacher'
+            ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetchAssignments} />
+            : null
+        }
         {
           role === 'Student'
             ? (
               <div className={classes.assignmentItem}>
                 {assignments.map((assignment) => (
-                  <AssignmentItem assignment={assignment} key={assignment.assignmentId} />
+                  <AssignmentItem
+                    assignment={assignment}
+                    key={assignment.assignmentId}
+                  />
                 ))}
               </div>
             )
             : (
               <div className={classes.editAssignmentItem}>
                 {assignments.map((assignment) => (
-                  <>
-                    <EditAssignmentComponent assignment={assignment} key={assignment.assignmentId} />
-                    <br />
-                  </>
+                  <EditAssignmentComponent
+                    assignment={assignment}
+                    fetchAssignments={fetchAssignments}
+                  />
                 ))}
               </div>
             )
         }
-
       </div>
     </>
   );

@@ -48,7 +48,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
         parseInt(courseId, 10),
         title,
         description,
-        fileUploadResult,
+        fileUploadResult.data.uploadFileMultiple,
       )
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {

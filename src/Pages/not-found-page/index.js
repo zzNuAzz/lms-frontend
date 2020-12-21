@@ -25,7 +25,7 @@ export default function NotFound404() {
     <div className={classes.root}>
       <div className={classes.content}>
         <h1 className={classes.title}>404</h1>
-        <p className={classes.center}>Let get you&nbsp;<Link to="/">back</Link></p>
+        <p className={classes.center}>Let's get you&nbsp;<Link to="/">back</Link></p>
       </div>
     </div>
   );

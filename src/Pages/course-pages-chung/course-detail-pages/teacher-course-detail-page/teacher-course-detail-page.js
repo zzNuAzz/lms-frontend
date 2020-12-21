@@ -160,8 +160,7 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Submissions' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Submissions')}
               >
-                <SubmissionListRoundedIcon />
-                &nbsp;
+                <SubmissionListRoundedIcon style={{marginRight: '1rem'}} />
                 Submissions
               </div>
             </Grid>

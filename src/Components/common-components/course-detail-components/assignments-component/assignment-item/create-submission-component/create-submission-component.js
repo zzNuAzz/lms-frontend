@@ -50,20 +50,17 @@ const CreateSubmissionComponent = ({ assignmentId, fetchSubmission }) => {
             handleCloseSubmission();
           } else {
             toast.error(parsedResult.data.createSubmission.message);
-            setLoading(false);
           }
         } else {
           toastFetchErrors(parsedResult);
-          setLoading(false);
         }
       } else {
         toastFetchErrors(fileUploadResult);
-        setLoading(false);
       }
     } catch (error) {
       toast.error(error.toString());
-      setLoading(false);
     }
+    setLoading(false);
   }
 
   return (
