@@ -12,6 +12,14 @@ const getAssignmentsList = async (courseId, pageNumber = 0, pageSize = 10) => {
         assignmentId
         title
         content
+        files {
+          assignmentFileId
+          filename
+          url
+          mimetype
+        }
+        createAt
+        updateAt
         dueDate
       }
       pageNumber

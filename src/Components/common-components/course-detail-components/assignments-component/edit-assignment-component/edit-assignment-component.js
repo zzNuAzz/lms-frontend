@@ -9,12 +9,18 @@ import {
   makeStyles,
   Typography,
   Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  AccordionActions,
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
 
 import createAssignment from '../../../../../api/graphql/create-assignment';
 import { grey } from '@material-ui/core/colors';
+import moment from 'moment';
+import { ExpandMoreRounded } from '@material-ui/icons';
 
 const useStyle = makeStyles((theme) => ({
   dialog: {
@@ -44,20 +50,12 @@ const EditAssignmentComponent = ({
   const [title, setTitle] = useState(assignment.title);
   const [content, setContent] = useState(assignment.content);
   const [dueDate, setDueDate] = useState(new Date(assignment.dueDate));
-
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const classes = useStyle();
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
-
-  const handleDeleteDialogOpen = () => {
+  const handleDelete = () => {
   };
 
   const handleSubmit = async () => {
@@ -93,8 +91,9 @@ const EditAssignmentComponent = ({
             name="date"
             label="New Due Date"
             type="date"
+            value={moment(dueDate).format('YYYY-MM-DD')}
             variant="outlined"
-            onChange={(event) => setDueDate(event.target.value)}
+            onChange={(event) => setDueDate(new Date(event.target.value))}
             InputLabelProps={{
               shrink: true,
             }}
@@ -123,8 +122,8 @@ const EditAssignmentComponent = ({
   return (
     <>
       <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
         fullWidth
         maxWidth="md"
       >
@@ -143,36 +142,67 @@ const EditAssignmentComponent = ({
           </Button>
           <Button
             variant="text"
-            onClick={handleDialogClose}
+            onClick={() => setEditDialogOpen(false)}
           >
             Cancel
           </Button>
         </DialogActions>
       </Dialog>
-      <Paper elevation={2} className={classes.paper}>
-        <Typography className={classes.title} variant="h6">{assignment.title}</Typography>
-        <Typography className={classes.dueDate} variant="h6">
-          {`Due: ${assignment.dueDate ? dueDate.toLocaleString() : 'none'}`}
-        </Typography>
-        <Button
-          variant="text"
-          color="primary"
-          size="small"
-          onClick={handleDialogOpen}
-          style={{ float: 'right' }}
-        >
-          Edit
-        </Button>
-        <Button
-          variant="text"
-          color="secondary"
-          size="small"
-          onClick={handleDeleteDialogOpen}
-          style={{ float: 'right' }}
-        >
-          Delete
-        </Button>
-      </Paper>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle>{`Are you sure you want to delete ${title}?`}</DialogTitle>
+        <DialogActions>
+          <Button
+            variant="text"
+            color="secondary"
+            onClick={handleDelete}
+            disabled={isLoading}
+          >
+            Yes
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => setDeleteDialogOpen(false)}
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreRounded />}>
+          <Typography className={classes.title}>{assignment.title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {/* <Typography variant="h6">Description</Typography>
+          <Typography variant="body1">{assignment.content}</Typography> */}
+          {EditAssignmentForm}
+        </AccordionDetails>
+        <AccordionActions>
+          <Button
+            variant="text"
+            color="primary"
+            size="small"
+            onClick={() => setEditDialogOpen(true)}
+            style={{ float: 'right' }}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="text"
+            color="secondary"
+            size="small"
+            onClick={() => setDeleteDialogOpen(true)}
+            style={{ float: 'right' }}
+          >
+            Delete
+          </Button>
+        </AccordionActions>
+      </Accordion>
     </>
   );
 };

@@ -15,6 +15,7 @@ import getSubmission from '../../../../../api/graphql/get-submission';
 import toastFetchErrors from '../../../../tools/toast-fetch-errors';
 import CreateSubmissionComponent from './create-submission-component/create-submission-component';
 import CurrentStudentSubmission from './current-student-submission/current-student-submission';
+import FileViewer from '../../../file-viewer/file-viewer';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -77,6 +78,26 @@ const AssignmentItem = ({ assignment }) => {
     }
   };
 
+  const RenderContent = (
+    <>
+      <Typography variant="h6">Description</Typography>
+      <Typography variant="body1">
+        {assignment.content}
+      </Typography>
+      <hr />
+      <Typography variant="h6">Attached Files</Typography>
+      {
+        assignment.files.length === 0
+          ? (
+            <Typography variant="body1">There are no attached files!</Typography>
+          )
+          : (
+            <FileViewer files={assignment.files} />
+          )
+      }
+    </>
+  )
+
   return (
     <Accordion>
       <AccordionSummary
@@ -116,11 +137,7 @@ const AssignmentItem = ({ assignment }) => {
         {(() => {
           switch (tab) {
             case 0:
-              return (
-                <Typography variant="body1">
-                  {assignment.content}
-                </Typography>
-              );
+              return RenderContent;
             case 1:
               return (
                 <div className="submission">

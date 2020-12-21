@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    fontSize: theme.typography.pxToRem(20),
   },
   assignmentItem: {
     width: '100%',
@@ -78,15 +79,11 @@ const AssignmentsComponent = ({ courseId }) => {
             : (
               <div className={classes.editAssignmentItem}>
                 {assignments.map((assignment) => (
-                  <>
-                    <EditAssignmentComponent assignment={assignment} key={assignment.assignmentId} />
-                    <br />
-                  </>
+                  <EditAssignmentComponent assignment={assignment} fetchAssignments={fetch} key={assignment.assignmentId} />
                 ))}
               </div>
             )
         }
-
       </div>
     </>
   );
