@@ -33,7 +33,7 @@ const useStyle = makeStyles((theme) => ({
 export default function NavBar() {
   const classes = useStyle();
 
-  const [isLoggedIn, setLoginStatus] = useState(false);
+  const [isLoggedIn, setLoginStatus] = useState(localStorage.getItem('userId'));
 
   return (
     <div className={classes.root}>
