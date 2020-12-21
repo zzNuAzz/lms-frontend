@@ -88,7 +88,7 @@ const AssignmentsComponent = ({ courseId }) => {
                 {assignments.map((assignment) => (
                   <EditAssignmentComponent
                     assignment={assignment}
-                    fetchAssignments={fetchAssignments}
+                    fetchAssignments={fetch}
                   />
                 ))}
               </div>
