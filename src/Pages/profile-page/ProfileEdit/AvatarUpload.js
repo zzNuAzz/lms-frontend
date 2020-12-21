@@ -10,12 +10,11 @@ AvatarUpload.IMAGE_WIDTH = 400;
 AvatarUpload.IMAGE_HEIGHT = 400;
 
 export default function AvatarUpload({ userProfile }) {
-    var { pictureUrl } = userProfile;
+    const { pictureUrl } = userProfile;
     const history = useHistory();
     const apply = file => {
         uploadAvatar(file).then(result => {
             if (result?.success) {
-                pictureUrl = userProfile.pictureUrl;
                 history.push('/profile/view/'+ userProfile.userId);
                 toast.success('Upload avatar successful.', {
                     autoClose: 3000,
