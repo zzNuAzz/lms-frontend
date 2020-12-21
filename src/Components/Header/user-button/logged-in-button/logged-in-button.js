@@ -27,6 +27,7 @@ const LoggedInButton = ({ setUsername }) => {
   const classes = useStyles();
   const username = localStorage.getItem('username') || '';
   const avatarUrl = localStorage.getItem('pictureUrl') || '';
+  const userId = localStorage.getItem('userId');
   const [anchorEl, setAnchorEl] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
@@ -44,8 +45,7 @@ const LoggedInButton = ({ setUsername }) => {
   };
 
   const handleProfileRedirect = () => {
-    history.push('/profile/edit');
-    history.go(0);
+    history.push(`/profile/view/${userId}`);
   };
 
   const handleLogout = async () => {
