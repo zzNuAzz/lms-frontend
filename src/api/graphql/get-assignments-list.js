@@ -1,6 +1,6 @@
 import { graphQLFetch } from './graphql-fetch';
 
-const getAssignmentsList = async (courseId, pageNumber = 0, pageSize = 10) => {
+const getAssignmentsList = async (courseId, pageNumber = 0, pageSize = 100) => {
   const query = `
   query getAssignments(
     $courseId: Int!
