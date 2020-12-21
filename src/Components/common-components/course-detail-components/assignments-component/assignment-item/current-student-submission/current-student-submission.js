@@ -40,7 +40,7 @@ const CurrentStudentSubmission = ({ files, description, fetchSubmission }) => {
               <Typography variant="body1">{description}</Typography>
               <br />
               <Typography variant="h6">Files</Typography>
-              <FileViewer files={files} />
+              <FileViewer files={files} key={description} />
             </>
           )
       }
