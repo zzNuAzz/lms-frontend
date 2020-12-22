@@ -23,8 +23,6 @@ const FileExtensionIcon = ({ filename }) => {
     return imageExtensions.includes(fileExtension);
   };
 
-  console.log(fileExtension);
-
   return (
     <>
       {
