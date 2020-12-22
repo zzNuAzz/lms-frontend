@@ -97,7 +97,7 @@ export function ReplyCard({ content }) {
             <Avatar
               aria-label="recipe"
               className={classes.avatar}
-              src={`https://ritachan.site/${content.author.pictureUrl}`}
+              src={`${content.author.pictureUrl}`}
             />
           }
           action={
@@ -115,7 +115,7 @@ export function ReplyCard({ content }) {
                     onClose={handleClose}
                     TransitionComponent={Fade}
                   >
-                    <MenuItem onClick={handleEdit}>Edit Post</MenuItem>
+                    {/* <MenuItem onClick={handleEdit}>Edit Post</MenuItem> */}
                     <MenuItem onClick={openAlertDelete}>Delete Post</MenuItem>
                   </Menu>
                 </>
