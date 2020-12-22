@@ -11,6 +11,7 @@ const getThreadList = async (courseId, pageNumber, pageSize) => {
             firstName
             pictureUrl
           }
+          postCount
           title
           content
           createAt
@@ -18,10 +19,6 @@ const getThreadList = async (courseId, pageNumber, pageSize) => {
         totalPages
         totalRecords
         pageNumber
-      }
-      course(courseId: $courseId) {
-        courseId
-        name
       }
 }`;
   const vars = {
