@@ -20,6 +20,7 @@ import { grey } from '@material-ui/core/colors';
 import { ExpandMoreRounded } from '@material-ui/icons';
 import moment from 'moment';
 import { DropzoneArea } from 'material-ui-dropzone';
+import uuid from 'react-uuid';
 
 import editAssignment from '../../../../../api/graphql/edit-assignment';
 import toastFetchErrors from '../../../../tools/toast-fetch-errors';
@@ -200,7 +201,6 @@ const EditAssignmentComponent = ({
         files={files}
         deletable
         setRemovedFiles={setRemovedFiles}
-        key={content}
       />
       <br />
       <Typography variant="h6">Upload new files</Typography>
@@ -214,7 +214,6 @@ const EditAssignmentComponent = ({
         useChipsForPreview
         showAlerts={false}
         onChange={handleOnFilesChange}
-        key={assignment.assignmentId}
       />
     </>
   );
