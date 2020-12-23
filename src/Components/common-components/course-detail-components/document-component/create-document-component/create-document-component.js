@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -6,19 +6,19 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-} from '@material-ui/core';
-import { CreateRounded } from '@material-ui/icons';
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import { DropzoneArea } from 'material-ui-dropzone';
-import { toast } from 'react-toastify';
-import toastFetchErrors from '../../../../tools/toast-fetch-errors';
-import createDocument from '../../../../../api/graphql/create-document';
-import graphqlMultipleUpload from '../../../../../api/graphql/graphql-multiple-upload';
+} from "@material-ui/core";
+import { CreateRounded } from "@material-ui/icons";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import { DropzoneArea } from "material-ui-dropzone";
+import { toast } from "react-toastify";
+import toastFetchErrors from "../../../../tools/toast-fetch-errors";
+import createDocument from "../../../../../api/graphql/create-document";
+import graphqlMultipleUpload from "../../../../../api/graphql/graphql-multiple-upload";
 
 const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [files, setFiles] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [files, setFiles] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
@@ -41,15 +41,15 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
       if (files.length !== 0) {
         fileUploadResult = await graphqlMultipleUpload(files);
         if (fileUploadResult.data?.uploadFileMultiple?.length === 0) {
-          toast.error('Error(s) occured while uploading files');
+          toast.error("Error(s) occured while uploading files");
         }
       }
       const result = await createDocument(
         parseInt(courseId, 10),
         title,
         description,
-        fileUploadResult.data.uploadFileMultiple,
-      )
+        fileUploadResult.data.uploadFileMultiple
+      );
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
         if (parsedResult.data.createDocument.success) {
@@ -72,11 +72,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
 
   const CreateDocumentForm = (
     <ValidatorForm onSubmit={handleSubmit}>
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-      >
+      <Grid container direction="column" spacing={2}>
         <Grid item>
           <TextValidator
             label="Title"
@@ -85,8 +81,8 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
             type="text"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            validators={['required']}
-            errorMessages={['This field is required']}
+            validators={["required"]}
+            errorMessages={["This field is required"]}
             variant="outlined"
             fullWidth
           />
@@ -99,8 +95,8 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
             type="text"
             variant="outlined"
             onChange={(event) => setDescription(event.target.value)}
-            validators={['required']}
-            errorMessages={['This field is required']}
+            validators={["required"]}
+            errorMessages={["This field is required"]}
             fullWidth
           />
         </Grid>
@@ -128,9 +124,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
         fullWidth
       >
         <DialogTitle>Add a new Document</DialogTitle>
-        <DialogContent>
-          {CreateDocumentForm}
-        </DialogContent>
+        <DialogContent>{CreateDocumentForm}</DialogContent>
         <DialogActions>
           <Button
             variant="text"
@@ -140,22 +134,14 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
           >
             Add
           </Button>
-          <Button
-            variant="text"
-            onClick={handleDialogClose}
-          >
+          <Button variant="text" onClick={handleDialogClose}>
             Cancel
           </Button>
         </DialogActions>
       </Dialog>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleDialogOpen}
-      >
+      <Button variant="contained" color="primary" onClick={handleDialogOpen}>
         <CreateRounded />
-        &nbsp;
-        Create document
+        &nbsp; Add new document
       </Button>
     </>
   );

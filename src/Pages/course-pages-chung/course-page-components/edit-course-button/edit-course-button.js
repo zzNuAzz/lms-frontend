@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -6,19 +6,28 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-} from '@material-ui/core';
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import { toast } from 'react-toastify';
+} from "@material-ui/core";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import { toast } from "react-toastify";
 
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import createCourse from '../../../../api/graphql/create-course';
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import createCourse from "../../../../api/graphql/create-course";
 
-const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeacherCourse }) => {
+const EditCourseButton = ({
+  courseId,
+  courseName,
+  courseShortDescription,
+  courseDescription,
+  fetchTeacherCourse,
+}) => {
   const [isLoading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState(courseName);
+  const [shortDescription, setShortDescription] = useState(
+    courseShortDescription
+  );
   const [description, setDescription] = useState(courseDescription);
 
   const handleDialogOpen = () => {
@@ -30,7 +39,7 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
   };
 
   const handleSubmit = async () => {
-    const result = await createCourse(name, description);
+    const result = await createCourse(name, description, shortDescription);
     const parsedResult = JSON.parse(result);
     if (parsedResult.data) {
       if (parsedResult.data.createCourse.success) {
@@ -45,11 +54,7 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
 
   const NewCourseForm = (
     <ValidatorForm onSubmit={handleSubmit}>
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-      >
+      <Grid container direction="column" spacing={2}>
         <Grid item>
           <TextValidator
             label="Course Name"
@@ -58,8 +63,22 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
             type="text"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            validators={['required']}
-            errorMessages={['This field is required']}
+            validators={["required"]}
+            errorMessages={["This field is required"]}
+            variant="outlined"
+            fullWidth
+          />
+        </Grid>
+        <Grid item>
+          <TextValidator
+            label="Short Description"
+            id="shortDescription"
+            name="shortDescription"
+            type="text"
+            value={shortDescription}
+            onChange={(event) => setShortDescription(event.target.value)}
+            validators={["required"]}
+            errorMessages={["This field is required"]}
             variant="outlined"
             fullWidth
           />
@@ -68,7 +87,9 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
           <CKEditor
             editor={ClassicEditor}
             data={description}
-            onBlur={(event, editor) => { setDescription(editor.getData()) }}
+            onBlur={(event, editor) => {
+              setDescription(editor.getData());
+            }}
           />
         </Grid>
       </Grid>
@@ -77,15 +98,9 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
 
   return (
     <>
-      <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        maxWidth="lg"
-      >
+      <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="lg">
         <DialogTitle>{`Edit ${courseName}`}</DialogTitle>
-        <DialogContent>
-          {NewCourseForm}
-        </DialogContent>
+        <DialogContent>{NewCourseForm}</DialogContent>
         <DialogActions>
           <Button
             variant="text"
@@ -95,10 +110,7 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
           >
             Update
           </Button>
-          <Button
-            variant="text"
-            onClick={handleDialogClose}
-          >
+          <Button variant="text" onClick={handleDialogClose}>
             Cancel
           </Button>
         </DialogActions>

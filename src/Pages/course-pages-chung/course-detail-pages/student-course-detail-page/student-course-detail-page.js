@@ -81,7 +81,7 @@ const TeacherCourseDetailPage = () => {
   const history = useHistory();
   const userId = parseInt(localStorage.getItem("userId"), 10);
   const { id } = useParams();
-  const [haveForum, setHaveForum] = useState(false);
+  const [isAccepted, setIsAccepted] = useState(false);
 
   const [tabPosition, setTabPosition] = useState("Course Info");
   const [courseList, setCourseList] = useState([]);
@@ -140,7 +140,7 @@ const TeacherCourseDetailPage = () => {
     // console.log("List", courseList);
     courseList.map((course) => {
       if (course.courseId == id) {
-        setHaveForum(true);
+        setIsAccepted(true);
       }
     });
   }
@@ -189,23 +189,23 @@ const TeacherCourseDetailPage = () => {
                 &nbsp; Documents
               </div>
             </Grid>
+            <Grid item style={{ width: "inherit" }}>
+              <div
+                role="tab"
+                className={
+                  tabPosition === "Assignments"
+                    ? classes.tabButtonActive
+                    : classes.tabButtonInactive
+                }
+                onClick={() => handleTabChange("Assignments")}
+              >
+                <BorderColorRoundedIcon />
+                &nbsp; Assignments
+              </div>
+            </Grid>
 
-            {haveForum ? (
+            {isAccepted ? (
               <>
-                <Grid item style={{ width: "inherit" }}>
-                  <div
-                    role="tab"
-                    className={
-                      tabPosition === "Assignments"
-                        ? classes.tabButtonActive
-                        : classes.tabButtonInactive
-                    }
-                    onClick={() => handleTabChange("Assignments")}
-                  >
-                    <BorderColorRoundedIcon />
-                    &nbsp; Assignments
-                  </div>
-                </Grid>
                 <Grid item>
                   <Box ml={2} mt={2}>
                     <Divider variant="fullWidth" />
@@ -234,14 +234,14 @@ const TeacherCourseDetailPage = () => {
               <>
                 <Grid item>
                   <Box ml={2} mt={2} mb={2}>
-                    <Divider variant="fullWidth" />
+                    {/* <Divider variant="fullWidth" />
                     <Typography variant="body2" color="inherit">
                       Do you want to enroll?
-                    </Typography>
+                    </Typography> */}
                   </Box>
                 </Grid>
                 <Grid item style={{ width: "inherit" }}>
-                  <Box ml={2}>
+                  <Box mx={2}>
                     <Button
                       variant="contained"
                       color="primary"

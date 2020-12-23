@@ -120,7 +120,7 @@ export function Recommend({ recommendArr, title }) {
               <Divider variant="fullWidth"></Divider>
               <CardActions>
                 <Box pl={3}>
-                  <Link>
+                  <Link to={`/profile/view/${course.host.userId}`}>
                     <Typography variant="subtitle2">
                       Lecturer:{" "}
                       {course.host.lastName + " " + course.host.firstName}
