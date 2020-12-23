@@ -55,7 +55,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
   };
 
   const NewCourseForm = (
-    <ValidatorForm onSubmit={handleSubmit}>
+    <ValidatorForm onSubmit={handleSubmit} id="new-course-form">
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <Typography variant="h6">Course Name</Typography>
@@ -112,9 +112,10 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
         <DialogContent>{NewCourseForm}</DialogContent>
         <DialogActions>
           <Button
+            type="submit"
+            form="new-course-form"
             variant="text"
             color="primary"
-            onClick={handleSubmit}
             disabled={isLoading}
           >
             Add
