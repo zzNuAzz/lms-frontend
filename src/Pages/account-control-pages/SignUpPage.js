@@ -65,7 +65,10 @@ export default function SignUp() {
 
   const handleSubmit = async () => {
     // alert("Sign up");
+<<<<<<< HEAD
+=======
     setLoading(true);
+>>>>>>> 0f49d8ce36b541a72535b03d69d0083648806ae7
     try {
       const result = await createUserAccount(
         username,
@@ -99,6 +102,19 @@ export default function SignUp() {
     }
     setLoading(false);
   };
+<<<<<<< HEAD
+  // console.log(
+  //   "Form: ",
+  //   username,
+  //   password,
+  //   role,
+  //   firstName,
+  //   lastName,
+  //   phoneNumber,
+  //   address,
+  //   birthday
+  // );
+=======
 
   const handleBlur = (event) => {
     const { name, value } = event.target;
@@ -126,6 +142,7 @@ export default function SignUp() {
     });
   });
 
+>>>>>>> 0f49d8ce36b541a72535b03d69d0083648806ae7
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -179,11 +196,16 @@ export default function SignUp() {
                   onBlur={handleBlur}
                   name="username"
                   value={username}
+<<<<<<< HEAD
+                  validators={["required"]}
+                  errorMessages={["This field is required"]}
+=======
                   validators={['required', 'usernameExists']}
                   errorMessages={[
                     'This field is required',
                     'Username already exists',
                   ]}
+>>>>>>> 0f49d8ce36b541a72535b03d69d0083648806ae7
                   variant="outlined"
                   margin="normal"
                   fullWidth
@@ -282,7 +304,7 @@ export default function SignUp() {
             <Grid container justify="flex-end">
               <Grid item>
                 <Link to="/login" variant="body2">
-                  Already have an account? Sign in
+                  Already have account? Sign in
                 </Link>
               </Grid>
             </Grid>
