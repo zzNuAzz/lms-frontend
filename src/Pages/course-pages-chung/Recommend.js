@@ -84,7 +84,7 @@ export function Recommend({ recommendArr, title }) {
         <Carousel breakPoints={breakPoints}>
           {recommendCourses.map((course, index) => (
             <Card className={classes.card}>
-              <Link to={`/course/${course.courseId}`}>
+              <Link to={`/course/${course.courseId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}
