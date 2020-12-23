@@ -8,10 +8,10 @@ import { Button, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({}));
 
-export function NewPostBox() {
-  const cId = useParams();
-  const courseId = parseInt(cId.courseId, 10);
-  const newThreadLink = `/course/${courseId}/newthread`;
+export function NewPostBox({Id}) {
+  // const cId = useParams();
+  // const courseId = parseInt(cId.courseId, 10);
+  const newThreadLink = `/course/${Id}/newthread`;
   return (
     <>
       <Card style={{ marginTop: '30px' }}>

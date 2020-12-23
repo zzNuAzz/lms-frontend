@@ -14,18 +14,23 @@ import {
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
-import { DropzoneArea } from 'material-ui-dropzone';
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
 import FileViewer from '../../../file-viewer/file-viewer';
 import deleteDocument from '../../../../../api/graphql/delete-document';
 import toastFetchErrors from '../../../../tools/toast-fetch-errors';
 import graphqlMultipleUpload from '../../../../../api/graphql/graphql-multiple-upload';
 import editDocument from '../../../../../api/graphql/edit-document';
+import FileUpload from '../../../file-upload/file-upload';
 
 const useStyles = makeStyles((theme) => ({
   title: {
+    flexBasis: '33.33%',
     fontSize: theme.typography.pxToRem(20),
     fontWeight: theme.typography.fontWeightBold,
+  },
+  dateCreated: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
   },
   accordionBody: {
     flexDirection: 'column',
@@ -48,6 +53,11 @@ const DocumentItem = ({ document, fetchDocuments }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showUploadProgress, setShowUploadProgress] = useState(false);
+
+  const createAt = new Date(document.createAt);
+  const updateAt = new Date(document.updateAt);
 
   const handleOnFilesChange = (addedFiles) => {
     setNewFiles(addedFiles);
@@ -58,7 +68,10 @@ const DocumentItem = ({ document, fetchDocuments }) => {
     try {
       let fileUploadResult = [];
       if (newFiles.length !== 0) {
-        fileUploadResult = await graphqlMultipleUpload(newFiles);
+        setShowUploadProgress(true);
+        fileUploadResult = await graphqlMultipleUpload(newFiles, (event) => {
+          setProgress(Math.round((100 * event.loaded) / event.total));
+        });
         if (fileUploadResult.data.uploadFileMultiple.length === 0 || !fileUploadResult.data) {
           toast.error('Error(s) occured while uploading files. Please try again!');
         }
@@ -92,6 +105,7 @@ const DocumentItem = ({ document, fetchDocuments }) => {
       toast.error(error.toString());
     }
     setLoading(false);
+    setShowUploadProgress(false);
   };
 
   const handleDelete = async () => {
@@ -153,13 +167,10 @@ const DocumentItem = ({ document, fetchDocuments }) => {
           setRemovedFiles={setRemovedFiles}
         />
         <Typography variant="h6">Add new files</Typography>
-        <DropzoneArea
-          filesLimit={5}
-          showPreviews
-          showPreviewsInDropzone={false}
-          useChipsForPreview
-          showAlerts={false}
-          onChange={handleOnFilesChange}
+        <FileUpload
+          handleOnFilesChange={handleOnFilesChange}
+          progress={progress}
+          showUploadProgress={showUploadProgress}
         />
       </ValidatorForm>
     </>
@@ -226,6 +237,9 @@ const DocumentItem = ({ document, fetchDocuments }) => {
           expandIcon={<ExpandMoreRoundedIcon />}
         >
           <Typography className={classes.title}>{document.title}</Typography>
+          <Typography className={classes.dateCreated}>
+            {`Last updated: ${updateAt.toLocaleDateString()}`}
+          </Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.accordionBody}>
           <Typography variant="h6">Description</Typography>

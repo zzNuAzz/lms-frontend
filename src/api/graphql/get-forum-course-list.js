@@ -1,4 +1,4 @@
-import { graphQLFetch } from './graphql-fetch';
+import { graphQLFetch } from "./graphql-fetch";
 
 const getForumCourseList = async (userId) => {
   const query = `query getForumCourseList($userId: Int!){
@@ -18,7 +18,7 @@ const getForumCourseList = async (userId) => {
     userId,
   };
   const result = await graphQLFetch(query, vars);
-  console.log("result: ", result);
+  // console.log("result: ", result);
   return JSON.parse(result).data;
 };
 export default getForumCourseList;

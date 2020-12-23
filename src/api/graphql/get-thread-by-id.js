@@ -1,4 +1,4 @@
-import { graphQLFetch } from './graphql-fetch';
+import { graphQLFetch } from "./graphql-fetch";
 
 const getThreadById = async (threadId) => {
   const query = `query getThreadById ($threadId: Int!) {
@@ -11,9 +11,11 @@ const getThreadById = async (threadId) => {
         email
         pictureUrl
       }
+      courseId
       title
       content
       tags
+      postCount
       createAt
       updateAt
     }

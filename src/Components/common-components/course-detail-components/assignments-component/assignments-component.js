@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import uuid from 'react-uuid';
 
 import AddAssignmentComponent from './add-assignment-component/add-assignment-component';
 import EditAssignmentComponent from './edit-assignment-component';
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    fontSize: theme.typography.pxToRem(20),
   },
   assignmentItem: {
     width: '100%',
@@ -65,28 +67,34 @@ const AssignmentsComponent = ({ courseId }) => {
           : null
       }
       <div className="assignments">
-        {role === 'Teacher' ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetch} /> : null}
+        {
+          role === 'Teacher'
+            ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetch} key={uuid()} />
+            : null
+        }
         {
           role === 'Student'
             ? (
               <div className={classes.assignmentItem}>
                 {assignments.map((assignment) => (
-                  <AssignmentItem assignment={assignment} key={assignment.assignmentId} />
+                  <AssignmentItem
+                    assignment={assignment}
+                    key={assignment.assignmentId}
+                  />
                 ))}
               </div>
             )
             : (
               <div className={classes.editAssignmentItem}>
                 {assignments.map((assignment) => (
-                  <>
-                    <EditAssignmentComponent assignment={assignment} key={assignment.assignmentId} />
-                    <br />
-                  </>
+                  <EditAssignmentComponent
+                    assignment={assignment}
+                    fetchAssignments={fetch}
+                  />
                 ))}
               </div>
             )
         }
-
       </div>
     </>
   );

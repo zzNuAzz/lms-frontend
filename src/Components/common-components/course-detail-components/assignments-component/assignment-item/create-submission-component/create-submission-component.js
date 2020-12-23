@@ -5,19 +5,20 @@ import {
 } from '@material-ui/core';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
-import { DropzoneArea } from 'material-ui-dropzone';
+import { toast } from 'react-toastify';
 
 import graphqlMultipleUpload from '../../../../../../api/graphql/graphql-multiple-upload';
-import { toast } from 'react-toastify';
 import toastFetchErrors from '../../../../../tools/toast-fetch-errors';
 import createSubmission from '../../../../../../api/graphql/create-submission';
+import FileUpload from '../../../../file-upload/file-upload';
 
 const CreateSubmissionComponent = ({ assignmentId, fetchSubmission }) => {
   const [description, setDescription] = useState('');
   const [files, setFiles] = useState([]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [submissionOpen, setSubmissionOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showUploadProgress, setShowUploadProgress] = useState(false);
 
   const handleOnFilesChange = (addedFiles) => {
     setFiles(addedFiles);
@@ -32,39 +33,39 @@ const CreateSubmissionComponent = ({ assignmentId, fetchSubmission }) => {
   const handleAssignmentsSubmit = async () => {
     setLoading(true);
     try {
-      const fileUploadResult = await graphqlMultipleUpload(files);
-      if (fileUploadResult.data?.uploadFileMultiple?.length !== 0) {
-        const result = await createSubmission(
-          assignmentId,
-          description,
-          fileUploadResult.data.uploadFileMultiple,
-        );
-        const parsedResult = JSON.parse(result);
-        if (parsedResult.data) {
-          if (parsedResult.data.createSubmission.success) {
-            toast.success('Assignment uploaded successfully!', {
-              autoClose: 3000,
-            });
-            setLoading(false);
-            fetchSubmission();
-            handleCloseSubmission();
-          } else {
-            toast.error(parsedResult.data.createSubmission.message);
-            setLoading(false);
-          }
-        } else {
-          toastFetchErrors(parsedResult);
+      let fileUploadResult = [];
+      if (files.length !== 0) {
+        setShowUploadProgress(true);
+        fileUploadResult = await graphqlMultipleUpload(files, (event) => {
+          setProgress(Math.round((100 * event.loaded) / event.total));
+        });
+      }
+      const result = await createSubmission(
+        assignmentId,
+        description,
+        fileUploadResult.data ? fileUploadResult.data.uploadFileMultiple : [],
+      );
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.createSubmission.success) {
+          toast.success('Assignment uploaded successfully!', {
+            autoClose: 3000,
+          });
           setLoading(false);
+          fetchSubmission();
+          handleCloseSubmission();
+        } else {
+          toast.error(parsedResult.data.createSubmission.message);
         }
       } else {
-        toastFetchErrors(fileUploadResult);
-        setLoading(false);
+        toastFetchErrors(parsedResult);
       }
     } catch (error) {
       toast.error(error.toString());
-      setLoading(false);
     }
-  }
+    setLoading(false);
+    setShowUploadProgress(false);
+  };
 
   return (
     <div className="create-submission">
@@ -108,13 +109,10 @@ const CreateSubmissionComponent = ({ assignmentId, fetchSubmission }) => {
                   />
                   <br />
                   <br />
-                  <DropzoneArea
-                    filesLimit={5}
-                    showPreviews
-                    showPreviewsInDropzone={false}
-                    useChipsForPreview
-                    showAlerts={false}
-                    onChange={handleOnFilesChange}
+                  <FileUpload
+                    handleOnFilesChange={handleOnFilesChange}
+                    progress={progress}
+                    showUploadProgress={showUploadProgress}
                   />
                 </div>
                 <br />

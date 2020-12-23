@@ -7,15 +7,16 @@ import {
   TableCell,
   Button,
   Typography,
+  IconButton,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import DownloadRoundedIcon from '@material-ui/icons/GetAppRounded';
 import { DeleteForeverRounded } from '@material-ui/icons';
 import RestoreFromTrashRoundedIcon from '@material-ui/icons/RestoreFromTrashRounded';
+import FileExtensionIcon from './file-extension-icon/file-extension-icon';
 
 const FileViewer = ({
   files,
-  type = 'Document',
   deletable = false,
   setRemovedFiles,
 }) => {
@@ -67,23 +68,16 @@ const FileViewer = ({
               <TableCell style={tableCellStyle}>{file.filename || ''}</TableCell>
               <TableCell>
                 <Link to={file.url || ''} target="_blank" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <Button
-                    variant="contained"
+                  <IconButton
                     color="primary"
-                    size="small"
                   >
                     <DownloadRoundedIcon />
-                  </Button>
+                  </IconButton>
                 </Link>
                 &nbsp;
-                <Button
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  onClick={() => handleRestoreFile(index)}
-                >
+                <IconButton color="primary" onClick={() => handleRestoreFile(index)}>
                   <RestoreFromTrashRoundedIcon />
-                </Button>
+                </IconButton>
               </TableCell>
             </TableRow>
           ))
@@ -92,7 +86,7 @@ const FileViewer = ({
     </Table>
   );
 
-  return (
+  const RenderComponent = (
     <>
       <Table size="small">
         <TableHead>
@@ -105,30 +99,30 @@ const FileViewer = ({
           {
             currentFiles.map((file, index) => (
               <TableRow hover>
-                <TableCell style={tableCellStyle}>{file.filename || ''}</TableCell>
+                <TableCell style={tableCellStyle}>
+                  <FileExtensionIcon filename={file.filename} />
+                  &nbsp;
+                  {file.filename || ''}
+                </TableCell>
                 <TableCell>
                   <Link to={file.url || ''} target="_blank" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Button
-                      variant="contained"
+                    <IconButton
                       color="primary"
-                      size="small"
                     >
                       <DownloadRoundedIcon />
-                    </Button>
+                    </IconButton>
                   </Link>
                   {
                     deletable
                       ? (
                         <>
                           &nbsp;
-                          <Button
-                            variant="contained"
+                          <IconButton
                             color="secondary"
-                            size="small"
                             onClick={() => handleRemoveFile(index)}
                           >
                             <DeleteForeverRounded />
-                          </Button>
+                          </IconButton>
                         </>
                       )
                       : null
@@ -148,6 +142,18 @@ const FileViewer = ({
             </>
           )
           : null
+      }
+    </>
+  );
+
+  return (
+    <>
+      {
+        files.length === 0
+          ? (
+            <Typography variant="body1">No files available</Typography>
+          )
+          : RenderComponent
       }
     </>
   );

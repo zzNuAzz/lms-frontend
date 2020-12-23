@@ -1,7 +1,14 @@
 import axios from 'axios';
 
-const graphqlMultipleUpload = async (files) => {
+const graphqlMultipleUpload = async (files, onUploadProgress) => {
   const data = new FormData();
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    onUploadProgress,
+  };
 
   //* Operation field
   const query = `
@@ -39,15 +46,15 @@ const graphqlMultipleUpload = async (files) => {
   }
 
   //* Send data to server
-  const response = await axios({
-    url: '/api/graphql',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    withCredentials: true,
-    data,
-  });
+  // const response = await axios.post({
+  //   url: '/api/graphql',
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data',
+  //   },
+  //   withCredentials: true,
+  // });
+  const response = await axios.post('/api/graphql', data, config);
   return response.data;
 };
 

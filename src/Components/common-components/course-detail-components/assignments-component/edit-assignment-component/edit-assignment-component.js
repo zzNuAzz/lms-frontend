@@ -9,12 +9,25 @@ import {
   makeStyles,
   Typography,
   Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  AccordionActions,
+  LinearProgress,
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
-
-import createAssignment from '../../../../../api/graphql/create-assignment';
 import { grey } from '@material-ui/core/colors';
+import { ExpandMoreRounded } from '@material-ui/icons';
+import moment from 'moment';
+import uuid from 'react-uuid';
+
+import editAssignment from '../../../../../api/graphql/edit-assignment';
+import toastFetchErrors from '../../../../tools/toast-fetch-errors';
+import deleteAssignment from '../../../../../api/graphql/delete-assignment';
+import graphqlMultipleUpload from '../../../../../api/graphql/graphql-multiple-upload';
+import FileViewer from '../../../file-viewer/file-viewer';
+import FileUpload from '../../../file-upload/file-upload';
 
 const useStyle = makeStyles((theme) => ({
   dialog: {
@@ -35,144 +48,246 @@ const useStyle = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     flexGrow: 1,
   },
+  editForm: {
+    width: '100%',
+  },
 }));
 
 const EditAssignmentComponent = ({
   assignment,
-  fetchAssignments
+  fetchAssignments,
 }) => {
   const [title, setTitle] = useState(assignment.title);
   const [content, setContent] = useState(assignment.content);
   const [dueDate, setDueDate] = useState(new Date(assignment.dueDate));
-
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [files, setFiles] = useState(assignment.files);
+  const [removedFiles, setRemovedFiles] = useState([]);
+  const [newFiles, setNewFiles] = useState([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
+
+  const [progress, setProgress] = useState(0);
+  const [showUploadProgress, setShowUploadProgress] = useState(false);
+
   const classes = useStyle();
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
+  const handleOnFilesChange = (addedFiles) => {
+    setNewFiles(addedFiles);
   };
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
-
-  const handleDeleteDialogOpen = () => {
+  const handleDelete = async () => {
+    try {
+      const result = await deleteAssignment(parseInt(assignment.assignmentId, 10));
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.deleteAssignment.success) {
+          toast.info(`Assignment ${title} deleted.`);
+          fetchAssignments();
+          setDeleteDialogOpen(false);
+        }
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast.error(error.toString());
+    }
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      let fileUploadResult = [];
+      if (newFiles.length !== 0) {
+        setShowUploadProgress(true);
+        fileUploadResult = await graphqlMultipleUpload(newFiles, (event) => {
+          setProgress(Math.round((100 * event.loaded) / event.total));
+        });
+        if (fileUploadResult.data?.uploadFileMultiple?.length === 0) {
+          toast.error('Error(s) occured while uploading files');
+        }
+      }
+      const removeFileId = [];
+      removedFiles.forEach((file) => {
+        removeFileId.push(file.assignmentFileId);
+      });
+      const result = await editAssignment(
+        assignment.assignmentId,
+        title,
+        content,
+        dueDate.toISOString(),
+        removeFileId,
+        fileUploadResult.data ? fileUploadResult.data.uploadFileMultiple : [],
+      );
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.editAssignment.success) {
+          toast.success(`Assignment ${title} updated successfully!`, {
+            autoClose: 3000,
+          });
+          await fetchAssignments();
+        } else {
+          toast.error(parsedResult.data.editAssignment.message);
+        }
+      } else {
+        toastFetchErrors(parsedResult);
+      }
+    } catch (error) {
+      toast.error(error.toString());
+    }
+    setLoading(false);
+    setProgress(0);
+    setShowUploadProgress(false);
+  };
 
+  const handleRevertChanges = async () => {
+    const { title, content, dueDate } = assignment;
+    setTitle(title);
+    setContent(content);
+    setDueDate(new Date(dueDate));
+    setFiles(assignment.files);
+    setRemovedFiles([]);
+    setNewFiles([]);
   };
 
   const EditAssignmentForm = (
-    <ValidatorForm onSubmit={handleSubmit}>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        spacing={2}
-      >
-        <Grid item xs={6}>
-          <TextValidator
-            label="New Title"
-            id="title"
-            name="title"
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            validators={['required']}
-            errorMessages={['This field is required']}
-            variant="outlined"
-            fullWidth
-          />
+    <>
+      <ValidatorForm className={classes.editForm}>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          spacing={2}
+        >
+          <Grid item xs={6}>
+            <Typography variant="h6">Title</Typography>
+            <TextValidator
+              id="title"
+              name="title"
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="h6">Due date</Typography>
+            <TextValidator
+              id="date"
+              name="date"
+              type="date"
+              value={moment(dueDate).format('YYYY-MM-DD')}
+              variant="outlined"
+              onChange={(event) => setDueDate(new Date(event.target.value))}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Content</Typography>
+            <TextValidator
+              name="content"
+              type="text"
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <TextValidator
-            id="date"
-            name="date"
-            label="New Due Date"
-            type="date"
-            variant="outlined"
-            onChange={(event) => setDueDate(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            validators={['required']}
-            errorMessages={['This field is required']}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            label="New Content"
-            name="content"
-            type="text"
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-            validators={['required']}
-            errorMessages={['This field is required']}
-            variant="outlined"
-            fullWidth
-          />
-        </Grid>
-      </Grid>
-    </ValidatorForm>
+      </ValidatorForm>
+      <br />
+      <Typography variant="h6">Current files</Typography>
+      <FileViewer
+        files={files}
+        deletable
+        setRemovedFiles={setRemovedFiles}
+      />
+      <br />
+      <Typography variant="h6">Upload new files</Typography>
+      <FileUpload
+        handleOnFilesChange={handleOnFilesChange}
+        showUploadProgress={showUploadProgress}
+        progress={progress}
+      />
+    </>
   );
 
   return (
     <>
       <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
         fullWidth
-        maxWidth="md"
+        maxWidth="sm"
       >
-        <DialogTitle>Edit Assignment</DialogTitle>
-        <DialogContent>
-          {EditAssignmentForm}
-        </DialogContent>
+        <DialogTitle>{`Are you sure you want to delete ${title}?`}</DialogTitle>
         <DialogActions>
           <Button
             variant="text"
-            color="primary"
-            onClick={handleSubmit}
+            color="secondary"
+            onClick={handleDelete}
             disabled={isLoading}
           >
-            Submit
+            Yes
           </Button>
           <Button
             variant="text"
-            onClick={handleDialogClose}
+            onClick={() => setDeleteDialogOpen(false)}
           >
-            Cancel
+            No
           </Button>
         </DialogActions>
       </Dialog>
-      <Paper elevation={2} className={classes.paper}>
-        <Typography className={classes.title} variant="h6">{assignment.title}</Typography>
-        <Typography className={classes.dueDate} variant="h6">
-          {`Due: ${assignment.dueDate ? dueDate.toLocaleString() : 'none'}`}
-        </Typography>
-        <Button
-          variant="text"
-          color="primary"
-          size="small"
-          onClick={handleDialogOpen}
-          style={{ float: 'right' }}
-        >
-          Edit
-        </Button>
-        <Button
-          variant="text"
-          color="secondary"
-          size="small"
-          onClick={handleDeleteDialogOpen}
-          style={{ float: 'right' }}
-        >
-          Delete
-        </Button>
-      </Paper>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreRounded />}>
+          <Typography className={classes.title}>{assignment.title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails style={{ flexDirection: 'column' }}>
+          {EditAssignmentForm}
+        </AccordionDetails>
+        <AccordionActions>
+          <Button
+            variant="text"
+            color="primary"
+            size="small"
+            onClick={handleSubmit}
+            style={{ float: 'right' }}
+            disabled={isLoading}
+          >
+            Update
+          </Button>
+          <Button
+            variant="text"
+            color="default"
+            size="small"
+            onClick={handleRevertChanges}
+            style={{ float: 'right' }}
+            disabled={isLoading}
+          >
+            Revert changes
+          </Button>
+          <Button
+            variant="text"
+            color="secondary"
+            size="small"
+            onClick={() => setDeleteDialogOpen(true)}
+            style={{ float: 'right' }}
+            disabled={isLoading}
+          >
+            Delete
+          </Button>
+        </AccordionActions>
+      </Accordion>
     </>
   );
 };

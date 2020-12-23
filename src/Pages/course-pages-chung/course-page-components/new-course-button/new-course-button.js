@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -6,21 +6,23 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-} from '@material-ui/core';
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import { toast } from 'react-toastify';
+  Typography,
+} from "@material-ui/core";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import { toast } from "react-toastify";
 
-import AddRoundedIcon from '@material-ui/icons/AddRounded';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import createCourse from '../../../../api/graphql/create-course';
-import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
+import AddRoundedIcon from "@material-ui/icons/AddRounded";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import createCourse from "../../../../api/graphql/create-course";
+import toastFetchErrors from "../../../../Components/tools/toast-fetch-errors";
 
 const NewCourseButton = ({ fetchTeacherCourse }) => {
   const [isLoading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -32,7 +34,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
 
   const handleSubmit = async () => {
     try {
-      const result = await createCourse(name, description);
+      const result = await createCourse(name, description, shortDescription);
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
         if (parsedResult.data.createCourse.success) {
@@ -54,12 +56,9 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
 
   const NewCourseForm = (
     <ValidatorForm onSubmit={handleSubmit}>
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-      >
+      <Grid container direction="column" spacing={2}>
         <Grid item>
+          <Typography variant="h6">Course Name</Typography>
           <TextValidator
             label="Course Name"
             id="name"
@@ -67,17 +66,33 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
             type="text"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            validators={['required']}
-            errorMessages={['This field is required']}
+            validators={["required"]}
+            errorMessages={["This field is required"]}
             variant="outlined"
             fullWidth
+            required
           />
         </Grid>
         <Grid item>
+          <Typography variant="h6">Short Description</Typography>
+          <CKEditor
+            editor={ClassicEditor}
+            data={shortDescription}
+            onBlur={(event, editor) => {
+              setShortDescription(editor.getData());
+            }}
+            require
+          />
+        </Grid>
+        <Grid item>
+          <Typography variant="h6">Detail Description</Typography>
           <CKEditor
             editor={ClassicEditor}
             data={description}
-            onBlur={(event, editor) => { setDescription(editor.getData()) }}
+            onBlur={(event, editor) => {
+              setDescription(editor.getData());
+            }}
+            requiure
           />
         </Grid>
       </Grid>
@@ -86,15 +101,9 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
 
   return (
     <>
-      <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        maxWidth="lg"
-      >
+      <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="lg">
         <DialogTitle>Add a new course</DialogTitle>
-        <DialogContent>
-          {NewCourseForm}
-        </DialogContent>
+        <DialogContent>{NewCourseForm}</DialogContent>
         <DialogActions>
           <Button
             variant="text"
@@ -104,10 +113,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
           >
             Add
           </Button>
-          <Button
-            variant="text"
-            onClick={handleDialogClose}
-          >
+          <Button variant="text" onClick={handleDialogClose}>
             Cancel
           </Button>
         </DialogActions>

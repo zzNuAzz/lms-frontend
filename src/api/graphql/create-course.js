@@ -1,10 +1,10 @@
-import { graphQLFetch } from './graphql-fetch';
+import { graphQLFetch } from "./graphql-fetch";
 
 // eslint-disable-next-line import/prefer-default-export
-const createCourse = async (name, description) => {
+const createCourse = async (name, description, shortDescription) => {
   const query = `
-  mutation createCourse($name: String!, $description: String!) {
-    createCourse(name: $name, description: $description) {
+  mutation createCourse($name: String!, $description: String!, $shortDescription: String!) {
+    createCourse(name: $name, description: $description, shortDescription: $shortDescription) {
       success
       insertedId
       message
@@ -13,6 +13,7 @@ const createCourse = async (name, description) => {
   const vars = {
     name,
     description,
+    shortDescription,
   };
   const result = await graphQLFetch(query, vars);
   return result;

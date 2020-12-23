@@ -1,12 +1,19 @@
 import {
-  Typography, makeStyles, Grid, Avatar, LinearProgress,
+  Avatar,
+  Grid,
+  LinearProgress,
+  makeStyles,
+  Typography,
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import ReactHtmlParser from 'react-html-parser';
+import uuid from 'react-uuid';
+
 import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
 import toastFetchErrors from '../../../tools/toast-fetch-errors';
+import EditCourseComponent from '../edit-course-component/edit-course-component';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -14,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  contactInfo: {
-
+  editCourse: {
+    marginLeft: 'auto'
   },
   hostAvatar: {
     width: theme.spacing(12),
@@ -27,6 +34,7 @@ const OverviewComponent = ({
   courseId,
 }) => {
   const classes = useStyles();
+  const role = localStorage.getItem('role');
   const [host, setHost] = useState({
     firstName: '',
     lastName: '',
@@ -59,7 +67,7 @@ const OverviewComponent = ({
         toast(result);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 
@@ -90,49 +98,66 @@ const OverviewComponent = ({
   }, []);
 
   const RenderComponent = (
-    <div className="overview">
-      <div className={classes.title}>
-        <Typography variant="h3">
-          {courseName}
-        </Typography>
-        <Typography variant="body1">
-          {`by ${host.lastName.concat(' ', host.firstName)}`}
-        </Typography>
-      </div>
-      <hr />
-      <div className="course-description">
-        {ReactHtmlParser(courseDescription)}
-      </div>
-      <hr />
-      <div className={classes.contactInfo}>
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justify="flex-start"
-          spacing={2}
-        >
-          <Grid item>
-            <Avatar className={classes.hostAvatar} src={host.pictureUrl} />
+    <>
+      <div className="overview">
+        <div className={classes.title}>
+          <Typography variant="h3">
+            {courseName}
+          </Typography>
+          <Typography variant="body1">
+            {`by ${host.lastName.concat(' ', host.firstName)}`}
+          </Typography>
+          {
+            role === 'Teacher'
+              ? (
+                <div className={classes.editCourse}>
+                  <EditCourseComponent
+                    courseName={courseName}
+                    currentDescription={courseDescription}
+                    currentShortDescription={courseShortDescription}
+                    fetchCourseDetails={fetchCourseDetails}
+                    key={uuid()}
+                  />
+                </div>
+              )
+              : null
+          }
+        </div>
+        <hr />
+        <div className="course-description">
+          {ReactHtmlParser(courseDescription)}
+        </div>
+        <hr />
+        <div className={classes.contactInfo}>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="flex-start"
+            spacing={2}
+          >
+            <Grid item>
+              <Avatar className={classes.hostAvatar} src={host.pictureUrl} />
+            </Grid>
+            <Grid item>
+              <Typography variant="h6">
+                {`Taught by: ${host.lastName.concat(' ', host.firstName)}`}
+              </Typography>
+              <Typography variant="body2">
+                Professor at UET - VNU
+              </Typography>
+              <Typography variant="body2">
+                Computer Science
+              </Typography>
+              <Typography variant="body2">
+                {'Email: '}
+                <a href={`mailto:${host.email}`}>{host.email}</a>
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="h6">
-              {`Taught by: ${host.lastName.concat(' ', host.firstName)}`}
-            </Typography>
-            <Typography variant="body2">
-              Professor at UET - VNU
-            </Typography>
-            <Typography variant="body2">
-              Computer Science
-            </Typography>
-            <Typography variant="body2">
-              {'Email: '}
-              <a href={`mailto:${host.email}`}>{host.email}</a>
-            </Typography>
-          </Grid>
-        </Grid>
+        </div>
       </div>
-    </div>
+    </>
   );
 
   return (

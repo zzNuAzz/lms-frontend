@@ -14,7 +14,7 @@ import DownloadRoundedIcon from '@material-ui/icons/GetAppRounded';
 import FileViewer from '../../../../file-viewer/file-viewer';
 
 const CurrentStudentSubmission = ({ files, description, fetchSubmission }) => {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
@@ -40,7 +40,7 @@ const CurrentStudentSubmission = ({ files, description, fetchSubmission }) => {
               <Typography variant="body1">{description}</Typography>
               <br />
               <Typography variant="h6">Files</Typography>
-              <FileViewer files={files} />
+              <FileViewer files={files} key={description} />
             </>
           )
       }

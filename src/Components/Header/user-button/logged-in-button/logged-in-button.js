@@ -22,11 +22,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoggedInButton = ({ setUsername }) => {
+const LoggedInButton = ({ user ,setUser }) => {
   const history = useHistory();
   const classes = useStyles();
-  const username = localStorage.getItem('username') || '';
-  const avatarUrl = localStorage.getItem('pictureUrl') || '';
+  const { 
+    username = localStorage.getItem('username') || '',
+    userId =  localStorage.getItem('userId') || '',
+    pictureUrl = localStorage.getItem('pictureUrl') || ''
+  } = user || {};
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
@@ -39,20 +43,20 @@ const LoggedInButton = ({ setUsername }) => {
   };
 
   const handleDialog = () => {
+    handleClose();
     setLogoutDialogOpen(true);
-    setAnchorEl(null);
   };
 
   const handleProfileRedirect = () => {
-    history.push('/profile/edit');
-    history.go(0);
+    history.push(`/profile/view/${userId}`);
+    handleClose();
   };
 
   const handleLogout = async () => {
     const result = await userLogout();
     if (result.success) {
       localStorage.clear();
-      setUsername('');
+      setUser(null);
       setLogoutDialogOpen(false);
       toast.info('See you soon!', {
         autoClose: 3000,
@@ -73,11 +77,11 @@ const LoggedInButton = ({ setUsername }) => {
         variant="contained"
         color="primary"
         onClick={(event) => handleClick(event)}
-        style={{margin: '10px 10px'}}
+        style={{margin: '10px 10px', minWidth:'10rem', display:'flex', justifyContent:'space-between'}}
       >
         {/* <SentimentVerySatisfiedRoundedIcon /> */}
-        <Avatar alt="User's Avatar" src={avatarUrl} className={classes.avatar} />
-        &nbsp;
+        <Avatar alt="User's Avatar" src={pictureUrl} className={classes.avatar} />
+        &nbsp;&nbsp;
         {username}
       </Button>
       <Menu

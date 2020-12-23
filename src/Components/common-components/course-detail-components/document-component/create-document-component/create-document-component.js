@@ -9,11 +9,11 @@ import {
 } from '@material-ui/core';
 import { CreateRounded } from '@material-ui/icons';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import { DropzoneArea } from 'material-ui-dropzone';
 import { toast } from 'react-toastify';
 import toastFetchErrors from '../../../../tools/toast-fetch-errors';
 import createDocument from '../../../../../api/graphql/create-document';
 import graphqlMultipleUpload from '../../../../../api/graphql/graphql-multiple-upload';
+import FileUpload from '../../../file-upload/file-upload';
 
 const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
   const [title, setTitle] = useState('');
@@ -21,6 +21,8 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
   const [files, setFiles] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showUploadProgress, setShowUploadProgress] = useState(false);
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -37,39 +39,41 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const fileUploadResult = await graphqlMultipleUpload(files);
-      if (fileUploadResult.data?.uploadFileMultiple?.length !== 0) {
-        const result = await createDocument(
-          parseInt(courseId, 10),
-          title,
-          description,
-          fileUploadResult.data.uploadFileMultiple,
-        )
-        const parsedResult = JSON.parse(result);
-        if (parsedResult.data) {
-          if (parsedResult.data.createDocument.success) {
-            toast.success(`Successfully added document ${title}!`, {
-              autoClose: 3000,
-            });
-            await fetchDocuments();
-            setLoading(false);
-            setDialogOpen(false);
-          } else {
-            toast.error(parsedResult.data.createDocument.message);
-            setLoading(false);
-          }
+      let fileUploadResult = [];
+      if (files.length !== 0) {
+        setShowUploadProgress(true);
+        fileUploadResult = await graphqlMultipleUpload(files, (event) => {
+          setProgress(Math.round((100 * event.loaded) / event.total));
+        });
+        if (fileUploadResult.data?.uploadFileMultiple?.length === 0) {
+          toast.error('Error(s) occured while uploading files');
+        }
+      }
+      const result = await createDocument(
+        parseInt(courseId, 10),
+        title,
+        description,
+        fileUploadResult.data.uploadFileMultiple,
+      )
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.createDocument.success) {
+          toast.success(`Successfully added document ${title}!`, {
+            autoClose: 3000,
+          });
+          await fetchDocuments();
+          setDialogOpen(false);
         } else {
-          toastFetchErrors(parsedResult);
-          setLoading(false);
+          toast.error(parsedResult.data.createDocument.message);
         }
       } else {
-        toastFetchErrors(fileUploadResult);
-        setLoading(false);
+        toastFetchErrors(parsedResult);
       }
     } catch (error) {
       toast.error(error.toString());
-      setLoading(false);
     }
+    setLoading(false);
+    setShowUploadProgress(false)
   };
 
   const CreateDocumentForm = (
@@ -107,13 +111,10 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
           />
         </Grid>
         <Grid item>
-          <DropzoneArea
-            filesLimit={5}
-            showPreviews
-            showPreviewsInDropzone={false}
-            useChipsForPreview
-            showAlerts={false}
-            onChange={handleOnFilesChange}
+          <FileUpload
+            handleOnFilesChange={handleOnFilesChange}
+            progress={progress}
+            showUploadProgress={showUploadProgress}
           />
         </Grid>
       </Grid>

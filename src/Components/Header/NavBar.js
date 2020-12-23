@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  makeStyles,
-} from '@material-ui/core';
-import UserButton from './user-button/user-button';
-import MenuBar from './MenuBar/menu-bar';
+import React, { useState } from "react";
+import { AppBar, Toolbar, Typography, makeStyles } from "@material-ui/core";
+import UserButton from "./user-button/user-button";
+import MenuBar from "./MenuBar/menu-bar";
 
 const useStyle = makeStyles((theme) => ({
   title: {
@@ -14,8 +9,8 @@ const useStyle = makeStyles((theme) => ({
   },
 
   root: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     flexGrow: 1,
   },
 
@@ -25,28 +20,29 @@ const useStyle = makeStyles((theme) => ({
 
   navbar: {
     backgroundColor: theme.palette.background.paper,
-    color: '#2a73cc',
-    fontWeight: 'bolder',
-    position: 'sticky',
+    color: "#2a73cc",
+    fontWeight: "bolder",
+    position: "sticky",
   },
 
   navigationButton: {
-    margin: '10px 10px',
+    margin: "10px 10px",
   },
-
 }));
 
 export default function NavBar() {
   const classes = useStyle();
 
-  const [isLoggedIn, setLoginStatus] = useState(false);
+  const [isLoggedIn, setLoginStatus] = useState(localStorage.getItem('userId'));
 
   return (
     <div className={classes.root}>
       <AppBar className={classes.navbar}>
         <Toolbar>
           <MenuBar isLoggedIn={isLoggedIn} />
-          <Typography className={classes.title} variant="h6">Learning System</Typography>
+          <Typography className={classes.title} variant="h6">
+            Learning System
+          </Typography>
           <div className={classes.endPoint} />
           <UserButton isLoggedIn={isLoggedIn} setLoginStatus={setLoginStatus} />
         </Toolbar>

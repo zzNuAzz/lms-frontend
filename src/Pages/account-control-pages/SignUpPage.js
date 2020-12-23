@@ -87,7 +87,7 @@ export default function SignUp() {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
-      toast(error);
+      toast.error(error.toString());
     }
   };
 

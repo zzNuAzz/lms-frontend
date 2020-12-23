@@ -1,23 +1,14 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
-  Box,
   Container,
-  LinearProgress,
-  Tab,
-  Tabs,
-  Typography,
   makeStyles,
   Grid,
-  Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Paper,
+  Badge,
 } from '@material-ui/core';
-import { grey } from '@material-ui/core/colors'
-import React, { useEffect, useState } from 'react';
+import { grey } from '@material-ui/core/colors';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import SubjectRoundedIcon from '@material-ui/icons/SubjectRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
@@ -25,6 +16,7 @@ import DescriptionRoundedIcon from '@material-ui/icons/DescriptionRounded';
 import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
 import ForumRoundedIcon from '@material-ui/icons/ForumRounded';
 import PeopleRoundedIcon from '@material-ui/icons/PeopleRounded';
+import SubmissionListRoundedIcon from '@material-ui/icons/ListRounded';
 import { toast } from 'react-toastify';
 
 import OverviewComponent from '../../../../Components/common-components/course-detail-components/overview-component/overview-component';
@@ -37,6 +29,7 @@ import getCourseHost from '../../../../api/graphql/get-course-host';
 import getCourseDetails from '../../../../api/graphql/get-course-details';
 import toastFetchErrors from '../../../../Components/tools/toast-fetch-errors';
 import EditCourseComponent from '../../../../Components/common-components/course-detail-components/edit-course-component/edit-course-component';
+import SubmissionListComponent from '../../../../Components/common-components/course-detail-components/submission-list-component/submission-list-component';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,10 +69,23 @@ const TeacherCourseDetailPage = () => {
   const history = useHistory();
 
   const { id } = useParams();
-
+  const [pendingMember, setPendingMember] = useState(0);
   const [tabPosition, setTabPosition] = useState('Course Info');
 
+  const _getPendingMember = () => {
+    getCourseMemberList(+id, 'Pending').then(result => {
+      setPendingMember(JSON.parse(result).data?.courseMemberList?.totalRecords || 0)
+    }).catch(err => {
+      toast.error(err.message);
+    })
+  }
+
+  useEffect(()=> {
+    _getPendingMember();
+  },[])
+
   const handleTabChange = (newTab) => {
+    _getPendingMember();
     setTabPosition(newTab);
   };
 
@@ -99,22 +105,8 @@ const TeacherCourseDetailPage = () => {
                 onClick={() => handleTabChange('Course Info')}
               >
                 <div className="tab-item">
-                  <SubjectRoundedIcon />
-                  &nbsp;
+                  <SubjectRoundedIcon style={{marginRight: "1rem"}}/>
                   Course Info
-                </div>
-              </div>
-            </Grid>
-            <Grid item style={{ width: 'inherit' }}>
-              <div
-                role="tab"
-                className={tabPosition === 'Edit Course' ? classes.tabButtonActive : classes.tabButtonInactive}
-                onClick={() => handleTabChange('Edit Course')}
-              >
-                <div className="tab-item">
-                  <EditRoundedIcon />
-                  &nbsp;
-                  Edit Course
                 </div>
               </div>
             </Grid>
@@ -124,9 +116,10 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Members' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Members')}
               >
-                <PeopleRoundedIcon />
-                &nbsp;
-                Members
+                <Badge badgeContent={pendingMember} color="primary" style={{marginRight: "1rem"}}>
+                  <PeopleRoundedIcon />
+                </Badge>
+                Members   
               </div>
             </Grid>
             <Grid item style={{ width: 'inherit' }}>
@@ -135,8 +128,7 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Documents' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Documents')}
               >
-                <DescriptionRoundedIcon />
-                &nbsp;
+                <DescriptionRoundedIcon style={{marginRight: "1rem"}}/>
                 Documents
               </div>
             </Grid>
@@ -146,9 +138,18 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Assignments' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Assignments')}
               >
-                <BorderColorRoundedIcon />
-                &nbsp;
+                <BorderColorRoundedIcon style={{marginRight: "1rem"}}/>
                 Assignments
+              </div>
+            </Grid>
+            <Grid item style={{ width: 'inherit' }}>
+              <div
+                role="tab"
+                className={tabPosition === 'Submissions' ? classes.tabButtonActive : classes.tabButtonInactive}
+                onClick={() => handleTabChange('Submissions')}
+              >
+                <SubmissionListRoundedIcon style={{marginRight: '1rem'}} />
+                Submissions
               </div>
             </Grid>
             <Grid item style={{ width: 'inherit' }}>
@@ -157,8 +158,7 @@ const TeacherCourseDetailPage = () => {
                 className={tabPosition === 'Forum' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Forum')}
               >
-                <ForumRoundedIcon />
-                &nbsp;
+                <ForumRoundedIcon style={{marginRight: "1rem"}}/>
                 Forum
               </div>
             </Grid>
@@ -177,15 +177,6 @@ const TeacherCourseDetailPage = () => {
                       />
                     </Paper>
                   );
-                case 'Edit Course':
-                  return (
-                    // <EditCourseComponent
-                    //   courseName={courseName}
-                    //   currentDescription={courseDescription}
-                    //   currentShortDescription={courseShortDescription}
-                    // />
-                    <p>To be implemented into Teacher's Course info page</p>
-                  );
                 case 'Members':
                   return (
                     <CourseMembersComponent
@@ -196,9 +187,10 @@ const TeacherCourseDetailPage = () => {
                   return <DocumentComponent courseId={id} />;
                 case 'Assignments':
                   return <AssignmentsComponent courseId={id} />;
+                case 'Submissions':
+                  return <SubmissionListComponent courseId={id} />;
                 case 'Forum':
                   history.push(`/course/${id}/forum`);
-                  history.go(0);
                   break;
                 default:
                   return null;
