@@ -94,9 +94,16 @@ export default function CoursePage() {
     fetchContent();
   };
   const handleSwitchCourseType = (event, newValue) => {
-    if (newValue == 0) setTotalPage(totalPageAllCourses);
-    else if (newValue == 1) setTotalPage(totalPageIPCourses);
-    else if (newValue == 2) setTotalPage(totalPagePeCourses);
+    if (newValue == 0) {
+      setTotalPage(totalPageAllCourses);
+      fetchAllCourses(0, pageSize);
+    } else if (newValue == 1) {
+      setTotalPage(totalPageIPCourses);
+      fetchStudentCourse(0, pageSize);
+    } else if (newValue == 2) {
+      setTotalPage(totalPagePeCourses);
+      fetchStudentCourse(0, pageSize);
+    }
     setValue(newValue);
     setPageNumber(1);
   };
@@ -142,10 +149,13 @@ export default function CoursePage() {
         pageSize: pageSize,
       });
       const temp = JSON.parse(result);
+      console.log("Pending Courses:", temp);
       if (temp.data) {
         if (temp.data.userCourseList.courseList.length !== 0) {
           setPendingCourses(temp.data.userCourseList.courseList);
-          setTotalPagePeCourses(parsedResult.data.userCourseList.totalPages);
+          setTotalPagePeCourses(
+            parsedResult.data.userCourseList.courseList.totalPages
+          );
         }
       } else {
         toastFetchErrors(temp);
