@@ -171,9 +171,11 @@ export default function CoursePage() {
       const parsedResult = JSON.parse(result);
       console.log("All Courses: ", parsedResult);
       if (parsedResult.data) {
-        setAllCourses(parsedResult.data.courseList.courseList);
-        setTotalPageAllCourses(parsedResult.data.courseList.totalPages);
-        setTotalPage(parsedResult.data.courseList.totalPages);
+        setAllCourses(parsedResult.data.userCourseListExclude.courseList);
+        setTotalPageAllCourses(
+          parsedResult.data.userCourseListExclude.totalPages
+        );
+        setTotalPage(parsedResult.data.userCourseListExclude.totalPages);
       } else {
         toastFetchErrors(parsedResult);
       }
