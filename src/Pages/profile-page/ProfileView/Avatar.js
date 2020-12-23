@@ -12,7 +12,6 @@ Avatar.IMAGE_HEIGHT = 400;
 export default function Avatar({ userProfile }) {
     const { pictureUrl, username } = userProfile;
     const history = useHistory();
-    console.log(userProfile);
     
     return (
         <Fragment>

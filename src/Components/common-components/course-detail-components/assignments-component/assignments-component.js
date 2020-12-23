@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import uuid from 'react-uuid';
 
 import AddAssignmentComponent from './add-assignment-component/add-assignment-component';
 import EditAssignmentComponent from './edit-assignment-component';
@@ -68,7 +69,7 @@ const AssignmentsComponent = ({ courseId }) => {
       <div className="assignments">
         {
           role === 'Teacher'
-            ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetchAssignments} />
+            ? <AddAssignmentComponent courseId={courseId} fetchAssignments={fetch} key={uuid()} />
             : null
         }
         {

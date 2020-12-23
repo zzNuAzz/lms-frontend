@@ -9,24 +9,34 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+import { AddRounded } from '@material-ui/icons';
 import { toast } from 'react-toastify';
 import createAssignment from '../../../../../api/graphql/create-assignment';
-import { AddRounded } from '@material-ui/icons';
+import FileUpload from '../../../file-upload/file-upload';
+import graphqlMultipleUpload from '../../../../../api/graphql/graphql-multiple-upload';
 
 const useStyle = makeStyles((theme) => ({
   dialog: {
     width: '960px',
-  }
+  },
 }));
 
 const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [files, setFiles] = useState([]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showUploadProgress, setShowUploadProgress] = useState(false);
+
   const classes = useStyle();
+
+  const handleOnFilesChange = (addedFiles) => {
+    setFiles(addedFiles);
+  };
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -37,41 +47,55 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
   };
 
   const handleSubmit = async () => {
-    const payload = {
-      assignment: {
-        courseId: parseInt(courseId, 10),
-        title,
-        content,
-        dueDate: new Date(dueDate).getTime(),
-        files: [],
-      },
-    };
     setLoading(true);
-    const result = await createAssignment(payload);
-    const parsedResult = JSON.parse(result);
-    if (parsedResult.data) {
-      if (parsedResult.data.createAssignment.success) {
-        toast('Assignment added successfully!', {
-          autoClose: 3000,
-          type: 'success',
+    try {
+      let fileUploadResult = [];
+      if (files.length !== 0) {
+        setShowUploadProgress(true);
+        fileUploadResult = await graphqlMultipleUpload(files, (event) => {
+          setProgress(Math.round((100 * event.loaded) / event.total));
         });
-        fetchAssignments();
-        setDialogOpen(false);
-        setLoading(false);
+        if (fileUploadResult.data?.uploadFileMultiple?.length === 0) {
+          toast.error('Error(s) occured while uploading files');
+        }
+      }
+      const payload = {
+        assignment: {
+          courseId: parseInt(courseId, 10),
+          title,
+          content,
+          dueDate: new Date(dueDate).getTime(),
+          files: fileUploadResult.data ? fileUploadResult.data.uploadFileMultiple : [],
+        },
+      };
+      const result = await createAssignment(payload);
+      const parsedResult = JSON.parse(result);
+      if (parsedResult.data) {
+        if (parsedResult.data.createAssignment.success) {
+          toast('Assignment added successfully!', {
+            autoClose: 3000,
+            type: 'success',
+          });
+          await fetchAssignments();
+          setDialogOpen(false);
+        } else {
+          toast('Failed to add new assignment. Please try again!', {
+            autoClode: 3000,
+            type: 'error',
+          });
+        }
       } else {
-        toast('Failed to add new assignment. Please try again!', {
-          autoClode: 3000,
+        toast(result, {
+          autoClode: 5000,
           type: 'error',
         });
-        setLoading(false);
       }
-    } else {
-      toast(result, {
-        autoClode: 5000,
-        type: 'error',
-      });
-      setLoading(false);
+    } catch (error) {
+      toast.error(error.toString());
     }
+    setLoading(false);
+    setProgress(0);
+    setShowUploadProgress(false);
   };
 
   const AddAssignmentForm = (
@@ -124,6 +148,13 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
             errorMessages={['This field is required']}
             variant="outlined"
             fullWidth
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <FileUpload
+            handleOnFilesChange={handleOnFilesChange}
+            progress={progress}
+            showUploadProgress={showUploadProgress}
           />
         </Grid>
       </Grid>

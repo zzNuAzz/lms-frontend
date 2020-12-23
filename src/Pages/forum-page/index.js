@@ -155,9 +155,9 @@ export default function Forum() {
                 <ArrowDropDownIcon />
               </IconButton>
               <Menu id="fade-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose} TransitionComponent={Fade}>
-                {courseList.map((course) => (
-                  <MenuItem onClick={() => handleClickOnCourse(course)}>
-                    {course.name}
+                {courseList.map((myCourse) => (
+                  <MenuItem onClick={() => handleClickOnCourse(myCourse)}>
+                    {myCourse.name}
                   </MenuItem>
                 ))}
               </Menu>
@@ -187,7 +187,7 @@ export default function Forum() {
             </Grid>
             <Grid container item xs={12} lg={4} direction="column" spacing={2}>
               <MostHelpful />
-              <NewPostBox />
+              <NewPostBox Id={courseId}/>
             </Grid>
           </Grid>
         </Container>

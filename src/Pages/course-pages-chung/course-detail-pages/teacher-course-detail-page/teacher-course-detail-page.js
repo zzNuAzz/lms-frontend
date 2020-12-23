@@ -113,18 +113,6 @@ const TeacherCourseDetailPage = () => {
             <Grid item style={{ width: 'inherit' }}>
               <div
                 role="tab"
-                className={tabPosition === 'Edit Course' ? classes.tabButtonActive : classes.tabButtonInactive}
-                onClick={() => handleTabChange('Edit Course')}
-              >
-                <div className="tab-item">
-                  <EditRoundedIcon style={{marginRight: "1rem"}} />
-                  Edit Course
-                </div>
-              </div>
-            </Grid>
-            <Grid item style={{ width: 'inherit' }}>
-              <div
-                role="tab"
                 className={tabPosition === 'Members' ? classes.tabButtonActive : classes.tabButtonInactive}
                 onClick={() => handleTabChange('Members')}
               >
@@ -188,15 +176,6 @@ const TeacherCourseDetailPage = () => {
                         courseId={id}
                       />
                     </Paper>
-                  );
-                case 'Edit Course':
-                  return (
-                    // <EditCourseComponent
-                    //   courseName={courseName}
-                    //   currentDescription={courseDescription}
-                    //   currentShortDescription={courseShortDescription}
-                    // />
-                    <p>To be implemented into Teacher's Course info page</p>
                   );
                 case 'Members':
                   return (

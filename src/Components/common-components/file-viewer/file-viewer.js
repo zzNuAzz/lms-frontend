@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import DownloadRoundedIcon from '@material-ui/icons/GetAppRounded';
 import { DeleteForeverRounded } from '@material-ui/icons';
 import RestoreFromTrashRoundedIcon from '@material-ui/icons/RestoreFromTrashRounded';
+import FileExtensionIcon from './file-extension-icon/file-extension-icon';
 
 const FileViewer = ({
   files,
@@ -98,7 +99,11 @@ const FileViewer = ({
           {
             currentFiles.map((file, index) => (
               <TableRow hover>
-                <TableCell style={tableCellStyle}>{file.filename || ''}</TableCell>
+                <TableCell style={tableCellStyle}>
+                  <FileExtensionIcon filename={file.filename} />
+                  &nbsp;
+                  {file.filename || ''}
+                </TableCell>
                 <TableCell>
                   <Link to={file.url || ''} target="_blank" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <IconButton

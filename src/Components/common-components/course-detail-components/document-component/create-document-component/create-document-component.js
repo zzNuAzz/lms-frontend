@@ -9,11 +9,11 @@ import {
 } from "@material-ui/core";
 import { CreateRounded } from "@material-ui/icons";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
-import { DropzoneArea } from "material-ui-dropzone";
 import { toast } from "react-toastify";
 import toastFetchErrors from "../../../../tools/toast-fetch-errors";
 import createDocument from "../../../../../api/graphql/create-document";
 import graphqlMultipleUpload from "../../../../../api/graphql/graphql-multiple-upload";
+import FileUpload from "../../../file-upload/file-upload";
 
 const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
   const [title, setTitle] = useState("");
@@ -21,6 +21,8 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
   const [files, setFiles] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showUploadProgress, setShowUploadProgress] = useState(false);
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -39,7 +41,10 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
     try {
       let fileUploadResult = [];
       if (files.length !== 0) {
-        fileUploadResult = await graphqlMultipleUpload(files);
+        setShowUploadProgress(true);
+        fileUploadResult = await graphqlMultipleUpload(files, (event) => {
+          setProgress(Math.round((100 * event.loaded) / event.total));
+        });
         if (fileUploadResult.data?.uploadFileMultiple?.length === 0) {
           toast.error("Error(s) occured while uploading files");
         }
@@ -68,6 +73,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
       toast.error(error.toString());
     }
     setLoading(false);
+    setShowUploadProgress(false);
   };
 
   const CreateDocumentForm = (
@@ -101,14 +107,10 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
           />
         </Grid>
         <Grid item>
-          <DropzoneArea
-            filesLimit={100}
-            maxFileSize={100000000}
-            showPreviews
-            showPreviewsInDropzone={false}
-            useChipsForPreview
-            showAlerts={false}
-            onChange={handleOnFilesChange}
+          <FileUpload
+            handleOnFilesChange={handleOnFilesChange}
+            progress={progress}
+            showUploadProgress={showUploadProgress}
           />
         </Grid>
       </Grid>

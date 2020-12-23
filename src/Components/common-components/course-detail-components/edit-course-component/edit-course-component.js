@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Button, makeStyles, Typography } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import { EditRounded } from "@material-ui/icons";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
@@ -29,9 +38,12 @@ const EditCourseComponent = ({
     currentShortDescription
   );
   const [description, setDescription] = useState(currentDescription);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const { id } = useParams();
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const result = await editCourse(
         parseInt(id, 10),
@@ -58,60 +70,106 @@ const EditCourseComponent = ({
     } catch (error) {
       toast.error(error.toString());
     }
+    setLoading(false);
   };
+
+  const handleRevertChanges = () => {
+    setName(courseName);
+    setShortDescription(currentShortDescription);
+    setDescription(currentDescription);
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+  };
+
+  const EditCourseForm = (
+    <div
+      className="course-edit"
+      style={{ display: "flex", flexDirection: "column" }}
+    >
+      <ValidatorForm>
+        <Typography variant="h6">Course name</Typography>
+        <TextValidator
+          onChange={(event) => setName(event.target.value)}
+          name="course-name"
+          value={name}
+          validators={["required"]}
+          errorMessages={["This field is required"]}
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          autoFocus
+        />
+        <Typography variant="h6">Short description</Typography>
+        <TextValidator
+          name="short-description"
+          type="text"
+          value={shortDescription}
+          onChange={(event) => setShortDescription(event.target.value)}
+          validators={["required"]}
+          errorMessages={["This field is required"]}
+          variant="outlined"
+          margin="normal"
+          fullWidth
+        />
+        <Typography variant="h6">Description</Typography>
+        <CKEditor
+          editor={ClassicEditor}
+          data={description}
+          onBlur={(event, editor) => setDescription(editor.getData())}
+        />
+      </ValidatorForm>
+    </div>
+  );
 
   return (
     <>
-      <div className={classes.title}>
-        <Typography variant="h3">Edit Course</Typography>
-      </div>
-      <hr />
-      <div
-        className="course-edit"
-        style={{ display: "flex", flexDirection: "column" }}
+      <Dialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        maxWidth="lg"
+        fullWidth
       >
-        <ValidatorForm>
-          <TextValidator
-            label="Course Name"
-            onChange={(event) => setName(event.target.value)}
-            name="course-name"
-            value={name}
-            validators={["required"]}
-            errorMessages={["This field is required"]}
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            autoFocus
-          />
-          <TextValidator
-            label="Short Description"
-            name="short-description"
-            type="text"
-            value={shortDescription}
-            onChange={(event) => setShortDescription(event.target.value)}
-            validators={["required"]}
-            errorMessages={["This field is required"]}
-            variant="outlined"
-            margin="normal"
-            fullWidth
-          />
-          Description
-          <CKEditor
-            editor={ClassicEditor}
-            data={description}
-            onBlur={(event, editor) => setDescription(editor.getData())}
-          />
-          <br />
-          <div
-            className="update-button"
-            style={{ justifyContent: "flex-start" }}
+        <DialogTitle>
+          <Typography variant="h6">{`Edit ${courseName}`}</Typography>
+        </DialogTitle>
+        <DialogContent>{EditCourseForm}</DialogContent>
+        <DialogActions>
+          <Button
+            variant="text"
+            color="primary"
+            onClick={handleSubmit}
+            disabled={isLoading}
           >
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-              Update
-            </Button>
-          </div>
-        </ValidatorForm>
-      </div>
+            Update
+          </Button>
+          <Button
+            variant="text"
+            color="secondary"
+            onClick={handleRevertChanges}
+            disabled={isLoading}
+          >
+            Revert Changes
+          </Button>
+          <Button
+            variant="text"
+            color="default"
+            onClick={handleEditDialogClose}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setEditDialogOpen(true)}
+      >
+        <EditRounded />
+        &nbsp; Edit course
+      </Button>
     </>
   );
 };
