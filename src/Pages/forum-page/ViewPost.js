@@ -126,7 +126,6 @@ export default function ViewPost({ courseId }) {
         toast.success("Replied", {
           autoClose: 3000,
         });
-        // window.location.reload();
         fetchPostList();
       } else {
         toastFetchErrors(parsedResult);

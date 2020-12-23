@@ -79,9 +79,6 @@ export function ReplyCard({ content, fetchPostList }) {
         toast.success(`Your comment is successfully deleted`, {
           autoClose: 3000,
         });
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 500);
         fetchPostList();
       } else {
         toastFetchErrors(parsedResult);

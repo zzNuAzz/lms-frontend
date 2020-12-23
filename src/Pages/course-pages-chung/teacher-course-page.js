@@ -255,7 +255,7 @@ export default function CoursePage() {
             </Container>
             <Container maxWidth="lg">
               {courses.map((course) => (
-                <TeacherCourseCard course={course} />
+                <TeacherCourseCard course={course} fetchTeacherCourse={fetchTeacherCourse} />
               ))}
             </Container>
           </Box>
@@ -288,7 +288,7 @@ export default function CoursePage() {
             </Container>
             <Container maxWidth="lg">
               {courses.map((course) => (
-                <TeacherCourseCard course={course} />
+                <TeacherCourseCard course={course} fetchTeacherCourse={fetchTeacherCourse} />
               ))}
             </Container>
           </Box>

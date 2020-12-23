@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function CardForum({ forum, isView }) {
+export function CardForum({ forum, isView, fetchThreadList }) {
   const classes = useStyles();
   const history = useHistory();
   const { courseId } = useParams();
@@ -110,7 +110,7 @@ export function CardForum({ forum, isView }) {
         console.log(err);
       });
   }, [threadId]);
-  console.log({thread})
+  console.log({ thread })
   const openAlertDelete = () => {
     setAnchorEl(null);
     setOpenDialog(true);
@@ -154,9 +154,7 @@ export function CardForum({ forum, isView }) {
         toast.success(`Delete Post: ${title} Successfully`, {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        fetchThreadList(cId, 1, 10);
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -168,7 +166,7 @@ export function CardForum({ forum, isView }) {
     <Grid item>
       <Card width="100%" className={classes.root}>
         <CardHeader
-          avatar={<Avatar aria-label="recipe" className={classes.avatar} src={`${forum.author.pictureUrl}`} onClick={handleClickOnUser} style={{ cursor: "pointer" }}/>}
+          avatar={<Avatar aria-label="recipe" className={classes.avatar} src={`${forum.author.pictureUrl}`} onClick={handleClickOnUser} style={{ cursor: "pointer" }} />}
           action={
             <>
               {forum.author.userId == userId ? (
@@ -201,10 +199,10 @@ export function CardForum({ forum, isView }) {
                 {forum.title}
               </Typography>
             ) : (
-              <Typography variant="h6" onClick={viewThread} style={{ cursor: "pointer" }}>
-                {forum.title}
-              </Typography>
-            )}
+                <Typography variant="h6" onClick={viewThread} style={{ cursor: "pointer" }}>
+                  {forum.title}
+                </Typography>
+              )}
           </Box>
           <Typography variant="body2" color="textSecondary" component="p">
             {renderHTML(forum.content)}
@@ -224,17 +222,17 @@ export function CardForum({ forum, isView }) {
           {isView ? (
             <div></div>
           ) : (
-            <div onClick={viewThread} style={{ cursor: "pointer" }}>
-              <IconButton aria-label="share">
-                <ChatBubbleIcon />
-              </IconButton>
-              <Typography variant="caption" gutterTop style={{fontWeight: "bolder"}}>
-                {forum.comment}
-                {console.log(thread.postCount)}
-                {thread.postCount} Comment
+              <div onClick={viewThread} style={{ cursor: "pointer" }}>
+                <IconButton aria-label="share">
+                  <ChatBubbleIcon />
+                </IconButton>
+                <Typography variant="caption" gutterTop style={{ fontWeight: "bolder" }}>
+                  {forum.comment}
+                  {console.log(thread.postCount)}
+                  {thread.postCount} Comment
               </Typography>
-            </div>
-          )}
+              </div>
+            )}
         </CardActions>
       </Card>
       <Dialog open={openDialog} TransitionComponent={Transition} keepMounted onClose={handleCloseAlert} aria-labelledby="alert-dialog-slide-title" aria-describedby="alert-dialog-slide-description">
@@ -255,10 +253,10 @@ export function CardForum({ forum, isView }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Modal aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" className={classes.modal} open={openEditModal} onClose={()=>setOpenEditModal(false)} >
+      <Modal aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" className={classes.modal} open={openEditModal} onClose={() => setOpenEditModal(false)} >
         <Fade in={openEditModal}>
           <div className={classes.paper}>
-            <EditComponent thread={forum} handleClose={()=>setOpenEditModal(false)} />
+            <EditComponent thread={forum} handleClose={() => setOpenEditModal(false)} />
           </div>
         </Fade>
       </Modal>
@@ -283,6 +281,7 @@ export default function ({ thread }) {
     };
     fetchContent();
   };
+
   const fetchThreadList = async (cId, pageNumber, pageSize) => {
     try {
       const result = await getThreadList(cId, pageNumber, pageSize);
@@ -293,10 +292,11 @@ export default function ({ thread }) {
       } else {
         toastFetchErrors(parsedResult);
       }
-    } catch (error){
+    } catch (error) {
       toast.error(error.toString());
     }
   };
+
   useEffect(() => {
     const fetchContent = async () => {
       setLoading(true);
@@ -308,7 +308,7 @@ export default function ({ thread }) {
   return (
     <>
       {allThreads.map((forum) => (
-        <CardForum forum={forum} isView={false} />
+        <CardForum forum={forum} isView={false} fetchThreadList={fetchThreadList} />
       ))}
       {/* PAGINATE */}
       <Grid container justify="center">
