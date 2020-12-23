@@ -13,9 +13,35 @@ import { toast } from "react-toastify";
 
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ClassicEditor from "ckeditor5-custom-build/build/ckeditor";
 import createCourse from "../../../../api/graphql/create-course";
 import toastFetchErrors from "../../../../Components/tools/toast-fetch-errors";
+
+const editorConfig = {
+  toolbar: [
+    'heading',
+    '|',
+    'bold',
+    'italic',
+    'underline',
+    'alignment',
+    '|',
+    'fontSize',
+    'fontFamily',
+    'fontColor',
+    'fontBackgroundColor',
+    '|',
+    'link',
+    'bulletedList',
+    'numberedList',
+    'indent',
+    'outdent',
+    'imageUpload',
+    'blockQuote',
+    'insertTable',
+    'mediaEmbedded',
+  ],
+};
 
 const NewCourseButton = ({ fetchTeacherCourse }) => {
   const [isLoading, setLoading] = useState(false);
@@ -78,6 +104,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
           <CKEditor
             editor={ClassicEditor}
             data={shortDescription}
+            config={editorConfig}
             onBlur={(event, editor) => {
               setShortDescription(editor.getData());
             }}
@@ -89,6 +116,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
           <CKEditor
             editor={ClassicEditor}
             data={description}
+            config={editorConfig}
             onBlur={(event, editor) => {
               setDescription(editor.getData());
             }}

@@ -18,6 +18,7 @@
     "@tinymce/tinymce-react": "^3.8.1",
     "axios": "^0.21.0",
     "bootstrap": "^4.5.2",
+    "ckeditor5-custom-build": "file:./ckeditor5",
     "draft-js": "^0.11.7",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
@@ -27,7 +28,7 @@
     "eslint-plugin-react-hooks": "^4.1.2",
     "holderjs": "^2.9.7",
     "isomorphic-fetch": "^3.0.0",
-    "jodit-react": "^1.0.66",
+    "jodit-react": "^1.0.68",
     "jquery": "^3.5.1",
     "material-ui-dropzone": "^3.5.0",
     "material-ui-password-field": "^2.1.2",
@@ -73,6 +74,7 @@
     ]
   },
   "devDependencies": {
+    "@ckeditor/ckeditor5-alignment": "^24.0.0",
     "@editorjs/editorjs": "^2.19.0",
     "@editorjs/paragraph": "^2.8.0",
     "react-editor-js": "^1.7.0"

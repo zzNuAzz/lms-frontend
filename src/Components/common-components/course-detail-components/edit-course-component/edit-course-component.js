@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   makeStyles,
   Typography,
 } from '@material-ui/core';
 import { EditRounded } from '@material-ui/icons';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
+
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -26,7 +27,36 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  editor: {
+    minHeight: '300px',
+  },
 }));
+
+const editorConfig = {
+  toolbar: [
+    'heading',
+    '|',
+    'bold',
+    'italic',
+    'underline',
+    'alignment',
+    '|',
+    'fontSize',
+    'fontFamily',
+    'fontColor',
+    'fontBackgroundColor',
+    '|',
+    'link',
+    'bulletedList',
+    'numberedList',
+    'indent',
+    'outdent',
+    'imageUpload',
+    'blockQuote',
+    'insertTable',
+    'mediaEmbedded',
+  ],
+};
 
 const EditCourseComponent = ({
   courseName,
@@ -81,36 +111,47 @@ const EditCourseComponent = ({
   const EditCourseForm = (
     <div className="course-edit" style={{ display: 'flex', flexDirection: 'column' }}>
       <ValidatorForm>
-        <Typography variant="h6">Course name</Typography>
-        <TextValidator
-          onChange={(event) => setName(event.target.value)}
-          name="course-name"
-          value={name}
-          validators={['required']}
-          errorMessages={['This field is required']}
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          autoFocus
-        />
-        <Typography variant="h6">Short description</Typography>
-        <TextValidator
-          name="short-description"
-          type="text"
-          value={shortDescription}
-          onChange={(event) => setShortDescription(event.target.value)}
-          validators={['required']}
-          errorMessages={['This field is required']}
-          variant="outlined"
-          margin="normal"
-          fullWidth
-        />
-        <Typography variant="h6">Description</Typography>
-        <CKEditor
-          editor={ClassicEditor}
-          data={description}
-          onBlur={(event, editor) => setDescription(editor.getData())}
-        />
+        <Grid container direction="row" spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="h6">Course name</Typography>
+            <TextValidator
+              onChange={(event) => setName(event.target.value)}
+              name="course-name"
+              value={name}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              autoFocus
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="h6">Short description</Typography>
+            <TextValidator
+              name="short-description"
+              type="text"
+              value={shortDescription}
+              onChange={(event) => setShortDescription(event.target.value)}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Description</Typography>
+            <CKEditor
+              editor={Editor}
+              config={editorConfig}
+              data={description}
+              onBlur={(event, editor) => setDescription(editor.getData())}
+              className={classes.editor}
+            />
+          </Grid>
+        </Grid>
+
       </ValidatorForm>
     </div>
   );

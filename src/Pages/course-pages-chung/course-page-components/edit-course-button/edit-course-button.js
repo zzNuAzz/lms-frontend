@@ -12,8 +12,34 @@ import { toast } from 'react-toastify';
 
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import createCourse from '../../../../api/graphql/create-course';
+
+const editorConfig = {
+  toolbar: [
+    'heading',
+    '|',
+    'bold',
+    'italic',
+    'underline',
+    'alignment',
+    '|',
+    'fontSize',
+    'fontFamily',
+    'fontColor',
+    'fontBackgroundColor',
+    '|',
+    'link',
+    'bulletedList',
+    'numberedList',
+    'indent',
+    'outdent',
+    'imageUpload',
+    'blockQuote',
+    'insertTable',
+    'mediaEmbedded',
+  ],
+};
 
 const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeacherCourse }) => {
   const [isLoading, setLoading] = useState(false);
@@ -67,6 +93,7 @@ const EditCourseButton = ({ courseId, courseName, courseDescription, fetchTeache
         <Grid item>
           <CKEditor
             editor={ClassicEditor}
+            config={editorConfig}
             data={description}
             onBlur={(event, editor) => { setDescription(editor.getData()) }}
           />
