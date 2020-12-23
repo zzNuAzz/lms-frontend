@@ -187,7 +187,7 @@ export default function Forum() {
             </Grid>
             <Grid container item xs={12} lg={4} direction="column" spacing={2}>
               <MostHelpful />
-              <NewPostBox />
+              <NewPostBox Id={courseId}/>
             </Grid>
           </Grid>
         </Container>
