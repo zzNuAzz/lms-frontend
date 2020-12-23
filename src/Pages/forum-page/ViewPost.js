@@ -99,7 +99,7 @@ export default function ViewPost({ courseId }) {
   courseId = thread.courseId;
   const forumLink = `/course/${courseId}/forum`;
 
-  useEffect(() => {
+  const fetchPostList = () => {
     getPostList(parseInt(threadId, 10))
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
@@ -110,6 +110,10 @@ export default function ViewPost({ courseId }) {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  useEffect(() => {
+    fetchPostList();
   }, [courseId]);
 
   const handleReply = async () => {
@@ -122,10 +126,8 @@ export default function ViewPost({ courseId }) {
         toast.success("Replied", {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          // console.log("replied successfully");
-        }, 3000);
-        window.location.reload();
+        // window.location.reload();
+        fetchPostList();
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -172,7 +174,7 @@ export default function ViewPost({ courseId }) {
 
                 {postList.reverse().map((post) => (
                   <Grid>
-                    <ReplyCard content={post} />
+                    <ReplyCard content={post} fetchPostList={fetchPostList} />
                   </Grid>
                 ))}
               </Grid>
@@ -186,13 +188,13 @@ export default function ViewPost({ courseId }) {
                   className={classes.editor}
                   editor={ClassicEditor}
                   data={replyContent}
-                  onReady={(editor) => {}}
+                  onReady={(editor) => { }}
                   onChange={(event, editor) => {
                     const data = editor.getData();
                     setReplyContent(data);
                   }}
-                  onBlur={(event, editor) => {}}
-                  onFocus={(event, editor) => {}}
+                  onBlur={(event, editor) => { }}
+                  onFocus={(event, editor) => { }}
                 />
                 <Button
                   className={classes.padding13}

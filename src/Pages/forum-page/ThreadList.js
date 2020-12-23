@@ -83,7 +83,8 @@ export function CardForum({ forum, isView }) {
   const viewThread = () => {
     history.push(`/course/forum/${threadId}`);
   };
-  useEffect(() => {
+
+  const fetchPostList = () => {
     getPostList(parseInt(threadId, 10))
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
@@ -93,6 +94,10 @@ export function CardForum({ forum, isView }) {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  useEffect(() => {
+    fetchPostList();
   }, [courseId]);
   useEffect(() => {
     getThreadById(parseInt(threadId, 10))
