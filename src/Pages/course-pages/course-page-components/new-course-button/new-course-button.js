@@ -11,7 +11,6 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { toast } from 'react-toastify';
 
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
-import { ClassicEditor } from '@ckeditor/ckeditor5-build-classic';
 
 const NewCourseButton = () => {
   const [isLoading, setLoading] = useState(false);
