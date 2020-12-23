@@ -151,7 +151,7 @@ const EditAssignmentComponent = ({
 
   const EditAssignmentForm = (
     <>
-      <ValidatorForm className={classes.editForm}>
+      <ValidatorForm className={classes.editForm} onSubmit={handleSubmit} id="edit-assignment-form">
         <Grid
           container
           direction="row"
@@ -257,10 +257,11 @@ const EditAssignmentComponent = ({
         </AccordionDetails>
         <AccordionActions>
           <Button
+            type="submit"
+            form="edit-assignment-form"
             variant="text"
             color="primary"
             size="small"
-            onClick={handleSubmit}
             style={{ float: 'right' }}
             disabled={isLoading}
           >
