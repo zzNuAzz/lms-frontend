@@ -132,7 +132,6 @@ export default function ViewPost({ courseId }) {
   //     });
   // }, [courseId]);
 
-  console.log({postList});
 
   const handleReply = async () => {
     // console.log(replyContent);
@@ -243,7 +242,8 @@ export default function ViewPost({ courseId }) {
             </Grid>
             <Grid container item xs={12} lg={4} direction="column" spacing={2}>
               <MostHelpful />
-              <NewPostBox />
+              {console.log({courseId})}
+              <NewPostBox Id={courseId}/>
             </Grid>
           </Grid>
         </Container>
