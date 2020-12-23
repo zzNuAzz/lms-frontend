@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://ritachan.site/",
+  "proxy": "https://dev.ritachan.site/",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^23.1.0",
     "@ckeditor/ckeditor5-build-decoupled-document": "^24.0.0",
