@@ -76,12 +76,10 @@ export default function NewThread() {
       // TODO
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
-        toast.success("Your topic will be displayed after 3 seconds", {
+        toast.success("Successfully created your topic!", {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          history.push(`/course/${courseId}/forum`);
-        }, 3000);
+        history.push(`/course/${courseId}/forum`);
       } else {
         toastFetchErrors(parsedResult);
       }

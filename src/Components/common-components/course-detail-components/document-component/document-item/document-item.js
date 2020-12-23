@@ -134,7 +134,7 @@ const DocumentItem = ({ document, fetchDocuments }) => {
 
   const EditDocumentForm = (
     <>
-      <ValidatorForm>
+      <ValidatorForm id="edit-document-form" onSubmit={handleEditSubmit} instantValidate>
         <TextValidator
           label="New Title"
           name="new-title"
@@ -190,9 +190,10 @@ const DocumentItem = ({ document, fetchDocuments }) => {
         </DialogContent>
         <DialogActions>
           <Button
+            type="submit"
+            form="edit-document-form"
             variant="text"
             color="primary"
-            onClick={handleEditSubmit}
             disabled={isLoading}
           >
             Submit

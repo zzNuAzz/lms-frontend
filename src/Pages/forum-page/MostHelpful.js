@@ -189,7 +189,7 @@ export default function MostHelpful() {
         <Grid item>
           <div>
             <span>
-              <Link to="/">Đạt Phịt</Link>
+              <Link to="/">Thành Đạt</Link>
             </span>
             {' '}
             <br />

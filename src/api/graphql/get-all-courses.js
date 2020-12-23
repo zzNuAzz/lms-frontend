@@ -3,24 +3,30 @@ import { graphQLFetch } from "./graphql-fetch";
 // eslint-disable-next-line import/prefer-default-export
 const getAllCourses = async (pageNumber, pageSize) => {
   const query = `
-  query getAllCourses($pageNumber: Int!, $pageSize: Int!) {
-    courseList(pageNumber: $pageNumber, pageSize: $pageSize) {
+  query getAllCourses(
+    $statusEclude:[EnrollStatus!]
+    $order: [[String!]!]
+    $pageNumber: Int!
+    $pageSize: Int!
+    
+  ) {
+    userCourseListExclude(statusExclude: $statusEclude, pageNumber: $pageNumber, pageSize: $pageSize, order: $order){
       courseList {
-        name
-        courseId
-        description
-        shortDescription
-        host {
-          userId
-          username
-          pictureUrl
-          firstName
-          lastName
+          name
+          courseId
+          description
+          shortDescription
+          host {
+            userId
+            username
+            pictureUrl
+            firstName
+            lastName
+          }
         }
-      }
-      totalPages
-      totalRecords
-      pageNumber
+        totalPages
+        totalRecords
+        pageNumber
     }
   }
   `;

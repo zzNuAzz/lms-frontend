@@ -59,7 +59,7 @@ const EditAssignmentComponent = ({
 }) => {
   const [title, setTitle] = useState(assignment.title);
   const [content, setContent] = useState(assignment.content);
-  const [dueDate, setDueDate] = useState(new Date(assignment.dueDate));
+  const [dueDate, setDueDate] = useState(assignment.dueDate ? new Date(assignment.dueDate) : '');
   const [files, setFiles] = useState(assignment.files);
   const [removedFiles, setRemovedFiles] = useState([]);
   const [newFiles, setNewFiles] = useState([]);
@@ -151,7 +151,7 @@ const EditAssignmentComponent = ({
 
   const EditAssignmentForm = (
     <>
-      <ValidatorForm className={classes.editForm}>
+      <ValidatorForm className={classes.editForm} onSubmit={handleSubmit} id="edit-assignment-form">
         <Grid
           container
           direction="row"
@@ -257,10 +257,11 @@ const EditAssignmentComponent = ({
         </AccordionDetails>
         <AccordionActions>
           <Button
+            type="submit"
+            form="edit-assignment-form"
             variant="text"
             color="primary"
             size="small"
-            onClick={handleSubmit}
             style={{ float: 'right' }}
             disabled={isLoading}
           >

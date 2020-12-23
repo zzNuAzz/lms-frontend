@@ -57,7 +57,7 @@ function LoginComponent({ setUsername, callbackToParent }) {
       localStorage.setItem("userId", result.credentials.user.userId);
       localStorage.setItem("role", result.credentials.user.role);
       localStorage.setItem("pictureUrl", result.credentials.user.pictureUrl);
-      localStorage.setItem("signedIn", true)
+      localStorage.setItem("signedIn", true);
       toast.success(`😄 Welcome ${formUsername}!`);
       history.push("/home");
       // history.go(0);
@@ -126,7 +126,7 @@ function LoginComponent({ setUsername, callbackToParent }) {
             <Grid container>
               <Grid item>
                 <Link to="/signup" variant="body2">
-                  Don't have an account? Sign Up
+                  Don't have account? Sign Up
                 </Link>
               </Grid>
             </Grid>

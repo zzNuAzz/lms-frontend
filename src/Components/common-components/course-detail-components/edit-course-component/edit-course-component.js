@@ -1,30 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   makeStyles,
   Typography,
 } from '@material-ui/core';
 import { EditRounded } from '@material-ui/icons';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Editor from '@ckeditor/ckeditor5-build-classic';
+
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import editCourse from '../../../../api/graphql/edit-course';
-import toastFetchErrors from '../../../tools/toast-fetch-errors';
+import editCourse from "../../../../api/graphql/edit-course";
+import toastFetchErrors from "../../../tools/toast-fetch-errors";
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 }));
 
@@ -36,7 +37,9 @@ const EditCourseComponent = ({
 }) => {
   const classes = useStyles();
   const [name, setName] = useState(courseName);
-  const [shortDescription, setShortDescription] = useState(currentShortDescription);
+  const [shortDescription, setShortDescription] = useState(
+    currentShortDescription
+  );
   const [description, setDescription] = useState(currentDescription);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -45,18 +48,23 @@ const EditCourseComponent = ({
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const result = await editCourse(parseInt(id, 10), name, shortDescription, description);
+      const result = await editCourse(
+        parseInt(id, 10),
+        name,
+        shortDescription,
+        description
+      );
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
         if (parsedResult.data.editCourse.success) {
           toast(`Successfully updated course ${name}!`, {
-            type: 'success',
+            type: "success",
             autoClose: 3000,
           });
           fetchCourseDetails();
         } else {
           toast(parsedResult.data.editCourse.message, {
-            type: 'error',
+            type: "error",
           });
         }
       } else {
@@ -79,38 +87,50 @@ const EditCourseComponent = ({
   };
 
   const EditCourseForm = (
-    <div className="course-edit" style={{ display: 'flex', flexDirection: 'column' }}>
-      <ValidatorForm>
-        <Typography variant="h6">Course name</Typography>
-        <TextValidator
-          onChange={(event) => setName(event.target.value)}
-          name="course-name"
-          value={name}
-          validators={['required']}
-          errorMessages={['This field is required']}
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          autoFocus
-        />
-        <Typography variant="h6">Short description</Typography>
-        <TextValidator
-          name="short-description"
-          type="text"
-          value={shortDescription}
-          onChange={(event) => setShortDescription(event.target.value)}
-          validators={['required']}
-          errorMessages={['This field is required']}
-          variant="outlined"
-          margin="normal"
-          fullWidth
-        />
-        <Typography variant="h6">Description</Typography>
-        <CKEditor
-          editor={ClassicEditor}
-          data={description}
-          onBlur={(event, editor) => setDescription(editor.getData())}
-        />
+    <div
+      className="course-edit"
+      style={{ display: "flex", flexDirection: "column" }}
+    >
+      <ValidatorForm onSubmit={handleSubmit} id="edit-course-form">
+        <Grid container direction="row" spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="h6">Course name</Typography>
+            <TextValidator
+              onChange={(event) => setName(event.target.value)}
+              name="course-name"
+              value={name}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              autoFocus
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="h6">Short description</Typography>
+            <TextValidator
+              name="short-description"
+              type="text"
+              value={shortDescription}
+              onChange={(event) => setShortDescription(event.target.value)}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+
+            <Typography variant="h6">Description</Typography>
+            <CKEditor
+              editor={Editor}
+              data={description}
+              onBlur={(event, editor) => setDescription(editor.getData())}
+            />
+          </Grid>
+        </Grid>
       </ValidatorForm>
     </div>
   );
@@ -126,14 +146,13 @@ const EditCourseComponent = ({
         <DialogTitle>
           <Typography variant="h6">{`Edit ${courseName}`}</Typography>
         </DialogTitle>
-        <DialogContent>
-          {EditCourseForm}
-        </DialogContent>
+        <DialogContent>{EditCourseForm}</DialogContent>
         <DialogActions>
           <Button
+            type="submit"
+            form="edit-course-form"
             variant="text"
             color="primary"
-            onClick={handleSubmit}
             disabled={isLoading}
           >
             Update
@@ -162,8 +181,7 @@ const EditCourseComponent = ({
         onClick={() => setEditDialogOpen(true)}
       >
         <EditRounded />
-        &nbsp;
-        Edit course
+        &nbsp; Edit course
       </Button>
     </>
   );

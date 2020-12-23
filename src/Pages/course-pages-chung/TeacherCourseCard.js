@@ -59,7 +59,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
   // const backGround = backGroundArr[course.courseId % 3];
   const backGround = classes.grayBack;
 
-  console.log({ backGround });
+  // console.log({ backGround });
   const linkToForum = `/course/${course.courseId}/forum`;
   const linkToCourse = `/course/${course.courseId}`;
   const deleteCourse = async () => {
@@ -72,9 +72,10 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
         toast.success(`Delete Course: ${courseName} Successfully`, {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 500);
+        fetchTeacherCourse();
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -144,6 +145,7 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
               <Box mr={2}>
                 <EditCourseButton
                   courseName={course.name}
+                  courseShortDescription={course.shortDescription}
                   courseDescription={course.description}
                   courseId={course.courseId}
                   fetchTeacherCourse={fetchTeacherCourse}

@@ -77,37 +77,37 @@ export default function Forum() {
           console.log(err);
         });
     } else if (user.role === "Student") {
-		getUserCourseList({ userId })
-			.then((result) => {
-				if (result.errors) throw new Error(result.errors[0].message);
-				if (isMounted)
-					setCourseList(JSON.parse(result).data.userCourseList.courseList);
-				})
-			.catch((err) => {
-				console.log(err);
-			});
+      getUserCourseList({ userId })
+        .then((result) => {
+          if (result.errors) throw new Error(result.errors[0].message);
+          if (isMounted)
+            setCourseList(JSON.parse(result).data.userCourseList.courseList);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     return () => {
       isMounted = false;
     };
   }, [user]);
   useEffect(() => {
-		let isMounted = true;
-		getCourseById(+courseId)
-		.then(JSON.parse)
-		.then(result => {
-			if (result.errors) throw new Error(result.errors[0].message);
-			console.log(result)
-			const {  course } = result.data;
-			if (isMounted) setCourse(course);
-		})
-		.catch((err) => {
-			console.log(err);
-		});
-		return () => {
-			isMounted = false;
-		};
-	}, [courseId]);
+    let isMounted = true;
+    getCourseById(+courseId)
+      .then(JSON.parse)
+      .then(result => {
+        if (result.errors) throw new Error(result.errors[0].message);
+        console.log(result)
+        const { course } = result.data;
+        if (isMounted) setCourse(course);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [courseId]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -139,11 +139,11 @@ export default function Forum() {
           </Container>
         </Box>
         <Container>
-        <Link to={coursesLink}>
-          <IconButton edge="start" color="primary" aria-label="menu">
-            <ArrowBackIcon />
-            <Typography variant="subtitle1" color="primary">
-              Back to Course
+          <Link to={coursesLink} className={classes.backToCourseTop}>
+            <IconButton edge="start" color="primary" aria-label="menu">
+              <ArrowBackIcon />
+              <Typography variant="subtitle1" color="primary">
+              &nbsp;Back to Course
             </Typography>
           </IconButton>
         </Link>
@@ -173,12 +173,12 @@ export default function Forum() {
                     <Typography variant="subtitle1" color="primary">
                       Add new topic
                     </Typography>
-                  </IconButton>
-                </Link>
+                    </IconButton>
+                  </Link>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Toolbar>
+          </Toolbar>
         </Container>
         <Container className={classes.root}>
           <Grid container direction="row" spacing={8}>
@@ -209,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     padding: 30,
     width: "100%",
-    // marginBottom: 50,
+    marginBottom: 25,
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -218,6 +218,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  backToCourseTop: {
+    "&:hover": {
+      textDecoration: "none"
+    }
   },
   media: {
     height: 0,
