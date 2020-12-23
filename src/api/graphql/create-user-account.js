@@ -1,4 +1,4 @@
-import { graphQLFetch } from './graphql-fetch';
+import { graphQLFetch } from "./graphql-fetch";
 
 // eslint-disable-next-line import/prefer-default-export
 const createUserAccount = async (
@@ -9,14 +9,14 @@ const createUserAccount = async (
   lastName,
   phone,
   address,
-  birthday,
+  birthday
 ) => {
   const query = `mutation createUserAccount(
     $username: String!
     $password: String!
     $role: UserRole! = Student
-    $firstName: String
-    $lastName: String
+    $firstName: String!
+    $lastName: String!
     $phone: String
     $address: String
     $birthday: String
@@ -39,7 +39,6 @@ const createUserAccount = async (
         address
         lastName
         firstName
-        
     }
 }`;
   const vars = {
