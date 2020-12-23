@@ -209,7 +209,7 @@ const TeacherCourseDetailPage = () => {
                 <Grid item>
                   <Box ml={2} mt={2}>
                     <Divider variant="fullWidth" />
-                    <Typography variant="body2" color="inherit">
+                    <Typography variant="button" color="inherit">
                       Have any problem?
                     </Typography>
                   </Box>
