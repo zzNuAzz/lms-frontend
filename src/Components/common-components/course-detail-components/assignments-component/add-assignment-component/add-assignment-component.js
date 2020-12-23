@@ -99,7 +99,7 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
   };
 
   const AddAssignmentForm = (
-    <ValidatorForm onSubmit={handleSubmit}>
+    <ValidatorForm onSubmit={handleSubmit} id="add-assignment-form">
       <Grid
         container
         direction="row"
@@ -174,9 +174,10 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
         </DialogContent>
         <DialogActions>
           <Button
+            type="submit"
+            form="add-assignment-form"
             variant="text"
             color="primary"
-            onClick={handleSubmit}
             disabled={isLoading}
           >
             Add
