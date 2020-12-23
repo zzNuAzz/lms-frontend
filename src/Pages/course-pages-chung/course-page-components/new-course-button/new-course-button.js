@@ -75,15 +75,21 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
         </Grid>
         <Grid item>
           <Typography variant="h6">Short Description</Typography>
-          <CKEditor
-            editor={ClassicEditor}
-            data={shortDescription}
-            onBlur={(event, editor) => {
-              setShortDescription(editor.getData());
-            }}
-            require
+          <TextValidator
+            label="Short Description"
+            id="shortDescription"
+            name="shortDescription"
+            type="text"
+            value={shortDescription}
+            onChange={(event) => setShortDescription(event.target.value)}
+            validators={["required"]}
+            errorMessages={["This field is required"]}
+            variant="outlined"
+            fullWidth
+            required
           />
         </Grid>
+        {/* </Grid> */}
         <Grid item>
           <Typography variant="h6">Detail Description</Typography>
           <CKEditor
@@ -102,7 +108,7 @@ const NewCourseButton = ({ fetchTeacherCourse }) => {
   return (
     <>
       <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="lg">
-        <DialogTitle>Add a new course</DialogTitle>
+        <DialogTitle>Create a new course</DialogTitle>
         <DialogContent>{NewCourseForm}</DialogContent>
         <DialogActions>
           <Button
