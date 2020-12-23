@@ -220,9 +220,7 @@ export function CardForum({ forum, isView, reloadList }) {
                   <ChatBubbleIcon />
                 </IconButton>
                 <Typography variant="caption" gutterTop style={{ fontWeight: "bolder" }}>
-                  {forum.comment}
-                  {console.log(thread.postCount)}
-                  {thread.postCount} Comment
+                  {forum.postCount} Reply
               </Typography>
               </div>
             )}
