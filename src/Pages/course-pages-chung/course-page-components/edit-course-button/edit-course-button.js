@@ -9,11 +9,9 @@ import {
 } from "@material-ui/core";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import { toast } from "react-toastify";
-
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import createCourse from "../../../../api/graphql/create-course";
+import editCourse from "../../../../api/graphql/edit-course";
 
 const EditCourseButton = ({
   courseId,
@@ -39,11 +37,17 @@ const EditCourseButton = ({
   };
 
   const handleSubmit = async () => {
-    const result = await createCourse(name, description, shortDescription);
+    const result = await editCourse(
+      courseId,
+      name,
+      shortDescription,
+      description
+    );
     const parsedResult = JSON.parse(result);
     if (parsedResult.data) {
-      if (parsedResult.data.createCourse.success) {
-        toast.success(`Successfully created course ${name}`, {
+      console.log({ parsedResult });
+      if (parsedResult.data.editCourse.success) {
+        toast.success(`Successfully update course ${name}`, {
           autoClose: 3000,
         });
         setDialogOpen(false);
@@ -53,14 +57,16 @@ const EditCourseButton = ({
   };
 
   const NewCourseForm = (
-    <ValidatorForm onSubmit={handleSubmit}>
+    <ValidatorForm
+      onSubmit={handleSubmit}
+      onError={(errors) => console.log(errors)}
+    >
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <TextValidator
             label="Course Name"
             id="name"
             name="name"
-            type="text"
             value={name}
             onChange={(event) => setName(event.target.value)}
             validators={["required"]}
@@ -72,13 +78,16 @@ const EditCourseButton = ({
         <Grid item>
           <TextValidator
             label="Short Description"
-            id="shortDescription"
+            // id="shortDescription"
             name="shortDescription"
-            type="text"
+            // type="text"
             value={shortDescription}
             onChange={(event) => setShortDescription(event.target.value)}
-            validators={["required"]}
-            errorMessages={["This field is required"]}
+            validators={["required", "maxLength=255"]}
+            errorMessages={[
+              "This field is required",
+              "Please limit your short description in 255 characters!",
+            ]}
             variant="outlined"
             fullWidth
           />
