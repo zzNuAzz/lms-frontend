@@ -15,7 +15,6 @@ export default function AvatarUpload({ userProfile }) {
     const apply = file => {
         uploadAvatar(file).then(result => {
             if (result?.success) {
-                pictureUrl = userProfile.pictureUrl;
                 history.push('/profile/view/'+ userProfile.userId);
                 toast.success('Upload avatar successful.', {
                     autoClose: 3000,
