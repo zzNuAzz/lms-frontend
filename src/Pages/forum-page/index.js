@@ -139,11 +139,11 @@ export default function Forum() {
           </Container>
         </Box>
         <Container>
-          <Link to={coursesLink}>
+          <Link to={coursesLink} className={classes.backToCourseTop}>
             <IconButton edge="start" color="primary" aria-label="menu">
               <ArrowBackIcon />
               <Typography variant="subtitle1" color="primary">
-                Back to Course
+              &nbsp;Back to Course
             </Typography>
           </IconButton>
         </Link>
@@ -209,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     padding: 30,
     width: "100%",
-    // marginBottom: 50,
+    marginBottom: 25,
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -218,6 +218,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  backToCourseTop: {
+    "&:hover": {
+      textDecoration: "none"
+    }
   },
   media: {
     height: 0,

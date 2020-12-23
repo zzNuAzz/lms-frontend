@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   CardContent,
+  IconButton,
 } from "@material-ui/core";
 import { Link, useParams } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -22,6 +23,7 @@ import getPostList from "../../api/graphql/get-post-list";
 import getThreadById from "../../api/graphql/get-thread-by-id";
 import addPost from "../../api/graphql/add-post";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 30,
     width: "100%",
     height: 250,
-    marginBottom: 50,
+    marginBottom: 25,
   },
   whiteBack: {
     backgroundColor: "#ffffff",
@@ -56,6 +58,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#f5f7fa",
     maxWidth: "800px",
   },
+  backForumTop: {
+    "&:hover": {
+      textDecoration: "none"
+    },
+    display:"block",
+    marginBottom:"2rem"
+  }
 }));
 
 export default function ViewPost({ courseId }) {
@@ -68,7 +77,7 @@ export default function ViewPost({ courseId }) {
   const [totalPage, setTotalPage] = React.useState(1);
   const pageSize = 5;
   
-  useEffect(() => {
+  const fetchThread = () => {
     getThreadById(parseInt(threadId, 10))
       .then((result) => {
         if (result.errors) throw new Error(result.errors[0].message);
@@ -78,6 +87,10 @@ export default function ViewPost({ courseId }) {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  useEffect(() => {
+    fetchThread();
   }, [threadId]);
 
   const fetchPostList = async (threadId, pageNumber, pageSize) => {
@@ -109,7 +122,7 @@ export default function ViewPost({ courseId }) {
     setPageNumber(pageNum);
     const fetchContent = async () => {
       await fetchPostList(threadId, pageNum -1, pageSize);
-      window.scrollTo(0, 900);
+      window.scrollTo(0, 250);
     }
     fetchContent();
   }
@@ -117,7 +130,6 @@ export default function ViewPost({ courseId }) {
   courseId = thread.courseId;
   const forumLink = `/course/${courseId}/forum`;
 
-  console.log(thread.postCount);
 
   // useEffect(() => {
   //   getPostList(parseInt(threadId, 10), 0, thread.postCount)
@@ -140,6 +152,8 @@ export default function ViewPost({ courseId }) {
       // TODO
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
+        setReplyContent("");
+        window.scrollTo(0, 250);
         toast.success("Replied", {
           autoClose: 3000,
         });
@@ -150,12 +164,22 @@ export default function ViewPost({ courseId }) {
       toast.error(error.toString());
     }
     fetchContent();
+    fetchThread();
   };
   return (
     <>
       <div className={classes.root}>
         <Box className={classes.search} />
         <Container className={classes.root}>
+          
+            <Link to={forumLink} className={classes.backForumTop} variant="caption">
+              <IconButton edge="start" color="primary" aria-label="menu">
+                <ArrowBackIcon />
+                <Typography variant="subtitle1" color="primary">
+                  &nbsp;Back to Forum
+                </Typography>
+              </IconButton>
+            </Link>
           <Grid container direction="row" spacing={5}>
             <Grid
               container
@@ -216,6 +240,8 @@ export default function ViewPost({ courseId }) {
                     const data = editor.getData();
                     setReplyContent(data);
                   }}
+                  onBlur={(event, editor) => { }}
+                  onFocus={(event, editor) => { }}
                 />
                 <Button
                   className={classes.padding13}
