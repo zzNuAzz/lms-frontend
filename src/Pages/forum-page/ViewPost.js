@@ -143,10 +143,6 @@ export default function ViewPost({ courseId }) {
         toast.success("Replied", {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          // console.log("replied successfully");
-        }, 3000);
-        window.location.reload();
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -194,7 +190,7 @@ export default function ViewPost({ courseId }) {
 
                 {postList.map((post) => (
                   <Grid>
-                    <ReplyCard content={post} />
+                    <ReplyCard content={post} fetchPostList={fetchContent} />
                   </Grid>
                 ))}
               </Grid>
@@ -216,13 +212,10 @@ export default function ViewPost({ courseId }) {
                   className={classes.editor}
                   editor={ClassicEditor}
                   data={replyContent}
-                  onReady={(editor) => {}}
                   onChange={(event, editor) => {
                     const data = editor.getData();
                     setReplyContent(data);
                   }}
-                  onBlur={(event, editor) => {}}
-                  onFocus={(event, editor) => {}}
                 />
                 <Button
                   className={classes.padding13}

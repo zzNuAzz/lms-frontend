@@ -72,9 +72,10 @@ export function TeacherCourseCard({ course, fetchTeacherCourse }) {
         toast.success(`Delete Course: ${courseName} Successfully`, {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 500);
+        fetchTeacherCourse();
       } else {
         toastFetchErrors(parsedResult);
       }

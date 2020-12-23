@@ -15,6 +15,11 @@ import {
   TableBody,
   makeStyles,
   LinearProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+  DialogActions,
 } from '@material-ui/core';
 import { toast } from 'react-toastify';
 import MemberStatusButton from './member-status-button/member-status-button';
@@ -32,12 +37,16 @@ const useStyles = makeStyles((theme) => ({
 const CourseMembersComponent = ({ courseId }) => {
   const classes = useStyles();
 
+  const [members, setMembers] = useState([]);
   const [enrolledMembers, setEnrolledMembers] = useState([]);
   const [pendingMembers, setPendingMembers] = useState([]);
   const [rejectedMembers, setRejectedMembers] = useState([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setLoading] = useState(true);
+
+  const [dialogRejectShow, setDialogRejectShow] = useState(false);
+
   //* Current member id for menu (different scope and is required for status update)
   const [currentMemberId, setCurrentMemberId] = useState();
 
@@ -57,7 +66,7 @@ const CourseMembersComponent = ({ courseId }) => {
             setRejectedMembers(parsedResult.data.courseMemberList.memberList);
             break;
           default:
-            break;
+            setMembers(parsedResult.data.courseMemberList.memberList);
         }
       } else {
         const { errors } = parsedResult;
@@ -74,9 +83,10 @@ const CourseMembersComponent = ({ courseId }) => {
   };
 
   const fetchAllMembers = async () => {
-    await fetchMembers('Accepted');
-    await fetchMembers('Pending');
-    await fetchMembers('Rejected');
+    await fetchMembers();
+    // await fetchMembers('Accepted');
+    // await fetchMembers('Pending');
+    // await fetchMembers('Rejected');
   };
 
   const handleStatusButtonClick = (event, id) => {
@@ -86,7 +96,12 @@ const CourseMembersComponent = ({ courseId }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setCurrentMemberId(null);
   };
+  const handleConfirmReject = event => {
+    handleStatusChange(event); 
+    setDialogRejectShow(false)
+  }
 
   const handleStatusChange = async (event) => {
     const { status } = event.currentTarget.dataset;
@@ -107,6 +122,7 @@ const CourseMembersComponent = ({ courseId }) => {
     handleClose();
   };
 
+
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
@@ -117,16 +133,16 @@ const CourseMembersComponent = ({ courseId }) => {
   }, []);
 
   // TODO: Show member's profile pic instead of icons.
-  const MemberRows = (members, status) => {
-    return members.map((member) => (
-      <TableRow hover>
-        <TableCell>{member.courseMemberId}</TableCell>
+  const MemberRows = (members) => {
+    return members.map((member, id) => (
+      <TableRow key={member.courseMemberId} hover>
+        <TableCell>{id + 1}</TableCell>
         <TableCell>{member.user.firstName || 'No Firstname'}</TableCell>
         <TableCell>{member.user.lastName || 'No Lastname'}</TableCell>
         <TableCell>{member.user.username}</TableCell>
         <TableCell>
           <MemberStatusButton
-            status={status}
+            status={member.status}
             onClick={(event) => handleStatusButtonClick(event, member.courseMemberId)}
           />
         </TableCell>
@@ -148,14 +164,14 @@ const CourseMembersComponent = ({ courseId }) => {
       >
         <MenuItem data-status="Accepted" onClick={(event) => handleStatusChange(event)}>Accepted</MenuItem>
         <MenuItem data-status="Pending" onClick={(event) => handleStatusChange(event)}>Pending</MenuItem>
-        <MenuItem data-status="Rejected" onClick={(event) => handleStatusChange(event)}>Rejected</MenuItem>
+        <MenuItem data-status="Rejected" onClick={() => {setDialogRejectShow(true); setAnchorEl(null)}}>Rejected</MenuItem>
       </Menu>
       <div className="members-table">
         <Paper elevation={3}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
+                <TableCell>#</TableCell>
                 <TableCell>First Name</TableCell>
                 <TableCell>Last Name</TableCell>
                 <TableCell>Username</TableCell>
@@ -163,12 +179,28 @@ const CourseMembersComponent = ({ courseId }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {MemberRows(enrolledMembers, 'Accepted')}
-              {MemberRows(pendingMembers, 'Pending')}
-              {MemberRows(rejectedMembers, 'Rejected')}
+              {MemberRows(members)}
+              {/* {MemberRows(pendingMembers)} */}
+              {/* {MemberRows(enrolledMembers)} */}
+              {/* {MemberRows(rejectedMembers)} */}
             </TableBody>
           </Table>
         </Paper>
+
+        <Dialog open={dialogRejectShow} onClose={()=>setDialogRejectShow(false)} maxWidth="md">
+          <DialogTitle>ARE YOU SURE?</DialogTitle>
+          <DialogContent>
+            This will remove student from course.
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="secondary" data-status="Rejected" onClick={handleConfirmReject} disabled={isLoading}>
+              YES
+            </Button>
+            <Button variant="contained" onClick={()=>setDialogRejectShow(false)}>
+              CANCEL
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </>
   );

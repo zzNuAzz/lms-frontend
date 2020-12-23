@@ -15,6 +15,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import editThread from "../../api/graphql/edit-thread";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
 import getThreadList from "../../api/graphql/get-thread-list";
+import { getCourseById } from "../../api/graphql/get-course-by-id";
 
 const useStyles = makeStyles((theme) => ({
   root: {

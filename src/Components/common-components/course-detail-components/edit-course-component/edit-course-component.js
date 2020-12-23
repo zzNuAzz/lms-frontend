@@ -5,15 +5,18 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   makeStyles,
   Typography,
-} from "@material-ui/core";
-import { EditRounded } from "@material-ui/icons";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+} from '@material-ui/core';
+import { EditRounded } from '@material-ui/icons';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Editor from '@ckeditor/ckeditor5-build-classic';
+
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import editCourse from "../../../../api/graphql/edit-course";
 import toastFetchErrors from "../../../tools/toast-fetch-errors";
@@ -89,36 +92,45 @@ const EditCourseComponent = ({
       style={{ display: "flex", flexDirection: "column" }}
     >
       <ValidatorForm>
-        <Typography variant="h6">Course name</Typography>
-        <TextValidator
-          onChange={(event) => setName(event.target.value)}
-          name="course-name"
-          value={name}
-          validators={["required"]}
-          errorMessages={["This field is required"]}
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          autoFocus
-        />
-        <Typography variant="h6">Short description</Typography>
-        <TextValidator
-          name="short-description"
-          type="text"
-          value={shortDescription}
-          onChange={(event) => setShortDescription(event.target.value)}
-          validators={["required"]}
-          errorMessages={["This field is required"]}
-          variant="outlined"
-          margin="normal"
-          fullWidth
-        />
-        <Typography variant="h6">Description</Typography>
-        <CKEditor
-          editor={ClassicEditor}
-          data={description}
-          onBlur={(event, editor) => setDescription(editor.getData())}
-        />
+        <Grid container direction="row" spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="h6">Course name</Typography>
+            <TextValidator
+              onChange={(event) => setName(event.target.value)}
+              name="course-name"
+              value={name}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              autoFocus
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="h6">Short description</Typography>
+            <TextValidator
+              name="short-description"
+              type="text"
+              value={shortDescription}
+              onChange={(event) => setShortDescription(event.target.value)}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+
+            <Typography variant="h6">Description</Typography>
+            <CKEditor
+              editor={Editor}
+              data={description}
+              onBlur={(event, editor) => setDescription(editor.getData())}
+            />
+          </Grid>
+        </Grid>
       </ValidatorForm>
     </div>
   );
