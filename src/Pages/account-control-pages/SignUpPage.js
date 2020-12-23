@@ -1,5 +1,5 @@
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   MenuItem,
@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 
 import createUserAccount from "../../api/graphql/create-user-account";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
+import checkUsernameAvailability from "../../api/graphql/check-username-availability";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,13 +56,16 @@ export default function SignUp() {
   const [role, setRole] = useState("Student");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const usernameRef = React.createRef();
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
 
   const handleSubmit = async () => {
-    alert("Sign up");
+    // alert("Sign up");
+    setLoading(true);
     try {
       const result = await createUserAccount(
         username,
@@ -93,18 +97,35 @@ export default function SignUp() {
     } catch (error) {
       toast.error(error.toString());
     }
+    setLoading(false);
   };
-  console.log(
-    "Form: ",
-    username,
-    password,
-    role,
-    firstName,
-    lastName,
-    phoneNumber,
-    address,
-    birthday
-  );
+
+  const handleBlur = (event) => {
+    const { name, value } = event.target;
+    if (name === "username") {
+      usernameRef.current.validate(value);
+    }
+  };
+
+  useEffect(() => {
+    ValidatorForm.addValidationRule("usernameExists", async (value) => {
+      try {
+        const result = await checkUsernameAvailability(value);
+        const parsedResult = JSON.parse(result);
+        if (parsedResult.data) {
+          if (!parsedResult.data.usernameAvailability) {
+            return false;
+          }
+        } else {
+          toastFetchErrors(parsedResult);
+        }
+      } catch (error) {
+        toast.error(error.toString());
+      }
+      return true;
+    });
+  });
+
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -118,7 +139,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5" className={classes.h5}>
             Sign up
           </Typography>
-          <ValidatorForm>
+          <ValidatorForm onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextValidator
@@ -153,14 +174,13 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <TextValidator
                   label="Username"
+                  ref={usernameRef}
                   onChange={(e) => setUsername(e.target.value)}
+                  onBlur={handleBlur}
                   name="username"
                   value={username}
-                  validators={["required", "isUsernameExists"]}
-                  errorMessages={[
-                    "This field is required",
-                    "Username already exists",
-                  ]}
+                  validators={["required"]}
+                  errorMessages={["This field is required"]}
                   variant="outlined"
                   margin="normal"
                   fullWidth
@@ -252,14 +272,14 @@ export default function SignUp() {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={handleSubmit}
+              disabled={isLoading}
             >
               Sign Up
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
                 <Link to="/login" variant="body2">
-                  Already have an account? Sign in
+                  Already have account? Sign in
                 </Link>
               </Grid>
             </Grid>

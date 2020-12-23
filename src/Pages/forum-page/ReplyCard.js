@@ -114,7 +114,9 @@ export function ReplyCard({ content, fetchPostList }) {
                     TransitionComponent={Fade}
                   >
                     {/* <MenuItem onClick={handleEdit}>Edit Post</MenuItem> */}
-                    <MenuItem onClick={openAlertDelete}>Delete Post</MenuItem>
+                    <MenuItem onClick={openAlertDelete}>
+                      Delete Comment
+                    </MenuItem>
                   </Menu>
                 </>
               ) : (

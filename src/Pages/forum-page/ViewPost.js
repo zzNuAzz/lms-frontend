@@ -240,6 +240,8 @@ export default function ViewPost({ courseId }) {
                     const data = editor.getData();
                     setReplyContent(data);
                   }}
+                  onBlur={(event, editor) => { }}
+                  onFocus={(event, editor) => { }}
                 />
                 <Button
                   className={classes.padding13}

@@ -57,7 +57,6 @@ export default function ViewProfile() {
 			<hr></hr>
 			<div>
 				<div style={{fontSize: "150%"}}>Information</div>
-				<div>Let the Learning Management System community of other learners and instructors recognize you.</div>
 				<Grid container>
 					<Grid container direction="column" item xs={6} >
 						<Avatar userProfile={userProfile} />

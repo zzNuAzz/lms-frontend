@@ -41,21 +41,7 @@ function TabPanel(props) {
     </div>
   );
 }
-const reduceAllCourses = (arr1, arr2) => {
-  var pendingIdList = [];
-  var result = [];
-  for (var i = 0; i < arr2.length; i++) {
-    pendingIdList.push(arr2[i].courseId);
-  }
-  // console.log("Reduce1", pendingIdList);
-  for (var i = 0; i < arr1.length; i++) {
-    if (!pendingIdList.includes(arr1[i].courseId)) {
-      result.push(arr1[i]);
-    }
-  }
-  // console.log("Reduce2", result);
-  return result;
-};
+
 //CoursePage
 export default function CoursePage() {
   const [isLoading, setLoading] = useState(false);
@@ -74,6 +60,24 @@ export default function CoursePage() {
   const [recommendArr, setRecommendArr] = useState([]);
   const pageSize = 5;
 
+  // const reduceAllCourses = (arr1, arr2) => {
+  //   var pendingIdList = [];
+  //   var result = [];
+  //   for (var i = 0; i < arr2.length; i++) {
+  //     pendingIdList.push(arr2[i].courseId);
+  //   }
+  //   // console.log("Reduce1", pendingIdList);
+  //   for (var i = 0; i < arr1.length; i++) {
+  //     if (!pendingIdList.includes(arr1[i].courseId)) {
+  //       result.push(arr1[i]);
+  //     }
+  //   }
+  //   totalPageAllCourses = Math.floor(allCourses.length / pageSize) + 1;
+  //   totalPage = totalPageAllCourses;
+  //   // console.log("Reduce2", result);
+  //   return result;
+  // };
+
   const handlePagination = (event, pageNum) => {
     setPageNumber(pageNum);
     const fetchContent = async () => {
@@ -90,9 +94,16 @@ export default function CoursePage() {
     fetchContent();
   };
   const handleSwitchCourseType = (event, newValue) => {
-    if (newValue == 0) setTotalPage(totalPageAllCourses);
-    else if (newValue == 1) setTotalPage(totalPageIPCourses);
-    else if (newValue == 2) setTotalPage(totalPagePeCourses);
+    if (newValue == 0) {
+      setTotalPage(totalPageAllCourses);
+      fetchAllCourses(0, pageSize);
+    } else if (newValue == 1) {
+      setTotalPage(totalPageIPCourses);
+      fetchStudentCourse(0, pageSize);
+    } else if (newValue == 2) {
+      setTotalPage(totalPagePeCourses);
+      fetchStudentCourse(0, pageSize);
+    }
     setValue(newValue);
     setPageNumber(1);
   };
@@ -109,6 +120,7 @@ export default function CoursePage() {
   const fetchStudentCourse = async (pageNumber, pageSize) => {
     try {
       //* Fetch enrolled courses
+      console.log("Detail", pageNumber, pageSize, userId);
       const acceptedResult = await getUserCourseList({
         userId,
         status: "Accepted",
@@ -137,10 +149,13 @@ export default function CoursePage() {
         pageSize: pageSize,
       });
       const temp = JSON.parse(result);
+      console.log("Pending Courses:", temp);
       if (temp.data) {
         if (temp.data.userCourseList.courseList.length !== 0) {
           setPendingCourses(temp.data.userCourseList.courseList);
-          setTotalPagePeCourses(parsedResult.data.userCourseList.totalPages);
+          setTotalPagePeCourses(
+            parsedResult.data.userCourseList.courseList.totalPages
+          );
         }
       } else {
         toastFetchErrors(temp);
@@ -154,8 +169,11 @@ export default function CoursePage() {
     try {
       const result = await getAllCourses(pageNumber, pageSize);
       const parsedResult = JSON.parse(result);
+      console.log("All Courses: ", parsedResult);
       if (parsedResult.data) {
         setAllCourses(parsedResult.data.courseList.courseList);
+        setTotalPageAllCourses(parsedResult.data.courseList.totalPages);
+        setTotalPage(parsedResult.data.courseList.totalPages);
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -184,7 +202,7 @@ export default function CoursePage() {
   useEffect(() => {
     const fetchContent = async () => {
       setLoading(true);
-      await fetchStudentCourse();
+      await fetchStudentCourse(pageNumber - 1, pageSize);
       await fetchAllCourses(pageNumber - 1, pageSize);
       await fetchRecommendCourses(20);
       setLoading(false);
@@ -192,12 +210,10 @@ export default function CoursePage() {
     fetchContent();
   }, []);
 
-  if (allCourses.length > 0) {
-    allCourses = reduceAllCourses(allCourses, courses);
-    totalPageAllCourses = Math.floor(allCourses.length / pageSize) + 1;
-    totalPage = totalPageAllCourses;
-    // console.log("Length", allCourses.length);
-  }
+  // if (allCourses.length > 0) {
+  //   allCourses = reduceAllCourses(allCourses, courses);
+  //   // console.log("Length", allCourses.length);
+  // }
 
   // console.log({ courses });
   // console.log({ allCourses });
