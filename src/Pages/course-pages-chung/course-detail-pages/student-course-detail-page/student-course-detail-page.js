@@ -42,6 +42,7 @@ import getCourseDetails from "../../../../api/graphql/get-course-details";
 import toastFetchErrors from "../../../../Components/tools/toast-fetch-errors";
 import EditCourseComponent from "../../../../Components/common-components/course-detail-components/edit-course-component/edit-course-component";
 import enrollCourse from "../../../../api/graphql/enroll-course";
+import getEnrollStatus from "../../../../api/graphql/get-enroll-status"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,25 +77,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TeacherCourseDetailPage = () => {
+const NOT_ENROLL = "NotEnroll";
+const PENDING = "Pending";
+const ACCEPTED = "Accepted";
+
+const StudentCourseDetailPage = () => {
   const classes = useStyles();
   const history = useHistory();
-  const userId = parseInt(localStorage.getItem("userId"), 10);
-  const { id } = useParams();
+  // const userId = parseInt(localStorage.getItem("userId"), 10);
+  const { id: courseId } = useParams();
   const [isAccepted, setIsAccepted] = useState(false);
+  const [enrollStatus, setEnrollStatus] = useState("NotEnroll");
 
   const [tabPosition, setTabPosition] = useState("Course Info");
-  const [courseList, setCourseList] = useState([]);
+  // const [courseList, setCourseList] = useState([]);
   const handleTabChange = (newTab) => {
     setTabPosition(newTab);
   };
-  const [isSetted, setIsSetted] = useState(0);
+  // const [isSetted, setIsSetted] = useState(0);
   const handleEnroll = async () => {
     try {
-      const result = await enrollCourse(parseInt(id, 10));
+      const result = await enrollCourse(parseInt(courseId, 10));
       // TODO
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
+        getEnrollStatus();
         toast.success(
           "Your enroll request is sent to lecturer. Please wait to be accepted!",
           {
@@ -108,51 +115,67 @@ const TeacherCourseDetailPage = () => {
       toast(error);
     }
   };
-  const fetchUserCourseList = async (pageNumber, pageSize) => {
-    try {
-      //* Fetch enrolled courses
-      const result = await getUserCourseList({
-        userId,
-        status: "Accepted",
-        pageNumber,
-        pageSize,
-      });
-      const parsedResult = JSON.parse(result);
-      // console.log({ parsedResult });
-      // isHaveForum();
-      if (parsedResult.data) {
-        if (parsedResult.data.userCourseList.courseList.length !== 0) {
-          setCourseList(parsedResult.data.userCourseList.courseList);
-        } else {
-          toast.error("You have no enrolled courses... :(");
-        }
-      } else {
-        toastFetchErrors(parsedResult);
-        // console.log({ parsedResult });
-      }
-    } catch (error) {
-      toast(error);
-    }
-  };
+  // const fetchUserCourseList = async (pageNumber, pageSize) => {
+  //   try {
+  //     //* Fetch enrolled courses
+  //     const result = await getUserCourseList({
+  //       userId,
+  //       status: "Accepted",
+  //       pageNumber,
+  //       pageSize,
+  //     });
+  //     const parsedResult = JSON.parse(result);
+  //     // console.log({ parsedResult });
+  //     // isHaveForum();
+  //     if (parsedResult.data) {
+  //       if (parsedResult.data.userCourseList.courseList.length !== 0) {
+  //         setCourseList(parsedResult.data.userCourseList.courseList);
+  //       } else {
+  //         toast.error("You have no enrolled courses... :(");
+  //       }
+  //     } else {
+  //       toastFetchErrors(parsedResult);
+  //       // console.log({ parsedResult });
+  //     }
+  //   } catch (error) {
+  //     toast(error);
+  //   }
+  // };
   // console.log("Start");
-  if (isSetted == 0 && courseList.length > 0) {
-    setIsSetted(1);
-    // console.log("List", courseList);
-    courseList.map((course) => {
-      if (course.courseId == id) {
-        setIsAccepted(true);
-      }
-    });
-  }
-  useEffect(() => {
-    const fetchContent = async () => {
-      await fetchUserCourseList(0, 5);
-    };
-    fetchContent();
-  }, []);
+  // if (isSetted == 0 && courseList.length > 0) {
+  //   setIsSetted(1);
+  //   // console.log("List", courseList);
+  //   courseList.map((course) => {
+  //     if (course.courseId == id) {
+  //       setIsAccepted(true);
+  //     }
+  //   });
+  // }
+  // useEffect(() => {
+  //   const fetchContent = async () => {
+  //     await fetchUserCourseList(0, 5);
+  //   };
+  //   fetchContent();
+  // }, []);
 
   // console.log({ courseList });
   // console.log({ id });
+  const getEnrollStatus = () => {
+    getEnrollStatus(parseInt(courseId,10))
+      .then(result => {
+        const status = result.data.getEnrollStatus;
+        if(status === ACCEPTED || status === PENDING) {
+          setEnrollStatus(status);
+        } else {
+          setEnrollStatus(NOT_ENROLL);
+        } 
+    }).catch(err => {
+      toast.error(err.message);
+    });
+  }
+  useEffect(()=> {
+    getEnrollStatus();
+  }, [courseId])
 
   const RenderComponent = (
     <div className={classes.root}>
@@ -203,8 +226,9 @@ const TeacherCourseDetailPage = () => {
                 &nbsp; Assignments
               </div>
             </Grid>
+            
 
-            {isAccepted ? (
+            {enrollStatus === ACCEPTED ? (
               <>
                 <Grid item>
                   <Box ml={2} mt={2}>
@@ -247,8 +271,9 @@ const TeacherCourseDetailPage = () => {
                       color="primary"
                       size="small"
                       onClick={handleEnroll}
+                      disabled={enrollStatus === PENDING ? true : false}
                     >
-                      Enroll this course
+                      { enrollStatus === NOT_ENROLL ? "Enroll this course" : "Waiting for teacher accept" }
                     </Button>
                   </Box>
                 </Grid>
@@ -264,15 +289,15 @@ const TeacherCourseDetailPage = () => {
                 case "Course Info":
                   return (
                     <Paper elevation="3" style={{ padding: "20px 20px" }}>
-                      <OverviewComponent courseId={id} />
+                      <OverviewComponent courseId={courseId} />
                     </Paper>
                   );
                 case "Documents":
-                  return <DocumentComponent courseId={id} />;
+                  return <DocumentComponent courseId={courseId} />;
                 case "Assignments":
-                  return <AssignmentsComponent courseId={id} />;
+                  return <AssignmentsComponent courseId={courseId} />;
                 case "Forum":
-                  history.push(`/course/${id}/forum`);
+                  history.push(`/course/${courseId}/forum`);
                   break;
                 default:
                   return null;
@@ -287,4 +312,4 @@ const TeacherCourseDetailPage = () => {
   return <>{RenderComponent}</>;
 };
 
-export default TeacherCourseDetailPage;
+export default StudentCourseDetailPage;
