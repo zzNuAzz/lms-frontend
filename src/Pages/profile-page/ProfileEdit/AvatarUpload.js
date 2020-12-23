@@ -10,7 +10,7 @@ AvatarUpload.IMAGE_WIDTH = 400;
 AvatarUpload.IMAGE_HEIGHT = 400;
 
 export default function AvatarUpload({ userProfile }) {
-    var { pictureUrl } = userProfile;
+    const { pictureUrl } = userProfile;
     const history = useHistory();
     const apply = file => {
         uploadAvatar(file).then(result => {
