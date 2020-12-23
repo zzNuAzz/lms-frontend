@@ -122,6 +122,9 @@ const SubmissionComponent = ({ assignmentId, description, dueDate }) => {
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
             <Collapse in={open} unmountOnExit>
+              <Typography variant="h6">Submission description</Typography>
+              <Typography variant="body1">{submission.description || 'No description'}</Typography>
+              <br />
               <Typography variant="h6">Submission Files</Typography>
               <FileViewer files={submission.files} />
             </Collapse>
@@ -133,7 +136,7 @@ const SubmissionComponent = ({ assignmentId, description, dueDate }) => {
 
   const RenderSubmissionTable = (
     <>
-      <Paper elevation={3} style={{padding: '15px 15px'}}>
+      <Paper elevation={3} style={{ padding: '15px 15px' }}>
         <Typography variant="h6">Description</Typography>
         <Typography variant="body1">{description}</Typography>
         <br />

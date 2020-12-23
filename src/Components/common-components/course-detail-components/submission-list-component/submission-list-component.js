@@ -62,6 +62,7 @@ const SubmissionListComponent = ({ courseId }) => {
         onChange={handleSelectedAssignmentChange}
         variant="outlined"
         fullWidth
+        disabled={assignments.length === 0}
       >
         {
           assignments.map((assignment) => (
@@ -79,6 +80,13 @@ const SubmissionListComponent = ({ courseId }) => {
         }
       </Select>
       <hr />
+      {
+        assignments.length === 0
+          ? (
+            <Typography variant="body1">There are no assignments in this course!</Typography>
+          )
+          : null
+      }
       {
         assignmentId !== -1
           ? (

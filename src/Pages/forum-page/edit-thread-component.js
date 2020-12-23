@@ -11,10 +11,36 @@ import {
 } from "@material-ui/core";
 import { toast } from "react-toastify";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ClassicEditor from "ckeditor5-custom-build/build/ckeditor";
 import editThread from "../../api/graphql/edit-thread";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
 import getThreadList from "../../api/graphql/get-thread-list";
+
+const editorConfig = {
+  toolbar: [
+    'heading',
+    '|',
+    'bold',
+    'italic',
+    'underline',
+    'alignment',
+    '|',
+    'fontSize',
+    'fontFamily',
+    'fontColor',
+    'fontBackgroundColor',
+    '|',
+    'link',
+    'bulletedList',
+    'numberedList',
+    'indent',
+    'outdent',
+    'imageUpload',
+    'blockQuote',
+    'insertTable',
+    'mediaEmbedded',
+  ],
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,6 +113,7 @@ function EditComponent({ thread: originThread, handleClose, reloadThread }) {
               <CKEditor
                 className={classes.editor}
                 editor={ClassicEditor}
+                config={editorConfig}
                 data={thread.content}
                 onChange={(event, editor) => {
                   const data = editor.getData();

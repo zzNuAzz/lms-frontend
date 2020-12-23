@@ -137,8 +137,16 @@ const FileViewer = ({
         deletable
           ? (
             <>
-              <Typography variant="h6">Removed Files</Typography>
-              {RenderRemovedFiles}
+              {
+                currentRemovedFiles.length === 0
+                  ? null
+                  : (
+                    <>
+                      <Typography variant="h6">Removed Files</Typography>
+                      {RenderRemovedFiles}
+                    </>
+                  )
+              }
             </>
           )
           : null
