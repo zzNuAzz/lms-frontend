@@ -61,7 +61,7 @@ export default function SignUp() {
   };
 
   const handleSubmit = async () => {
-    alert("Sign up");
+    // alert("Sign up");
     try {
       const result = await createUserAccount(
         username,
@@ -94,17 +94,17 @@ export default function SignUp() {
       toast.error(error.toString());
     }
   };
-  console.log(
-    "Form: ",
-    username,
-    password,
-    role,
-    firstName,
-    lastName,
-    phoneNumber,
-    address,
-    birthday
-  );
+  // console.log(
+  //   "Form: ",
+  //   username,
+  //   password,
+  //   role,
+  //   firstName,
+  //   lastName,
+  //   phoneNumber,
+  //   address,
+  //   birthday
+  // );
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -156,11 +156,8 @@ export default function SignUp() {
                   onChange={(e) => setUsername(e.target.value)}
                   name="username"
                   value={username}
-                  validators={["required", "isUsernameExists"]}
-                  errorMessages={[
-                    "This field is required",
-                    "Username already exists",
-                  ]}
+                  validators={["required"]}
+                  errorMessages={["This field is required"]}
                   variant="outlined"
                   margin="normal"
                   fullWidth
@@ -259,7 +256,7 @@ export default function SignUp() {
             <Grid container justify="flex-end">
               <Grid item>
                 <Link to="/login" variant="body2">
-                  Already have an account? Sign in
+                  Already have account? Sign in
                 </Link>
               </Grid>
             </Grid>
