@@ -77,7 +77,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
   };
 
   const CreateDocumentForm = (
-    <ValidatorForm onSubmit={handleSubmit}>
+    <ValidatorForm onSubmit={handleSubmit} id="create-document-form">
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <TextValidator
@@ -129,9 +129,10 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
         <DialogContent>{CreateDocumentForm}</DialogContent>
         <DialogActions>
           <Button
+            type="submit"
+            form="create-document-form"
             variant="text"
             color="primary"
-            onClick={handleSubmit}
             disabled={isLoading}
           >
             Add

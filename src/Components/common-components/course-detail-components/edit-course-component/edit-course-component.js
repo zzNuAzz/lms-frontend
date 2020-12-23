@@ -91,7 +91,7 @@ const EditCourseComponent = ({
       className="course-edit"
       style={{ display: "flex", flexDirection: "column" }}
     >
-      <ValidatorForm>
+      <ValidatorForm onSubmit={handleSubmit} id="edit-course-form">
         <Grid container direction="row" spacing={2}>
           <Grid item xs={6}>
             <Typography variant="h6">Course name</Typography>
@@ -149,9 +149,10 @@ const EditCourseComponent = ({
         <DialogContent>{EditCourseForm}</DialogContent>
         <DialogActions>
           <Button
+            type="submit"
+            form="edit-course-form"
             variant="text"
             color="primary"
-            onClick={handleSubmit}
             disabled={isLoading}
           >
             Update
