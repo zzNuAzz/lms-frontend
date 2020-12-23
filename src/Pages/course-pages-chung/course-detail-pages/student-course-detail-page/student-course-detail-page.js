@@ -199,12 +199,12 @@ const StudentCourseDetailPage = () => {
                 role="tab"
                 disabled={enrollStatus!==ACCEPTED}
                 className={
-                  tabPosition === "Forums"
+                  tabPosition === "Forum"
                     ? classes.tabButtonActive
                     : classes.tabButtonInactive
                 }
                 // disabled={enrollStatus!==ACCEPTED}
-                onClick={() => handleTabChange("Forums")}
+                onClick={() => handleTabChange("Forum")}
               >
                 <ForumRoundedIcon />
                 &nbsp; Forums
