@@ -77,7 +77,7 @@ const LoggedInButton = ({ user ,setUser }) => {
         variant="contained"
         color="primary"
         onClick={(event) => handleClick(event)}
-        style={{margin: '10px 10px', minWidth:'10rem', display:'flex', justifyContent:'space-between'}}
+        style={{margin: '10px 10px', display:'flex', justifyContent:'space-between'}}
       >
         {/* <SentimentVerySatisfiedRoundedIcon /> */}
         <Avatar alt="User's Avatar" src={pictureUrl} className={classes.avatar} />
