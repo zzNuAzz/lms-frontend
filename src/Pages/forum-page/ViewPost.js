@@ -143,10 +143,6 @@ export default function ViewPost({ courseId }) {
         toast.success("Replied", {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          // console.log("replied successfully");
-        }, 3000);
-        window.location.reload();
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -194,7 +190,7 @@ export default function ViewPost({ courseId }) {
 
                 {postList.map((post) => (
                   <Grid>
-                    <ReplyCard content={post} />
+                    <ReplyCard content={post} fetchPostList={fetchContent} />
                   </Grid>
                 ))}
               </Grid>

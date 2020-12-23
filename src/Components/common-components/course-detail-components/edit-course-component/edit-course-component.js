@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Dialog,
@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-  },
-  editor: {
-    minHeight: '300px',
   },
 }));
 
@@ -115,16 +112,15 @@ const EditCourseComponent = ({
             />
           </Grid>
           <Grid item xs={12}>
+
             <Typography variant="h6">Description</Typography>
             <CKEditor
               editor={Editor}
               data={description}
               onBlur={(event, editor) => setDescription(editor.getData())}
-              className={classes.editor}
             />
           </Grid>
         </Grid>
-
       </ValidatorForm>
     </div>
   );

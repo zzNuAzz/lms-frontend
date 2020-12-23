@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function ReplyCard({ content }) {
+export function ReplyCard({ content, fetchPostList }) {
   const classes = useStyles();
   const clickOnCard = (id) => {};
   const userId = parseInt(localStorage.getItem("userId"), 10);
@@ -79,9 +79,7 @@ export function ReplyCard({ content }) {
         toast.success(`Your comment is successfully deleted`, {
           autoClose: 3000,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        fetchPostList();
       } else {
         toastFetchErrors(parsedResult);
       }
