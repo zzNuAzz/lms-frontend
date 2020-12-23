@@ -190,7 +190,7 @@ export function CardForum({ forum, isView, reloadList }) {
           // title={`${forum.author.firstName} ${forum.author.lastName}`}
           title={
             <div>
-              <Link to={profileLink} style={{ color: "#2A73CC", fontWeight: "bolder" }}>
+              <Link to={`/profile/view/${forum.author.userId}`} style={{ color: "#2A73CC", fontWeight: "bolder" }}>
                 {forum.author.firstName} {forum.author.lastName}
               </Link>
             </div>
