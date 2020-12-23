@@ -11,36 +11,10 @@ import {
 import { toast } from "react-toastify";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "ckeditor5-custom-build/build/ckeditor";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import MostHelpful from "./MostHelpful";
 import createThread from "../../api/graphql/create-thread";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
-
-const editorConfig = {
-  toolbar: [
-    'heading',
-    '|',
-    'bold',
-    'italic',
-    'underline',
-    'alignment',
-    '|',
-    'fontSize',
-    'fontFamily',
-    'fontColor',
-    'fontBackgroundColor',
-    '|',
-    'link',
-    'bulletedList',
-    'numberedList',
-    'indent',
-    'outdent',
-    'imageUpload',
-    'blockQuote',
-    'insertTable',
-    'mediaEmbedded',
-  ],
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -152,7 +126,6 @@ export default function NewThread() {
               <CKEditor
                 className={classes.editor}
                 editor={ClassicEditor}
-                config={editorConfig}
                 placeholder="holder"
                 onChange={(event, editor) => {
                   const data = editor.getData();

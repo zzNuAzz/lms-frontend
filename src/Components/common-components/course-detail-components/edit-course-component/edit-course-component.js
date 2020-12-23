@@ -12,7 +12,7 @@ import {
 import { EditRounded } from '@material-ui/icons';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import Editor from 'ckeditor5-custom-build/build/ckeditor';
+import Editor from '@ckeditor/ckeditor5-build-classic';
 
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { useParams } from 'react-router-dom';
@@ -31,32 +31,6 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '300px',
   },
 }));
-
-const editorConfig = {
-  toolbar: [
-    'heading',
-    '|',
-    'bold',
-    'italic',
-    'underline',
-    'alignment',
-    '|',
-    'fontSize',
-    'fontFamily',
-    'fontColor',
-    'fontBackgroundColor',
-    '|',
-    'link',
-    'bulletedList',
-    'numberedList',
-    'indent',
-    'outdent',
-    'imageUpload',
-    'blockQuote',
-    'insertTable',
-    'mediaEmbedded',
-  ],
-};
 
 const EditCourseComponent = ({
   courseName,
@@ -144,7 +118,6 @@ const EditCourseComponent = ({
             <Typography variant="h6">Description</Typography>
             <CKEditor
               editor={Editor}
-              config={editorConfig}
               data={description}
               onBlur={(event, editor) => setDescription(editor.getData())}
               className={classes.editor}

@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { Link, useParams } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "ckeditor5-custom-build/build/ckeditor";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { toast } from "react-toastify";
 import MostHelpful from "./MostHelpful";
 import { CardForum } from "./ThreadList";
@@ -22,32 +22,6 @@ import getPostList from "../../api/graphql/get-post-list";
 import getThreadById from "../../api/graphql/get-thread-by-id";
 import addPost from "../../api/graphql/add-post";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
-
-const editorConfig = {
-  toolbar: [
-    'heading',
-    '|',
-    'bold',
-    'italic',
-    'underline',
-    'alignment',
-    '|',
-    'fontSize',
-    'fontFamily',
-    'fontColor',
-    'fontBackgroundColor',
-    '|',
-    'link',
-    'bulletedList',
-    'numberedList',
-    'indent',
-    'outdent',
-    'imageUpload',
-    'blockQuote',
-    'insertTable',
-    'mediaEmbedded',
-  ],
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -242,7 +216,6 @@ export default function ViewPost({ courseId }) {
                   className={classes.editor}
                   editor={ClassicEditor}
                   data={replyContent}
-                  config={editorConfig}
                   onChange={(event, editor) => {
                     const data = editor.getData();
                     setReplyContent(data);
