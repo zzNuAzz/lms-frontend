@@ -145,33 +145,33 @@ export default function Forum() {
               <Typography variant="subtitle1" color="primary">
                 Back to Course
             </Typography>
-            </IconButton>
-          </Link>
-          <Toolbar>
-            <Grid container>
-              <Grid item container alignItems="center" xs={5}>
-                <IconButton edge="start" className={classes.menuButton} color="primary" aria-label="menu" aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}
-                >
-                  <ArrowDropDownIcon />
-                </IconButton>
-                <Menu id="fade-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose} TransitionComponent={Fade}>
-                  {courseList.map((course) => (
-                    <MenuItem onClick={() => handleClickOnCourse(course)}>
-                      {course.name}
-                    </MenuItem>
-                  ))}
-                </Menu>
-                <Typography variant="h6" color="primary">
-                  {course.name}
-                </Typography>
-              </Grid>
-              <Grid item container alignItems="center" justify="flex-start" direction="column" xs={6}>
-                <Grid item container alignItems="center" justify="flex-start" xs={6}>
-                  <Link to={newThreadLink}>
-                    <IconButton edge="start" color="primary" aria-label="menu">
-                      <AddBoxIcon />
-                      <Typography variant="subtitle1" color="primary">
-                        Add new topic
+          </IconButton>
+        </Link>
+        <Toolbar>
+          <Grid container>
+            <Grid item container alignItems="center" xs={5}>
+              <IconButton edge="start" className={classes.menuButton} color="primary" aria-label="menu" aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}
+              >
+                <ArrowDropDownIcon />
+              </IconButton>
+              <Menu id="fade-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose} TransitionComponent={Fade}>
+                {courseList.map((myCourse) => (
+                  <MenuItem onClick={() => handleClickOnCourse(myCourse)}>
+                    {myCourse.name}
+                  </MenuItem>
+                ))}
+              </Menu>
+              <Typography variant="h6" color="primary">
+                {course.name}
+              </Typography>
+            </Grid>
+            <Grid item container alignItems="center" justify="flex-start" direction="column" xs={6}>
+              <Grid item container alignItems="center" justify="flex-start" xs={6}>
+                <Link to={newThreadLink}>
+                  <IconButton edge="start" color="primary" aria-label="menu">
+                    <AddBoxIcon />
+                    <Typography variant="subtitle1" color="primary">
+                      Add new topic
                     </Typography>
                     </IconButton>
                   </Link>
@@ -187,7 +187,7 @@ export default function Forum() {
             </Grid>
             <Grid container item xs={12} lg={4} direction="column" spacing={2}>
               <MostHelpful />
-              <NewPostBox />
+              <NewPostBox Id={courseId}/>
             </Grid>
           </Grid>
         </Container>

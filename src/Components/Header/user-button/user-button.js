@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 import LoginComponent from "../../login-component/login-component";
 import LoggedInButton from "./logged-in-button/logged-in-button";
+import { getSignedInUser } from "../../../api/graphql/get-signedin-user";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -30,7 +31,7 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -41,19 +42,37 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("username")) {
-      setUsername(localStorage.getItem("username"));
+    if (localStorage.getItem("signedIn")) {
       setLoginStatus(true);
     } else {
       setLoginStatus(false);
     }
-  }, [username]);
+  }, [localStorage.getItem("signedIn")]);
+
+  useEffect(()=> {
+    getSignedInUser()
+      .then(JSON.parse)
+      .then(data => data?.data?.currentUser)
+      .then(data => {
+        if(data.signedIn) {
+          setUser(data.user);
+          localStorage.setItem("username", data.user.username);
+          localStorage.setItem("userId", data.user.userId);
+          localStorage.setItem("role", data.user.role);
+          localStorage.setItem("pictureUrl", data.user.pictureUrl);
+          localStorage.setItem('signedIn', true)
+        }else {
+          setUser({});
+          localStorage.clear();
+        }
+      })
+      .catch(err=>toast.error(err.message));
+  },[])
 
   return (
     <div>
       {isLoggedIn ? (
-        // TODO: Logout and Account Information menu
-        <LoggedInButton setUsername={setUsername} />
+        <LoggedInButton user={user} setUser={setUser} />
       ) : (
         <Button
           variant="contained"
@@ -80,7 +99,7 @@ export default function UserButton({ isLoggedIn, setLoginStatus }) {
         <Fade in={open}>
           <div className={classes.paper}>
             <LoginComponent
-              setUsername={setUsername}
+              setUsername={setUser}
               callbackToParent={handleClose}
             />
           </div>

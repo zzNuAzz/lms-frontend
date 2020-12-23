@@ -82,7 +82,7 @@ export function CourseCard({ course, isEnrolled }) {
               <Box mr={2}>
                 <Avatar src={course.host.pictureUrl}></Avatar>
               </Box>
-              <Link>
+              <Link to={`profile/view/${course.host.userId}`}>
                 <Typography variant="subtitle2">{teacherName}</Typography>
               </Link>
             </Grid>

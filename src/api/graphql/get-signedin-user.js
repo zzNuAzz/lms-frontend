@@ -9,6 +9,9 @@ export const getSignedInUser = async () => {
       userId
       username
       role
+      firstName
+      lastName
+      pictureUrl
     }
   }
 }`;

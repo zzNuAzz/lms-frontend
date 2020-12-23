@@ -14,6 +14,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import editThread from "../../api/graphql/edit-thread";
 import toastFetchErrors from "../../Components/tools/toast-fetch-errors";
+import getThreadList from "../../api/graphql/get-thread-list";
 import { getCourseById } from "../../api/graphql/get-course-by-id";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,28 +46,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EditComponent({ thread: originThread, handleClose }) {
+function EditComponent({ thread: originThread, handleClose, reloadThread }) {
   const classes = useStyles();
   const [thread, setThread] = useMergeState(originThread);
-  let courseId = useParams();
-  const history = useHistory();
-  const [course, setCourse] = useState({});
-  console.log(thread.threadId);
-  courseId = parseInt(courseId.courseId, 10);
-  const handleSubmit = async () => {
-    try {
-      const result = await editThread(thread.threadId, thread.title, thread.content);
-      const parsedResult = JSON.parse(result);
-      if (parsedResult.data) {
-        console.log({ parsedResult });
-        history.push(`/course/${courseId}/forum`);
-        history.go(0);
-      } else {
-        toastFetchErrors(parsedResult);
-      }
-    } catch (error) {
-      toast(error);
-    }
+  const handleSubmit = async (event) => {
+      editThread(thread.threadId, thread.title, thread.content)
+      .then(JSON.parse)
+      .then(data => data?.data?.editThread)
+      .then(data => {
+        if(data?.success) {
+          toast.success("Edit successfully");
+          if(typeof reloadThread === 'function') reloadThread();
+        } else {
+          toast.error(data?.message || "Error");
+        }
+      })
+      .catch(err => toast.error(err.message))
+      .finally(()=>handleClose());
   }
 
   const handleChange = (e) => {

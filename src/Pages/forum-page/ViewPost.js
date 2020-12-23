@@ -17,7 +17,7 @@ import MostHelpful from "./MostHelpful";
 import { CardForum } from "./ThreadList";
 import { ReplyCard } from "./ReplyCard";
 import { NewPostBox } from "./NewPostBox";
-
+import Pagination from "@material-ui/lab/Pagination";
 import getPostList from "../../api/graphql/get-post-list";
 import getThreadById from "../../api/graphql/get-thread-by-id";
 import addPost from "../../api/graphql/add-post";
@@ -64,26 +64,10 @@ export default function ViewPost({ courseId }) {
   const [postList, setPostList] = useState(() => []);
   const [replyContent, setReplyContent] = useState();
   const { threadId } = useParams();
-  // const forum = {
-  //   author: {
-  //     userId: '5',
-  //     lastName: null,
-  //     firstName: null,
-  //     pictureUrl: '/file/avatar/0.png',
-  //   },
-  //   content: `Hi everyone,
-
-  //   I came across this article which features a new Coursera course. COVID-19 Contact Tracing (offered by Johns Hopkins) provides a promotion option right now which enables you to earn a free Course Certificate. As stated in the FAQ section, “you will need to enroll via a web browser on either a computer or a mobile device and not via the Coursera mobile app to enroll for the course and certificate for free. Unfortunately, the promotional price is not redeemable through the mobile app”.
-
-  //   If you have not taken the course, don’t miss the chance! If you’ve already taken the course, feel free to share your takeaway in the comment section. :point_down:
-
-  //   Stay safe!
-
-  //   (It was edited to add some more info.)`,
-  //   createAt: '2020-10-29T07:51:58.662Z',
-  //   forumThreadId: 6,
-  //   title: 'A New Course with Free Certificate: COVID-19 Contact Tracing 🔊',
-  // };
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(1);
+  const pageSize = 5;
+  
   useEffect(() => {
     getThreadById(parseInt(threadId, 10))
       .then((result) => {
@@ -96,25 +80,58 @@ export default function ViewPost({ courseId }) {
       });
   }, [threadId]);
 
+  const fetchPostList = async (threadId, pageNumber, pageSize) => {
+    try{
+      const result = await getPostList(parseInt(threadId, 10), pageNumber, pageSize);
+      console.log({result})
+      const parsedResult = result.data;
+      console.log({parsedResult})
+      if(parsedResult){
+        setPostList(parsedResult.postList.postList);
+        setTotalPage(parsedResult.postList.totalPages)
+      } else {
+        toast.error(parsedResult?.message || "Error");
+      }
+    } catch (error){
+      toast.error(error.message);
+    }
+  }
+
+  const fetchContent = async () => {
+    await fetchPostList(parseInt(threadId, 10), pageNumber - 1, pageSize);
+  }
+
+  useEffect(() => {
+    fetchContent();
+  }, [courseId]);
+
+  const handlePagination = (event, pageNum) => {
+    setPageNumber(pageNum);
+    const fetchContent = async () => {
+      await fetchPostList(threadId, pageNum -1, pageSize);
+      window.scrollTo(0, 900);
+    }
+    fetchContent();
+  }
+
   courseId = thread.courseId;
   const forumLink = `/course/${courseId}/forum`;
 
-  const fetchPostList = () => {
-    getPostList(parseInt(threadId, 10))
-      .then((result) => {
-        if (result.errors) throw new Error(result.errors[0].message);
-        // console.log("Post List", { result });
-        const data = result.data.postList.postList;
-        setPostList(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  console.log(thread.postCount);
 
-  useEffect(() => {
-    fetchPostList();
-  }, [courseId]);
+  // useEffect(() => {
+  //   getPostList(parseInt(threadId, 10), 0, thread.postCount)
+  //     .then((result) => {
+  //       if (result.errors) throw new Error(result.errors[0].message);
+  //       // console.log("Post List", { result });
+  //       const data = result.data.postList.postList;
+  //       setPostList(data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, [courseId]);
+
 
   const handleReply = async () => {
     // console.log(replyContent);
@@ -126,13 +143,13 @@ export default function ViewPost({ courseId }) {
         toast.success("Replied", {
           autoClose: 3000,
         });
-        fetchPostList();
       } else {
         toastFetchErrors(parsedResult);
       }
     } catch (error) {
       toast.error(error.toString());
     }
+    fetchContent();
   };
   return (
     <>
@@ -164,18 +181,26 @@ export default function ViewPost({ courseId }) {
                 <Card width="100%" className={classes.replyWidth}>
                   <CardContent>
                     <Typography variant="h6" style={{ fontWeight: "700" }}>
-                      {postList.length < 2
-                        ? `${postList.length} reply:`
-                        : `${postList.length} replies:`}
+                      {thread.postCount < 2
+                        ? `${thread.postCount} reply:`
+                        : `${thread.postCount} replies:`}
                     </Typography>
                   </CardContent>
                 </Card>
 
-                {postList.reverse().map((post) => (
+                {postList.map((post) => (
                   <Grid>
-                    <ReplyCard content={post} fetchPostList={fetchPostList} />
+                    <ReplyCard content={post} fetchPostList={fetchContent} />
                   </Grid>
                 ))}
+              </Grid>
+              <Grid container justify="center">
+                <Pagination
+                  count={totalPage}
+                  page={pageNumber}
+                  color="primary"
+                  onChange={handlePagination}
+                />
               </Grid>
               {/* reply */}
               <Grid item>
@@ -187,7 +212,6 @@ export default function ViewPost({ courseId }) {
                   className={classes.editor}
                   editor={ClassicEditor}
                   data={replyContent}
-                  onReady={(editor) => { }}
                   onChange={(event, editor) => {
                     const data = editor.getData();
                     setReplyContent(data);
@@ -213,7 +237,8 @@ export default function ViewPost({ courseId }) {
             </Grid>
             <Grid container item xs={12} lg={4} direction="column" spacing={2}>
               <MostHelpful />
-              <NewPostBox />
+              {console.log({courseId})}
+              <NewPostBox Id={courseId}/>
             </Grid>
           </Grid>
         </Container>

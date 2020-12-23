@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function CardForum({ forum, isView, fetchThreadList }) {
+export function CardForum({ forum, isView, reloadList }) {
   const classes = useStyles();
   const history = useHistory();
   const { courseId } = useParams();
@@ -74,8 +74,9 @@ export function CardForum({ forum, isView, fetchThreadList }) {
   const open = Boolean(anchorEl);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [flag, setFlag] = React.useState(true);
-  const [postList, setPostList] = useState(() => []);
+  // const [postList, setPostList] = useState(() => []);
   const [thread, setThread] = useState([]);
+  // const [allThreads, setAllThreads] = useState([]);
   const threadId = parseInt(forum.threadId);
   const profileLink = `/profile/view/${userId}`;
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -83,34 +84,36 @@ export function CardForum({ forum, isView, fetchThreadList }) {
   const viewThread = () => {
     history.push(`/course/forum/${threadId}`);
   };
+  // useEffect(() => {
+  //   getPostList(parseInt(threadId, 10))
+  //     .then((result) => {
+  //       if (result.errors) throw new Error(result.errors[0].message);
+  //       const data = result.data.postList.postList;
+  //       setPostList(data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, [courseId]);
 
-  const fetchPostList = () => {
-    getPostList(parseInt(threadId, 10))
-      .then((result) => {
-        if (result.errors) throw new Error(result.errors[0].message);
-        const data = result.data.postList.postList;
-        setPostList(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
-  useEffect(() => {
-    fetchPostList();
-  }, [courseId]);
-  useEffect(() => {
-    getThreadById(parseInt(threadId, 10))
-      .then((result) => {
-        if (result.errors) throw new Error(result.errors[0].message);
-        const data = result.data.thread;
-        setThread(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [threadId]);
-  console.log({ thread })
+//   const fetchThread = () => {
+// 	getThreadById(parseInt(threadId, 10))
+// 	.then((result) => {
+// 		if (result.errors) throw new Error(result.errors[0].message);
+// 		const data = result.data.thread;
+// 		console.log(data);
+// 		setThread(data);
+// 	})
+// 	.catch((err) => {
+// 		console.log(err);
+// 	});
+//   }
+
+//   useEffect(() => {
+//     fetchThread();
+//   }, [threadId]);
+  // console.log({thread})
   const openAlertDelete = () => {
     setAnchorEl(null);
     setOpenDialog(true);
@@ -123,13 +126,13 @@ export function CardForum({ forum, isView, fetchThreadList }) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleEdit = () => {
-    setAnchorEl(null);
-  };
+//   const handleEdit = () => {
+//     setAnchorEl(null);
+//   };
 
-  const handleLike = () => {
-    setFlag(!flag);
-  };
+//   const handleLike = () => {
+//     setFlag(!flag);
+//   };
 
   const openModalEdit = () => {
     setAnchorEl(null);
@@ -154,7 +157,7 @@ export function CardForum({ forum, isView, fetchThreadList }) {
         toast.success(`Delete Post: ${title} Successfully`, {
           autoClose: 3000,
         });
-        fetchThreadList(cId, 1, 10);
+        reloadList(cId, 1, 10);
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -209,16 +212,6 @@ export function CardForum({ forum, isView, fetchThreadList }) {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          {/* <IconButton
-            aria-label="add to favorites"
-            onClick={handleLike}
-            color={flag ? "action" : "primary"}
-          >
-            <ThumbUpIcon />
-          </IconButton>
-          <Typography variant="caption" gutterTop>
-            {forum.like} Like
-          </Typography> */}
           {isView ? (
             <div></div>
           ) : (
@@ -256,7 +249,7 @@ export function CardForum({ forum, isView, fetchThreadList }) {
       <Modal aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" className={classes.modal} open={openEditModal} onClose={() => setOpenEditModal(false)} >
         <Fade in={openEditModal}>
           <div className={classes.paper}>
-            <EditComponent thread={forum} handleClose={() => setOpenEditModal(false)} />
+            <EditComponent thread={forum} handleClose={()=>setOpenEditModal(false)} reloadThread={reloadList} />
           </div>
         </Fade>
       </Modal>
@@ -273,6 +266,7 @@ export default function ({ thread }) {
   const [isLoading, setLoading] = useState(false);
   const [allThreads, setAllThreads] = useState([]);
   const pageSize = 5;
+
   const handlePagination = (event, pageNum) => {
     setPageNumber(pageNum);
     const fetchContent = async () => {
@@ -292,23 +286,22 @@ export default function ({ thread }) {
       } else {
         toastFetchErrors(parsedResult);
       }
-    } catch (error) {
-      toast.error(error.toString());
+    } catch (error){
+      toast.error(error.message);
     }
   };
-
+  const fetchContent = async () => {
+	setLoading(true);
+	await fetchThreadList(cId, pageNumber - 1, pageSize);
+	setLoading(false);
+  };
   useEffect(() => {
-    const fetchContent = async () => {
-      setLoading(true);
-      await fetchThreadList(cId, pageNumber - 1, pageSize);
-      setLoading(false);
-    };
     fetchContent();
   }, [cId]);
   return (
     <>
       {allThreads.map((forum) => (
-        <CardForum forum={forum} isView={false} fetchThreadList={fetchThreadList} />
+        <CardForum forum={forum} isView={false} reloadList={fetchContent} />
       ))}
       {/* PAGINATE */}
       <Grid container justify="center">

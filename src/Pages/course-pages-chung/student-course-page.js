@@ -67,8 +67,8 @@ export default function CoursePage() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const [pageNumber, setPageNumber] = React.useState(1);
-  const [totalPage, setTotalPage] = React.useState(1);
-  const [totalPageAllCourses, setTotalPageAllCourses] = React.useState(1);
+  var [totalPage, setTotalPage] = React.useState(1);
+  var [totalPageAllCourses, setTotalPageAllCourses] = React.useState(1);
   const [totalPageIPCourses, setTotalPageIPCourses] = React.useState(1);
   const [totalPagePeCourses, setTotalPagePeCourses] = React.useState(1);
   const [recommendArr, setRecommendArr] = useState([]);
@@ -156,8 +156,6 @@ export default function CoursePage() {
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
         setAllCourses(parsedResult.data.courseList.courseList);
-        setTotalPageAllCourses(parsedResult.data.courseList.totalPages);
-        setTotalPage(parsedResult.data.courseList.totalPages);
       } else {
         toastFetchErrors(parsedResult);
       }
@@ -196,6 +194,9 @@ export default function CoursePage() {
 
   if (allCourses.length > 0) {
     allCourses = reduceAllCourses(allCourses, courses);
+    totalPageAllCourses = Math.floor(allCourses.length / pageSize) + 1;
+    totalPage = totalPageAllCourses;
+    // console.log("Length", allCourses.length);
   }
 
   // console.log({ courses });

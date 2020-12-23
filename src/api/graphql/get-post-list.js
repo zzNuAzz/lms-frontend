@@ -1,8 +1,8 @@
 import { graphQLFetch } from './graphql-fetch';
 
 const getPostList = async (threadId) => {
-  const query = `query getPostList ($threadId: Int!) {
-    postList(threadId: $threadId) {
+  const query = `query getPostList ($threadId: Int!, $pageNumber: Int, $pageSize: Int) {
+    postList(threadId: $threadId, pageNumber: $pageNumber, pageSize: $pageSize) {
       postList{
         postId
         threadId
