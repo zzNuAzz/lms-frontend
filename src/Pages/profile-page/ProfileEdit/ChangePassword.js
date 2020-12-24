@@ -63,6 +63,9 @@ class ChangePassword extends Component {
     changePassword = async () => {
         const { currentPassword, newPassword, confirmPassword } = this.state;
         if(!currentPassword || !newPassword || !confirmPassword) {
+            if(!currentPassword || !newPassword){
+                toast.error("Please input your password!")
+            }
             return;
         } 
         if(newPassword !== confirmPassword){
