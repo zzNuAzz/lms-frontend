@@ -25,7 +25,7 @@ const useStyle = makeStyles((theme) => ({
 const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [dueDate, setDueDate] = useState();
+  const [dueDate, setDueDate] = useState(new Date());
   const [files, setFiles] = useState([]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
