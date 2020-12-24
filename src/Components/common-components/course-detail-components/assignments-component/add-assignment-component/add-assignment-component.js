@@ -11,6 +11,7 @@ import {
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { AddRounded } from '@material-ui/icons';
 import { toast } from 'react-toastify';
+import moment from 'moment';
 import createAssignment from '../../../../../api/graphql/create-assignment';
 import FileUpload from '../../../file-upload/file-upload';
 import graphqlMultipleUpload from '../../../../../api/graphql/graphql-multiple-upload';
@@ -24,7 +25,7 @@ const useStyle = makeStyles((theme) => ({
 const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState();
   const [files, setFiles] = useState([]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -128,6 +129,7 @@ const AddAssignmentComponent = ({ courseId, fetchAssignments }) => {
             label="Due date"
             type="date"
             variant="outlined"
+            value={moment(dueDate).format('YYYY-MM-DD')}
             onChange={(event) => setDueDate(event.target.value)}
             InputLabelProps={{
               shrink: true,
