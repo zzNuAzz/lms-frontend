@@ -25,6 +25,7 @@ import { toast } from 'react-toastify';
 import MemberStatusButton from './member-status-button/member-status-button';
 import updateCourseMember from '../../../api/graphql/update-course-member';
 import getCourseMemberList from '../../../api/graphql/get-course-member-list';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -99,7 +100,7 @@ const CourseMembersComponent = ({ courseId }) => {
     setCurrentMemberId(null);
   };
   const handleConfirmReject = event => {
-    handleStatusChange(event); 
+    handleStatusChange(event);
     setDialogRejectShow(false)
   }
 
@@ -137,9 +138,21 @@ const CourseMembersComponent = ({ courseId }) => {
     return members.map((member, id) => (
       <TableRow key={member.courseMemberId} hover>
         <TableCell>{id + 1}</TableCell>
-        <TableCell>{member.user.firstName || 'No Firstname'}</TableCell>
-        <TableCell>{member.user.lastName || 'No Lastname'}</TableCell>
-        <TableCell>{member.user.username}</TableCell>
+        <TableCell>
+          <Link to={`/profile/view/${member.user.userId}`} style={{ color: 'inherit' }}>
+            {member.user.firstName || 'No Firstname'}
+          </Link>
+        </TableCell>
+        <TableCell>
+          <Link to={`/profile/view/${member.user.userId}`} style={{ color: 'inherit' }}>
+            {member.user.lastName || 'No Lastname'}
+          </Link>
+        </TableCell>
+        <TableCell>
+          <Link to={`/profile/view/${member.user.userId}`} style={{ color: 'inherit' }}>
+            {member.user.username}
+          </Link>
+        </TableCell>
         <TableCell>
           <MemberStatusButton
             status={member.status}
@@ -164,7 +177,7 @@ const CourseMembersComponent = ({ courseId }) => {
       >
         <MenuItem data-status="Accepted" onClick={(event) => handleStatusChange(event)}>Accepted</MenuItem>
         <MenuItem data-status="Pending" onClick={(event) => handleStatusChange(event)}>Pending</MenuItem>
-        <MenuItem data-status="Rejected" onClick={() => {setDialogRejectShow(true); setAnchorEl(null)}}>Rejected</MenuItem>
+        <MenuItem data-status="Rejected" onClick={() => { setDialogRejectShow(true); setAnchorEl(null) }}>Rejected</MenuItem>
       </Menu>
       <div className="members-table">
         <Paper elevation={3}>
@@ -187,7 +200,7 @@ const CourseMembersComponent = ({ courseId }) => {
           </Table>
         </Paper>
 
-        <Dialog open={dialogRejectShow} onClose={()=>setDialogRejectShow(false)} maxWidth="md">
+        <Dialog open={dialogRejectShow} onClose={() => setDialogRejectShow(false)} maxWidth="md">
           <DialogTitle>ARE YOU SURE?</DialogTitle>
           <DialogContent>
             This will remove student from course.
@@ -196,7 +209,7 @@ const CourseMembersComponent = ({ courseId }) => {
             <Button variant="contained" color="secondary" data-status="Rejected" onClick={handleConfirmReject} disabled={isLoading}>
               YES
             </Button>
-            <Button variant="contained" onClick={()=>setDialogRejectShow(false)}>
+            <Button variant="contained" onClick={() => setDialogRejectShow(false)}>
               CANCEL
             </Button>
           </DialogActions>
