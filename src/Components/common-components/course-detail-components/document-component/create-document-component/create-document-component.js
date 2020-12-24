@@ -100,6 +100,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
             label="Description"
             type="text"
             variant="outlined"
+            value={description}
             onChange={(event) => setDescription(event.target.value)}
             validators={["required"]}
             errorMessages={["This field is required"]}
