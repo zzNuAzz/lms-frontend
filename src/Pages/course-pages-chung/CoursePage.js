@@ -18,7 +18,6 @@ export default function CoursePage() {
         if (parsedResult.data.currentUser.signedIn === false) {
           localStorage.clear();
           history.push('/login');
-          history.go(0);
         }
       } else {
         toastFetchErrors(parsedResult);

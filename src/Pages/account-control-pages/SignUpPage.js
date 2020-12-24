@@ -81,16 +81,8 @@ export default function SignUp() {
       // TODO: Loading Animation
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
-        toast.success(
-          "Successfully created your account! You will be redirected to the Sign In page in 3 seconds...",
-          {
-            autoClose: 3000,
-          }
-        );
-        setTimeout(() => {
-          history.push("/login");
-          history.go(0);
-        }, 3000);
+        toast.success("Successfully created your account! Sign in now!");
+        history.push("/login");
       } else {
         toastFetchErrors(parsedResult);
       }

@@ -53,7 +53,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
         parseInt(courseId, 10),
         title,
         description,
-        fileUploadResult.data.uploadFileMultiple
+        fileUploadResult.data ? fileUploadResult.data.uploadFileMultiple : [],
       );
       const parsedResult = JSON.parse(result);
       if (parsedResult.data) {
@@ -100,6 +100,7 @@ const CreateDocumentComponent = ({ courseId, fetchDocuments }) => {
             label="Description"
             type="text"
             variant="outlined"
+            value={description}
             onChange={(event) => setDescription(event.target.value)}
             validators={["required"]}
             errorMessages={["This field is required"]}
