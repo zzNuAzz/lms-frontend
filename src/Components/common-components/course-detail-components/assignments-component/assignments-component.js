@@ -84,16 +84,14 @@ const AssignmentsComponent = ({ courseId }) => {
                 ))}
               </div>
             )
-            : (
-              <div className={classes.editAssignmentItem}>
-                {assignments.map((assignment) => (
-                  <EditAssignmentComponent
-                    assignment={assignment}
-                    fetchAssignments={fetch}
-                  />
-                ))}
-              </div>
-            )
+            : assignments.map((assignment) => (
+              <EditAssignmentComponent
+                assignment={assignment}
+                fetchAssignments={fetch}
+                key={assignment.assignmentId}
+              />
+            ))
+
         }
       </div>
     </>

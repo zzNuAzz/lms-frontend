@@ -69,6 +69,8 @@ const EditAssignmentComponent = ({
   const [progress, setProgress] = useState(0);
   const [showUploadProgress, setShowUploadProgress] = useState(false);
 
+  const formId = uuid();
+
   const classes = useStyle();
 
   const handleOnFilesChange = (addedFiles) => {
@@ -111,7 +113,7 @@ const EditAssignmentComponent = ({
         removeFileId.push(file.assignmentFileId);
       });
       const result = await editAssignment(
-        assignment.assignmentId,
+        parseInt(assignment.assignmentId,10),
         title,
         content,
         dueDate.toISOString(),
@@ -151,7 +153,7 @@ const EditAssignmentComponent = ({
 
   const EditAssignmentForm = (
     <>
-      <ValidatorForm className={classes.editForm} onSubmit={handleSubmit} id="edit-assignment-form">
+      <ValidatorForm className={classes.editForm} onSubmit={handleSubmit} id={formId}>
         <Grid
           container
           direction="row"
@@ -258,7 +260,7 @@ const EditAssignmentComponent = ({
         <AccordionActions>
           <Button
             type="submit"
-            form="edit-assignment-form"
+            form={formId}
             variant="text"
             color="primary"
             size="small"
