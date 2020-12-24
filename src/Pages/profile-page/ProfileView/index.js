@@ -57,7 +57,7 @@ export default function ViewProfile() {
 			<hr></hr>
 			<div>
 				<div style={{fontSize: "150%"}}>Information</div>
-				<Grid container>
+				<Grid container>qa
 					<Grid container direction="column" item xs={6} >
 						<Avatar userProfile={userProfile} />
 					</Grid>
