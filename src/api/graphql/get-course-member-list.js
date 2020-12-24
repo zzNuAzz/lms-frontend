@@ -9,6 +9,7 @@ const getCourseMemberList = async (courseId, status, pageNumber = 0, pageSize = 
         courseMemberId,
         status
         user {
+          userId,
           firstName,
           lastName,
           username
